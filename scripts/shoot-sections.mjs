@@ -6,11 +6,11 @@ const out = process.env.QA_OUT || 'qa-shots';
 await mkdir(out, { recursive: true });
 
 const browser = await chromium.launch();
-const sections = ['.hero', '.pratica', '.tx', '.doutor', '.filosofia', '.contato', '.footer'];
+const sections = ['.hero', '.missao', '.galeria', '.tx', '.doutor', '.filosofia', '.mapa', '.final', '.footer'];
 
 for (const vp of [
   { name: 'm390', width: 390, height: 844, isMobile: true },
-  { name: 'd1280', width: 1280, height: 800, isMobile: false },
+  { name: 'd1440', width: 1440, height: 900, isMobile: false },
 ]) {
   const ctx = await browser.newContext({
     viewport: { width: vp.width, height: vp.height },
@@ -20,22 +20,38 @@ for (const vp of [
   });
   const page = await ctx.newPage();
   await page.goto('http://localhost:4173/', { waitUntil: 'networkidle' });
+  await page.waitForTimeout(3400);
 
-  // varredura lenta para disparar todos os reveals e deixá-los assentar
+  /* varredura lenta para disparar reveals */
   await page.evaluate(async () => {
-    const step = window.innerHeight * 0.7;
+    const step = window.innerHeight * 0.6;
     for (let y = 0; y <= document.body.scrollHeight; y += step) {
       window.scrollTo(0, y);
-      await new Promise((r) => setTimeout(r, 160));
+      await new Promise((r) => setTimeout(r, 220));
     }
   });
-  await page.waitForTimeout(1600);
+  await page.waitForTimeout(1800);
 
   for (const sel of sections) {
-    const el = page.locator(sel);
-    await el.scrollIntoViewIfNeeded();
-    await page.waitForTimeout(250);
-    await el.screenshot({ path: path.join(out, `${vp.name}-${sel.slice(1)}.png`) });
+    const el = page.locator(sel).first();
+    try {
+      await el.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(350);
+      await el.screenshot({ path: path.join(out, `${vp.name}${sel.replace('.', '-')}.png`) });
+    } catch (e) {
+      console.log('skip', sel, e.message.split('\n')[0]);
+    }
+  }
+
+  /* processo no meio do pin (desktop) */
+  if (!vp.isMobile) {
+    await page.evaluate(() => {
+      const pin = document.querySelector('.processo');
+      const r = pin.getBoundingClientRect();
+      window.scrollTo(0, window.scrollY + r.top + window.innerHeight * 1.6);
+    });
+    await page.waitForTimeout(900);
+    await page.screenshot({ path: path.join(out, `${vp.name}-processo-mid.png`) });
   }
   await ctx.close();
 }

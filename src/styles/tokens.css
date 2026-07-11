@@ -1,80 +1,75 @@
 /* ============================================================================
-   TOKENS — Dr. Leonardo Guarçoni
-   Identidade derivada do material do cliente (marfim, espresso, cobre, fio
-   dourado), refinada: superfícies porcelana, tinta espresso-carbono, cobre
-   queimado como acento e dourado restrito a fios sobre fundo escuro.
+   TOKENS — Dr. Leonardo Guarçoni · direção Aventura
+   Identidade extraída do logotipo real (dourado + cobre queimado sobre
+   branco): superfícies porcelana, espresso profundo, úmbria e ferrugem
+   como planos cromáticos, fio dourado pontual sobre escuro.
    ========================================================================== */
 
 :root {
-  /* --- Cor: superfícies ---------------------------------------------------- */
-  --ivory:        oklch(96.2% 0.011 84);   /* superfície principal            */
-  --ivory-deep:   oklch(93.8% 0.015 82);   /* faixas de apoio                 */
-  --porcelain:    oklch(98.2% 0.006 90);   /* painéis sobre marfim            */
-  --espresso:     oklch(24.5% 0.021 55);   /* fundo escuro / tinta            */
-  --espresso-2:   oklch(21% 0.019 52);     /* footer, um passo mais fundo     */
+  /* --- Cor: superfícies claras --------------------------------------------- */
+  --porcelain:    oklch(97.6% 0.008 88);   /* superfície clara principal      */
+  --ivory:        oklch(95.8% 0.012 84);   /* variação de viagem de cor       */
+  --ivory-deep:   oklch(93.2% 0.016 82);   /* fim do trajeto claro            */
 
-  /* --- Cor: texto ----------------------------------------------------------- */
-  --ink:          oklch(24.5% 0.021 55);   /* texto sobre claro               */
-  --ink-soft:     oklch(41% 0.028 55);     /* texto secundário sobre claro    */
-  --ink-faint:    oklch(52% 0.025 55);     /* legendas grandes sobre claro    */
-  --milk:         oklch(96.5% 0.009 84);   /* texto sobre escuro              */
-  --milk-soft:    oklch(84% 0.018 78);     /* texto secundário sobre escuro   */
+  /* --- Cor: superfícies escuras --------------------------------------------- */
+  --espresso:     oklch(24.5% 0.021 55);   /* capítulo escuro                 */
+  --espresso-2:   oklch(20.5% 0.019 52);   /* hero, CTA final, footer         */
+  --umber:        oklch(31% 0.045 55);     /* painel do hero, placas          */
+  --rust:         oklch(38% 0.085 42);     /* placa cobre-queimado            */
 
-  /* --- Cor: acentos ---------------------------------------------------------- */
-  --copper:       oklch(56% 0.104 45);     /* cobre queimado (peças grandes)  */
+  /* --- Cor: texto ------------------------------------------------------------ */
+  --ink:          oklch(24.5% 0.021 55);
+  --ink-soft:     oklch(40% 0.028 55);
+  --milk:         oklch(96.5% 0.009 84);
+  --milk-soft:    oklch(85% 0.018 78);
+
+  /* --- Cor: acentos ------------------------------------------------------------ */
+  --copper:       oklch(56% 0.104 45);     /* cobre (peças grandes)           */
   --copper-ink:   oklch(46.5% 0.098 45);   /* cobre para texto pequeno        */
-  --gold-thread:  oklch(78% 0.072 84);     /* fio dourado, só sobre escuro    */
-  --wa-green:     oklch(66% 0.15 152);     /* verde do glifo WhatsApp         */
+  --gold-thread:  oklch(78% 0.072 84);     /* fio dourado sobre escuro        */
+  --gold-soft:    oklch(87% 0.052 88);     /* dourado claro (detalhe raro)    */
+  --wa-green:     oklch(66% 0.15 152);
 
-  /* --- Linhas ---------------------------------------------------------------- */
+  /* --- Linhas ------------------------------------------------------------------ */
   --line:         color-mix(in oklab, var(--espresso) 16%, transparent);
   --line-strong:  color-mix(in oklab, var(--espresso) 34%, transparent);
-  --line-dark:    color-mix(in oklab, var(--milk) 17%, transparent);
+  --line-dark:    color-mix(in oklab, var(--milk) 16%, transparent);
 
-  /* --- Tipografia ------------------------------------------------------------ */
+  /* --- Tipografia ---------------------------------------------------------------- */
   --serif: 'Literata Variable', 'Literata-fallback', Georgia, 'Times New Roman', serif;
   --sans:  'Hanken Grotesk Variable', 'Hanken-fallback', 'Segoe UI', Arial, sans-serif;
 
-  --fs-display:  clamp(2.35rem, 1.32rem + 4.4vw, 4.2rem);
-  --fs-h1:       clamp(2.5rem, 1.2rem + 5.6vw, 4.35rem);
-  --fs-h2:       clamp(1.85rem, 1.2rem + 2.8vw, 3.1rem);
+  --fs-hero:     clamp(3.1rem, 1.1rem + 9.4vw, 6rem);
+  --fs-display:  clamp(2.1rem, 1.15rem + 4.2vw, 4.3rem);
+  --fs-credo:    clamp(2rem, 1.1rem + 4.4vw, 4.1rem);
+  --fs-passo:    clamp(2.6rem, 1.4rem + 6.5vw, 5.6rem);
   --fs-h3:       clamp(1.2rem, 1.05rem + 0.65vw, 1.5rem);
-  --fs-quote:    clamp(1.45rem, 1rem + 2vw, 2.35rem);
   --fs-body-lg:  clamp(1.06rem, 1rem + 0.28vw, 1.19rem);
   --fs-body:     1rem;
   --fs-small:    0.875rem;
   --fs-micro:    0.78rem;
 
-  --lh-tight: 1.06;
-  --lh-snug:  1.22;
+  --lh-tight: 1.02;
+  --lh-snug:  1.16;
   --lh-body:  1.65;
 
-  /* --- Espaço ----------------------------------------------------------------- */
-  --sp-1: 0.25rem;
-  --sp-2: 0.5rem;
-  --sp-3: 0.75rem;
-  --sp-4: 1rem;
-  --sp-5: 1.5rem;
-  --sp-6: 2rem;
-  --sp-7: 3rem;
-  --sp-8: 4rem;
-  --sp-9: 6rem;
-  --section-y: clamp(5rem, 3.4rem + 7vw, 9.5rem);
-  --gutter: clamp(1.25rem, 0.6rem + 3vw, 2.75rem);
-  --container: 74rem;
+  /* --- Espaço ----------------------------------------------------------------------- */
+  --section-y: clamp(5.5rem, 3.5rem + 8vw, 11rem);
+  --gutter: clamp(1.25rem, 0.6rem + 3vw, 3rem);
+  --container: 82rem;
 
-  /* --- Forma ------------------------------------------------------------------ */
+  /* --- Forma ------------------------------------------------------------------------- */
   --r-frame: 4px;
-  --r-panel: 14px;
+  --r-panel: 16px;
   --r-pill: 999px;
 
-  /* --- Motion ------------------------------------------------------------------ */
+  /* --- Motion ------------------------------------------------------------------------- */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-fast: 180ms;
   --dur-med: 420ms;
-  --dur-slow: 900ms;
 
-  /* --- Camadas ------------------------------------------------------------------ */
+  /* --- Camadas ------------------------------------------------------------------------- */
   --z-header: 100;
   --z-menu: 200;
+  --z-preloader: 300;
 }

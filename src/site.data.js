@@ -110,6 +110,34 @@ export const site = {
     },
   ],
 
+  /* --- Processo (pilares factuais de método, sem tecnologias inventadas) --- */
+  processo: [
+    {
+      titulo: 'Escuta',
+      texto: 'Toda relação começa por entender o que incomoda e o que você espera ver no espelho.',
+    },
+    {
+      titulo: 'Avaliação',
+      texto: 'Exame criterioso da saúde, da função e da estética do sorriso, sem pressa.',
+    },
+    {
+      titulo: 'Diagnóstico',
+      texto: 'A leitura técnica que dá nome ao problema e abre as possibilidades de tratamento.',
+    },
+    {
+      titulo: 'Planejamento',
+      texto: 'Um plano individual, desenhado para uma boca, um rosto e uma rotina.',
+    },
+    {
+      titulo: 'Acompanhamento',
+      texto: 'Cada etapa conferida de perto, do início do tratamento ao acabamento final.',
+    },
+    {
+      titulo: 'Naturalidade',
+      texto: 'O critério que fecha cada caso: um resultado que passa despercebido de tão seu.',
+    },
+  ],
+
   /* --- Metadata ------------------------------------------------------------ */
   meta: {
     title: 'Dr. Leonardo Guarçoni · Odontologia Estética Restauradora em Vila Velha, ES',
@@ -130,11 +158,12 @@ export function derived() {
     `${d.endereco.rua} - ${d.endereco.bairro}, ${d.endereco.cidade} - ${d.endereco.uf}, ${d.endereco.cep}`
   );
   const mapsLink = `https://www.google.com/maps/search/?api=1&query=${mapsQuery}`;
+  const mapsEmbed = `https://www.google.com/maps?q=${mapsQuery}&output=embed&hl=pt-BR`;
   const croLinha = d.cro
     ? `${d.profissao} · CRO-${d.croUf} ${d.cro}`
     : `${d.profissao} · CRO-${d.croUf}`; /* número omitido até confirmação */
 
-  return { ...d, waLink, enderecoLinha, mapsLink, croLinha };
+  return { ...d, waLink, enderecoLinha, mapsLink, mapsEmbed, croLinha };
 }
 
 const esc = (s) =>
@@ -142,40 +171,61 @@ const esc = (s) =>
 
 const pad = (n) => String(n + 1).padStart(2, '0');
 
-/* Índice de tratamentos: lista de tabs (aprimorada via JS para tablist). */
-export function renderTreatmentIndex() {
+/* Lista de tratamentos: cada item carrega nome + resumo + CTA (disclosure).
+   O JS marca o ativo, anima o palco e mantém um aberto por vez. */
+export function renderTreatmentItems() {
+  const wa = derived().waLink;
   return site.tratamentos
     .map(
       (t, i) => `
-        <li class="tx-row" role="presentation">
-          <a class="tx-tab" id="tx-tab-${i}" href="#tx-panel-${i}" data-tx-tab="${i}">
-            <span class="tx-num" aria-hidden="true">${pad(i)}</span>
-            <span class="tx-name">${esc(t.nome)}</span>
-            <span class="tx-mark" aria-hidden="true"></span>
-          </a>
+        <li class="tx-item" data-tx-item="${i}">
+          <h3 class="tx-item-h">
+            <button class="tx-name" type="button" id="tx-btn-${i}" aria-expanded="${i === 0 ? 'true' : 'false'}" aria-controls="tx-body-${i}" data-tx-btn="${i}">
+              <span class="tx-num" aria-hidden="true">${pad(i)}</span>
+              <span class="tx-word">${esc(t.nome)}</span>
+            </button>
+          </h3>
+          <div class="tx-body" id="tx-body-${i}" data-tx-body="${i}"${i === 0 ? '' : ' hidden'}>
+            <p class="tx-desc">${esc(t.resumo)}</p>
+            <a class="btn btn-line" href="${wa}" target="_blank" rel="noopener noreferrer">
+              Conversar sobre este tratamento
+              <svg class="ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2 8h11M9 3.5 13.5 8 9 12.5"/></svg>
+            </a>
+          </div>
         </li>`
     )
     .join('\n');
 }
 
-/* Painéis estáticos: sem JS, todos visíveis; com JS viram tabpanels. */
-export function renderTreatmentPanels() {
-  const wa = derived().waLink;
+/* Palco decorativo dos tratamentos: placas cromático-tipográficas.
+   Sem fotos clínicas inventadas; superfícies, numeral, palavra e marca. */
+export function renderTreatmentPlates() {
+  const tones = ['espresso', 'umber', 'rust', 'bone'];
   return site.tratamentos
+    .map((t, i) => {
+      const tone = tones[i % tones.length];
+      const word = esc(t.nome.split(' ')[0]);
+      return `
+        <figure class="plate plate--${tone}" data-tx-plate="${i}"${i === 0 ? ' data-active' : ''} aria-hidden="true">
+          <span class="plate-num">${pad(i)}</span>
+          <span class="plate-word">${word}</span>
+          <img class="plate-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" />
+          <span class="plate-name">${esc(t.nome)}</span>
+        </figure>`;
+    })
+    .join('\n');
+}
+
+/* Etapas do processo: usadas no pin de desktop e na narrativa vertical. */
+export function renderProcesso() {
+  return site.processo
     .map(
-      (t, i) => `
-        <article class="tx-panel" id="tx-panel-${i}" data-tx-panel="${i}" aria-labelledby="tx-tab-${i}">
-          <p class="tx-panel-num" aria-hidden="true">${pad(i)}</p>
-          <h3 class="tx-panel-title">${esc(t.nome)}</h3>
-          <p class="tx-panel-body">${esc(t.resumo)}</p>
-          <div class="tx-panel-actions">
-            <a class="btn btn-line" href="${wa}" target="_blank" rel="noopener noreferrer">
-              Conversar sobre este tratamento
-              <svg class="ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2 8h11M9 3.5 13.5 8 9 12.5"/></svg>
-            </a>
-            <a class="tx-panel-back" href="#tratamentos" data-tx-back hidden>Voltar ao índice</a>
-          </div>
-        </article>`
+      (p, i) => `
+        <li class="passo" data-passo="${i}">
+          <span class="passo-num" aria-hidden="true">${pad(i)}</span>
+          <h3 class="passo-titulo">${esc(p.titulo)}</h3>
+          <p class="passo-texto">${esc(p.texto)}</p>
+        </li>`
     )
     .join('\n');
 }
@@ -185,10 +235,12 @@ export function renderFormacao() {
   return site.formacao
     .map(
       (f) => `
-        <li class="marco">
+        <li class="marco" data-marco>
           <span class="marco-ano">${esc(f.ano)}</span>
-          <h3 class="marco-titulo">${esc(f.titulo)}</h3>
-          <p class="marco-inst">${esc(f.instituicao)}</p>
+          <div class="marco-info">
+            <h3 class="marco-titulo">${esc(f.titulo)}</h3>
+            <p class="marco-inst">${esc(f.instituicao)}</p>
+          </div>
         </li>`
     )
     .join('\n');

@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite';
 import {
   derived,
-  renderTreatmentIndex,
-  renderTreatmentPanels,
+  renderTreatmentItems,
+  renderTreatmentPlates,
+  renderProcesso,
   renderFormacao,
   renderSchema,
 } from './src/site.data.js';
@@ -17,8 +18,9 @@ function siteDataPlugin() {
     transformIndexHtml(html) {
       const d = derived();
       const blocks = {
-        '@tratamentos_index': renderTreatmentIndex(),
-        '@tratamentos_panels': renderTreatmentPanels(),
+        '@tratamentos_items': renderTreatmentItems(),
+        '@tratamentos_plates': renderTreatmentPlates(),
+        '@processo': renderProcesso(),
         '@formacao': renderFormacao(),
         '@schema': renderSchema(),
       };

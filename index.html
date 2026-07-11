@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{meta.title}}</title>
   <meta name="description" content="{{meta.description}}" />
-  <meta name="theme-color" content="#F6F1E8" />
+  <meta name="theme-color" content="#26201A" />
   <meta name="color-scheme" content="light" />
 
   <!-- Open Graph -->
@@ -18,9 +18,20 @@
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preload" as="image" href="/images/retrato-01.webp" type="image/webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="/images/logo-mark.webp" type="image/webp" />
   <link rel="stylesheet" href="/src/styles/main.css" />
 
-  <script>document.documentElement.classList.add('js');</script>
+  <script>
+    (function () {
+      var el = document.documentElement;
+      el.classList.add('js');
+      var motion = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (motion) el.classList.add('motion');
+      var seen = false;
+      try { seen = sessionStorage.getItem('lg-seen') === '1'; } catch (e) {}
+      if (motion && !seen) el.classList.add('preloading');
+    })();
+  </script>
   <script type="application/ld+json">
 {{@schema}}
   </script>
@@ -28,12 +39,24 @@
 <body>
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
 
-  <!-- ==================== HEADER ==================== -->
+  <!-- ============ CAP. 01 · PRELOADER ============ -->
+  <div class="preloader" data-preloader aria-hidden="true" hidden>
+    <div class="preloader-in">
+      <img class="preloader-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" />
+      <span class="preloader-line" data-preloader-line></span>
+      <span class="preloader-place">Vila Velha · ES</span>
+    </div>
+  </div>
+
+  <!-- ============ CAP. 02 · HEADER ============ -->
   <header class="header" data-header>
     <div class="header-in">
-      <a class="wordmark" href="#inicio" aria-label="{{nomeCurto}}, voltar ao início">
-        <span class="wordmark-name">Leonardo&nbsp;Guarçoni</span>
-        <span class="wordmark-role">cirurgião&#8209;dentista</span>
+      <a class="brand" href="#inicio" aria-label="{{nomeCurto}}, voltar ao início">
+        <img class="brand-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" />
+        <span class="brand-text">
+          <span class="brand-name">Leonardo&nbsp;Guarçoni</span>
+          <span class="brand-role">cirurgião&#8209;dentista</span>
+        </span>
       </a>
 
       <nav class="nav" aria-label="Seções do site">
@@ -56,150 +79,191 @@
     </div>
   </header>
 
-  <!-- ==================== MENU (mobile) ==================== -->
+  <!-- ============ MENU OVERLAY ============ -->
   <div class="menu" id="menu" data-menu hidden>
     <div class="menu-panel" role="dialog" aria-modal="true" aria-label="Menu de navegação">
+      <img class="menu-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" />
       <nav class="menu-nav" aria-label="Seções do site">
         <ol class="menu-list" role="list">
-          <li><a class="menu-link" href="#tratamentos" data-menu-link><span class="menu-num" aria-hidden="true">01</span>Tratamentos</a></li>
-          <li><a class="menu-link" href="#o-doutor" data-menu-link><span class="menu-num" aria-hidden="true">02</span>O doutor</a></li>
-          <li><a class="menu-link" href="#filosofia" data-menu-link><span class="menu-num" aria-hidden="true">03</span>Filosofia</a></li>
-          <li><a class="menu-link" href="#contato" data-menu-link><span class="menu-num" aria-hidden="true">04</span>Contato</a></li>
+          <li><a class="menu-link" href="#tratamentos" data-menu-link><span class="menu-num" aria-hidden="true">01</span><span class="menu-word" data-menu-word>Tratamentos</span></a></li>
+          <li><a class="menu-link" href="#processo" data-menu-link><span class="menu-num" aria-hidden="true">02</span><span class="menu-word" data-menu-word>Como trabalhamos</span></a></li>
+          <li><a class="menu-link" href="#o-doutor" data-menu-link><span class="menu-num" aria-hidden="true">03</span><span class="menu-word" data-menu-word>O doutor</span></a></li>
+          <li><a class="menu-link" href="#filosofia" data-menu-link><span class="menu-num" aria-hidden="true">04</span><span class="menu-word" data-menu-word>Filosofia</span></a></li>
+          <li><a class="menu-link" href="#contato" data-menu-link><span class="menu-num" aria-hidden="true">05</span><span class="menu-word" data-menu-word>Contato</span></a></li>
         </ol>
       </nav>
-      <div class="menu-foot">
+      <div class="menu-foot" data-menu-foot>
         <a class="btn btn-ivory" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
           <svg class="ico ico-wa" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
           Agendar pelo WhatsApp
         </a>
-        <p class="menu-address">{{enderecoLinha}}</p>
+        <div class="menu-contacts">
+          <a class="menu-contact" href="mailto:{{email}}">{{email}}</a>
+          <a class="menu-contact" href="https://instagram.com/{{instagramUser}}" target="_blank" rel="noopener noreferrer">@{{instagramUser}}</a>
+          <p class="menu-address">{{enderecoLinha}}</p>
+        </div>
       </div>
     </div>
   </div>
 
   <main id="conteudo">
-    <!-- ==================== HERO ==================== -->
-    <section class="hero" id="inicio" aria-label="Apresentação">
+    <!-- ============ CAP. 03 · HERO ============ -->
+    <section class="hero" id="inicio" data-theme="dark" aria-label="Apresentação">
+      <div class="hero-panel" data-hero-panel>
+        <div class="hero-media" data-hero-media>
+          <img
+            src="/images/retrato-01.webp"
+            width="455" height="569"
+            alt="Retrato do Dr. Leonardo Guarçoni, cirurgião-dentista, de terno claro sobre fundo em tons quentes"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
+        <img class="hero-panel-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" aria-hidden="true" />
+      </div>
+
       <div class="hero-in">
-        <div class="hero-copy">
-          <p class="hero-id" data-reveal>
-            <span>Dr.&nbsp;Leonardo&nbsp;Guarçoni</span>
-            <span class="hero-id-sep" aria-hidden="true"></span>
-            <span>Odontologia estética restauradora</span>
-            <span class="hero-id-sep" aria-hidden="true"></span>
-            <span>Vila&nbsp;Velha,&nbsp;ES</span>
+        <p class="hero-meta" data-hero-meta>
+          <span>Consultório em <strong>Vila&nbsp;Velha,&nbsp;ES</strong></span>
+          <span class="hero-meta-sep" aria-hidden="true"></span>
+          <span>Desde <strong>1991</strong></span>
+        </p>
+
+        <h1 class="hero-title">
+          <span class="visually-hidden">Odontologia estética restauradora em Vila Velha: Dr. Leonardo Guarçoni</span>
+          <span class="hero-kicker" aria-hidden="true" data-hero-kicker>Odontologia</span>
+          <span class="hero-word" aria-hidden="true" data-hero-word>Estética</span>
+          <span class="hero-word hero-word--it" aria-hidden="true" data-hero-word>restauradora</span>
+        </h1>
+
+        <div class="hero-foot" data-hero-foot>
+          <p class="hero-statement">
+            Ciência, técnica e escuta a serviço de sorrisos naturais.
+            O Dr.&nbsp;Leonardo Guarçoni acompanha cada paciente de perto, desde&nbsp;1991.
           </p>
-          <h1 class="hero-title" data-reveal data-reveal-delay="1">
-            O sorriso natural é um trabalho de <em>precisão</em> e <em>escuta</em>.
-          </h1>
-          <p class="hero-sub" data-reveal data-reveal-delay="2">
-            Atendimento humanizado, sem fórmulas prontas. Desde 1991, o Dr.&nbsp;Leonardo une
-            saúde, função e estética em cada plano de tratamento.
-          </p>
-          <div class="hero-actions" data-reveal data-reveal-delay="3">
-            <a class="btn btn-solid" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
+          <div class="hero-actions">
+            <a class="btn btn-porcelain" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
               <svg class="ico ico-wa" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
               Agendar avaliação
             </a>
-            <a class="btn btn-line" href="#tratamentos">
-              Ver tratamentos
-              <svg class="ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M8 2v11M3.5 9 8 13.5 12.5 9"/></svg>
-            </a>
+            <ul class="hero-tags" role="list" aria-label="Algumas frentes de tratamento">
+              <li><a class="hero-tag" href="#tratamentos">Implantes</a></li>
+              <li><a class="hero-tag" href="#tratamentos">Ortodontia</a></li>
+              <li><a class="hero-tag" href="#tratamentos">Harmonização facial</a></li>
+            </ul>
           </div>
         </div>
 
-        <figure class="hero-figure" data-reveal-img>
-          <div class="hero-frame img-reveal" data-parallax>
-            <img
-              src="/images/retrato-01.webp"
-              width="455" height="569"
-              alt="Retrato do Dr. Leonardo Guarçoni, cirurgião-dentista, de terno claro sobre fundo em tons quentes"
-              fetchpriority="high"
-              decoding="async"
-            />
-          </div>
-          <figcaption class="hero-caption">Dr. Leonardo Pereira Guarçoni Duarte</figcaption>
+        <a class="hero-cue" href="#missao" data-hero-cue aria-label="Rolar para a próxima seção">
+          <span aria-hidden="true">Role para descobrir</span>
+          <i aria-hidden="true"></i>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ CAP. 04 · MISSÃO ============ -->
+    <section class="missao" id="missao" data-theme="light" aria-labelledby="missao-title">
+      <div class="missao-in">
+        <p class="chapter-label" data-reveal>A nossa missão</p>
+        <h2 class="missao-title" id="missao-title" data-split>
+          Oferecer um atendimento <em>humanizado</em>, pautado na confiança e na
+          qualidade, transformando sorrisos e elevando a autoestima com
+          resultados <em>naturais</em>.
+        </h2>
+
+        <div class="missao-cols">
+          <span class="missao-ghost" data-missao-ghost aria-hidden="true">1991</span>
+          <p class="missao-col" data-para="-0.35" data-reveal>
+            Cada plano de tratamento nasce de uma conversa e da leitura do rosto
+            de quem chega ao consultório. Nada de fórmulas prontas.
+          </p>
+          <p class="missao-col missao-col--b" data-para="0.3" data-reveal>
+            Saúde, função e estética caminham juntas em todas as decisões
+            clínicas, do primeiro exame ao acabamento final.
+          </p>
+        </div>
+
+        <a class="btn btn-line missao-cta" href="#o-doutor" data-reveal>
+          Conhecer o Dr.&nbsp;Leonardo
+          <svg class="ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2 8h11M9 3.5 13.5 8 9 12.5"/></svg>
+        </a>
+      </div>
+
+      <div class="galeria" aria-hidden="false">
+        <figure class="galeria-frame" data-mask data-para="0.18">
+          <img src="/images/retrato-01-face.webp" width="360" height="330" alt="Detalhe do olhar do Dr. Leonardo Guarçoni" loading="lazy" decoding="async" />
+        </figure>
+        <figure class="galeria-frame galeria-frame--plate" data-mask data-para="-0.14">
+          <img class="galeria-mark" src="/images/logo-mark.webp" width="376" height="305" alt="Símbolo do consultório: dente com monograma LG" loading="lazy" decoding="async" />
+        </figure>
+        <figure class="galeria-frame" data-mask data-para="0.1">
+          <img src="/images/retrato-02.webp" width="402" height="505" alt="Dr. Leonardo Guarçoni sorrindo, de camisa clara" loading="lazy" decoding="async" />
         </figure>
       </div>
     </section>
 
-    <!-- ==================== POSICIONAMENTO ==================== -->
-    <section class="pratica" id="a-pratica" aria-label="Posicionamento">
-      <div class="pratica-in">
-        <div class="pratica-copy">
-          <h2 class="display" data-reveal>Cada rosto pede um sorriso diferente.</h2>
-          <div class="pratica-text" data-reveal data-reveal-delay="1">
-            <p>
-              Antes de qualquer procedimento, uma conversa. O plano de tratamento nasce da
-              leitura do seu rosto, da sua saúde e do que você espera ver no espelho.
-            </p>
-            <p>
-              Estética e função caminham juntas, com calma e critério clínico, para um
-              resultado de aparência natural: um sorriso que combina com você.
-            </p>
-          </div>
-        </div>
-        <figure class="pratica-figure" data-reveal-img>
-          <div class="pratica-frame img-reveal">
-            <img
-              src="/images/sorriso-01.webp"
-              width="405" height="790"
-              alt="Duas pessoas sorrindo, rosto encostado no rosto, em tons quentes"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-          <figcaption class="pratica-caption">Estética que respeita a expressão de cada pessoa</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- ==================== TRATAMENTOS ==================== -->
-    <section class="tx" id="tratamentos" aria-labelledby="tx-title">
+    <!-- ============ CAP. 05 · TRATAMENTOS ============ -->
+    <section class="tx" id="tratamentos" data-theme="light" aria-labelledby="tx-title">
       <div class="tx-in">
         <header class="tx-head">
-          <h2 class="display" id="tx-title" data-reveal>Tratamentos</h2>
-          <p class="tx-lead" data-reveal data-reveal-delay="1">
-            Da prevenção à reabilitação completa: um consultório preparado para acompanhar
-            cada fase do seu sorriso. A indicação exata depende sempre de avaliação clínica.
+          <p class="chapter-label" data-reveal>Tratamentos</p>
+          <h2 class="tx-title" id="tx-title" data-split>
+            Todas as fases do seu sorriso, <em>num só consultório</em>.
+          </h2>
+          <p class="tx-lead" data-reveal>
+            Nove frentes de cuidado, sempre a partir de avaliação clínica.
+            Toque em cada uma para conhecer.
           </p>
         </header>
 
         <div class="tx-grid" data-tx>
-          <ol class="tx-index" data-tx-list role="list">
-{{@tratamentos_index}}
-          </ol>
-          <div class="tx-panels" data-tx-panels>
-{{@tratamentos_panels}}
+          <div class="tx-stage" data-tx-stage>
+{{@tratamentos_plates}}
+            <div class="tx-hud">
+              <p class="tx-counter"><span data-tx-current>01</span><i>/</i><span>09</span></p>
+              <span class="tx-progress"><i data-tx-progress></i></span>
+              <button class="tx-pause" type="button" data-tx-pause aria-label="Pausar troca automática" aria-pressed="false">
+                <svg class="ico-pause" viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path fill="currentColor" d="M2.5 1.5h2.4v9H2.5zM7.1 1.5h2.4v9H7.1z"/></svg>
+                <svg class="ico-play" viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path fill="currentColor" d="M3 1.4 10.4 6 3 10.6z"/></svg>
+              </button>
+            </div>
           </div>
+
+          <ol class="tx-list" data-tx-list role="list">
+{{@tratamentos_items}}
+          </ol>
         </div>
       </div>
     </section>
 
-    <!-- ==================== O DOUTOR ==================== -->
-    <section class="doutor" id="o-doutor" aria-labelledby="doutor-title">
-      <div class="doutor-in">
-        <div class="doutor-copy">
-          <h2 class="doutor-title" id="doutor-title" data-reveal>
-            Sou o Dr.&nbsp;Leonardo Pereira Guarçoni&nbsp;Duarte.
-          </h2>
-          <div class="doutor-bio" data-reveal data-reveal-delay="1">
-            <p>
-              Cirurgião-dentista formado pela Universidade Federal do Espírito Santo,
-              turma de 1991, com pós-graduação em Endodontia pela Universidade Gama Filho,
-              no Rio de Janeiro, em 1994.
-            </p>
-            <p>
-              Especialista em odontologia estética restauradora, dedico minha carreira a
-              unir saúde, função e estética, acompanhando cada paciente de perto, do
-              diagnóstico ao acabamento.
-            </p>
+    <!-- ============ CAP. 06 · PROCESSO (PIN) ============ -->
+    <section class="processo" id="processo" data-theme="dark" aria-labelledby="processo-title">
+      <div class="processo-pin" data-processo-pin>
+        <div class="processo-in">
+          <header class="processo-head">
+            <p class="chapter-label chapter-label--gold" data-reveal>Como trabalhamos</p>
+            <h2 class="processo-title" id="processo-title" data-split>Precisão em <em>cada etapa</em>.</h2>
+          </header>
+
+          <ol class="passos" data-passos role="list">
+{{@processo}}
+          </ol>
+
+          <div class="processo-hud" data-processo-hud aria-hidden="true">
+            <p class="processo-counter"><span data-processo-current>01</span><i>/</i><span>06</span></p>
+            <span class="processo-track"><i data-processo-progress></i></span>
           </div>
         </div>
+        <img class="processo-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" aria-hidden="true" />
+      </div>
+    </section>
 
-        <figure class="doutor-figure" data-reveal-img>
-          <span class="doutor-ghost" aria-hidden="true">1991</span>
-          <div class="doutor-frame img-reveal" data-parallax>
+    <!-- ============ CAP. 07 · O DOUTOR ============ -->
+    <section class="doutor" id="o-doutor" data-theme="dark" aria-labelledby="doutor-title">
+      <span class="doutor-ghost" data-doutor-ghost aria-hidden="true">1991</span>
+      <div class="doutor-in">
+        <div class="doutor-media" data-doutor-media>
+          <figure class="doutor-frame" data-mask>
             <img
               src="/images/retrato-02.webp"
               width="402" height="505"
@@ -207,126 +271,178 @@
               loading="lazy"
               decoding="async"
             />
-          </div>
+          </figure>
           <figcaption class="doutor-caption">Cirurgião&#8209;dentista desde 1991</figcaption>
-        </figure>
+        </div>
 
-        <div class="doutor-marcos">
-          <h3 class="marcos-title" data-reveal>Formação e trajetória</h3>
-          <ol class="marcos" role="list" data-reveal data-reveal-delay="1">
+        <div class="doutor-copy">
+          <p class="chapter-label chapter-label--gold" data-reveal>O doutor</p>
+          <h2 class="doutor-title" id="doutor-title" data-split>
+            Dr.&nbsp;Leonardo Pereira <em>Guarçoni</em> Duarte
+          </h2>
+
+          <div class="doutor-bio">
+            <p data-reveal>
+              Cirurgião-dentista formado pela Universidade Federal do Espírito
+              Santo, turma de 1991, com pós-graduação em Endodontia pela
+              Universidade Gama Filho, no Rio de Janeiro, em 1994.
+            </p>
+            <p data-reveal>
+              Especialista em odontologia estética restauradora, dedico minha
+              carreira a unir saúde, função e estética, acompanhando cada
+              paciente de perto, do diagnóstico ao acabamento.
+            </p>
+          </div>
+
+          <ol class="marcos" role="list">
 {{@formacao}}
           </ol>
         </div>
       </div>
     </section>
 
-    <!-- ==================== FILOSOFIA ==================== -->
-    <section class="filosofia" id="filosofia" aria-labelledby="filosofia-title">
+    <!-- ============ CAP. 08 · FILOSOFIA ============ -->
+    <section class="filosofia" id="filosofia" data-theme="light" aria-labelledby="filosofia-title">
       <div class="filosofia-in">
+        <p class="chapter-label" data-reveal>Filosofia</p>
         <h2 class="visually-hidden" id="filosofia-title">Filosofia de atendimento</h2>
-        <blockquote class="credo" data-reveal>
-          <p>
-            «&nbsp;Oferecer um atendimento humanizado, pautado na confiança e na qualidade:
-            transformar sorrisos e elevar a autoestima, com resultados naturais.&nbsp;»
-          </p>
-          <cite>A missão do consultório, nas palavras do Dr.&nbsp;Leonardo</cite>
-        </blockquote>
 
-        <ul class="principios" role="list">
-          <li class="principio" data-reveal>
-            <h3>Escuta antes da técnica</h3>
-            <p>Toda avaliação começa por entender o que incomoda e o que se espera. O plano vem depois.</p>
-          </li>
-          <li class="principio" data-reveal data-reveal-delay="1">
-            <h3>Planejamento individual</h3>
-            <p>Nenhum caso é igual ao outro. Cada tratamento é desenhado para uma boca, um rosto, uma rotina.</p>
-          </li>
-          <li class="principio" data-reveal data-reveal-delay="2">
-            <h3>Naturalidade como critério</h3>
-            <p>Um bom resultado é discreto: um sorriso saudável, em harmonia com a sua expressão.</p>
-          </li>
-        </ul>
+        <div class="credo credo--a">
+          <p class="credo-line" data-split>Escuta antes <em>da técnica</em>.</p>
+          <p class="credo-sub" data-reveal>
+            Toda avaliação começa por entender o que incomoda e o que se espera.
+            O plano vem depois.
+          </p>
+        </div>
+
+        <figure class="filosofia-macro" data-mask data-para="0.22">
+          <img src="/images/retrato-01-face.webp" width="360" height="330" alt="Detalhe do rosto do Dr. Leonardo Guarçoni" loading="lazy" decoding="async" />
+        </figure>
+
+        <div class="credo credo--b">
+          <p class="credo-line" data-split>Planejamento <em>individual</em>.</p>
+          <p class="credo-sub" data-reveal>
+            Nenhum caso é igual ao outro. Cada tratamento é desenhado para uma
+            boca, um rosto, uma rotina.
+          </p>
+        </div>
+
+        <div class="credo credo--c">
+          <p class="credo-line" data-split>Naturalidade <em>como critério</em>.</p>
+          <p class="credo-sub" data-reveal>
+            Um bom resultado é discreto: um sorriso saudável, em harmonia com a
+            sua expressão.
+          </p>
+        </div>
       </div>
     </section>
 
-    <!-- ==================== CONTATO ==================== -->
-    <section class="contato" id="contato" aria-labelledby="contato-title">
-      <div class="contato-in">
-        <div class="contato-cta">
-          <h2 class="display" id="contato-title" data-reveal>Vamos conversar sobre o seu sorriso.</h2>
-          <p class="contato-lead" data-reveal data-reveal-delay="1">
-            O agendamento é feito pelo WhatsApp: escreva quando for melhor para você.
-            {{disponibilidade}}
-          </p>
-          <div class="contato-actions" data-reveal data-reveal-delay="2">
-            <a class="btn btn-solid btn-lg" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
-              <svg class="ico ico-wa" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
-              Agendar pelo WhatsApp
-            </a>
-            <p class="contato-fone">{{whatsappDisplay}}</p>
-          </div>
+    <!-- ============ CAP. 09 · LOCALIZAÇÃO ============ -->
+    <section class="mapa" id="contato" data-theme="light" aria-labelledby="mapa-title">
+      <div class="mapa-shell" data-mapa-shell>
+        <div class="mapa-embed" data-mapa-embed>
+          <iframe
+            title="Mapa: consultório do Dr. Leonardo Guarçoni, Rua Henrique Laranja 230, Centro, Vila Velha ES"
+            data-src="{{mapsEmbed}}"
+            width="600" height="450"
+            style="border:0"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <noscript>
+            <iframe
+              title="Mapa: consultório do Dr. Leonardo Guarçoni"
+              src="{{mapsEmbed}}"
+              width="600" height="450"
+              style="border:0"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </noscript>
         </div>
 
-        <div class="contato-dados">
-          <dl class="dado-lista">
-            <div class="dado" data-reveal>
-              <dt>Endereço</dt>
-              <dd>
-                <address>
-                  {{endereco.rua}}<br />
-                  {{endereco.bairro}}, {{endereco.cidade}} · {{endereco.uf}}<br />
-                  CEP {{endereco.cep}}
-                </address>
-                <a class="dado-link" href="{{mapsLink}}" target="_blank" rel="noopener noreferrer">
-                  Como chegar
-                  <svg class="ico" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M4 12 12 4M6 4h6v6"/></svg>
-                </a>
-              </dd>
-            </div>
-            <div class="dado" data-reveal data-reveal-delay="1">
-              <dt>E-mail</dt>
-              <dd><a class="dado-link" href="mailto:{{email}}">{{email}}</a></dd>
-            </div>
-            <div class="dado" data-reveal data-reveal-delay="2">
-              <dt>Instagram</dt>
-              <dd>
-                <a class="dado-link" href="https://instagram.com/{{instagramUser}}" target="_blank" rel="noopener noreferrer">@{{instagramUser}}</a>
-              </dd>
-            </div>
-          </dl>
-          <div class="contato-logo" data-reveal data-reveal-delay="3">
-            <img
-              src="/images/logo.webp"
-              width="346" height="168"
-              alt="Logotipo Dr. Leonardo Guarçoni"
-              loading="lazy"
-              decoding="async"
-            />
+        <div class="mapa-panel" data-mapa-panel>
+          <p class="chapter-label chapter-label--gold">Onde estamos</p>
+          <h2 class="mapa-title" id="mapa-title">Centro de Vila&nbsp;Velha</h2>
+          <address class="mapa-endereco">
+            {{endereco.rua}}<br />
+            {{endereco.bairro}}, {{endereco.cidade}} · {{endereco.uf}}<br />
+            CEP {{endereco.cep}}
+          </address>
+          <p class="mapa-disponibilidade">{{disponibilidade}}</p>
+          <div class="mapa-acoes">
+            <a class="btn btn-porcelain" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
+              <svg class="ico ico-wa" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
+              Agendar pelo WhatsApp
+            </a>
+            <a class="mapa-link" href="{{mapsLink}}" target="_blank" rel="noopener noreferrer">
+              Como chegar
+              <svg class="ico" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M4 12 12 4M6 4h6v6"/></svg>
+            </a>
           </div>
+          <div class="mapa-contatos">
+            <a class="mapa-contato" href="{{waLink}}" target="_blank" rel="noopener noreferrer">{{whatsappDisplay}}</a>
+            <a class="mapa-contato" href="mailto:{{email}}">{{email}}</a>
+            <a class="mapa-contato" href="https://instagram.com/{{instagramUser}}" target="_blank" rel="noopener noreferrer">@{{instagramUser}}</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CAP. 10 · CTA FINAL ============ -->
+    <section class="final" data-theme="dark" aria-labelledby="final-title">
+      <div class="final-in">
+        <img class="final-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" aria-hidden="true" />
+        <h2 class="final-title" id="final-title" data-split>
+          Um sorriso natural começa com <em>uma conversa</em>.
+        </h2>
+        <div class="final-actions" data-reveal>
+          <a class="btn btn-porcelain btn-lg" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
+            <svg class="ico ico-wa" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
+            Agendar pelo WhatsApp
+          </a>
+          <p class="final-note">{{whatsappDisplay}} · {{endereco.cidade}}, {{endereco.uf}}</p>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ==================== FOOTER ==================== -->
+  <!-- ============ FOOTER ============ -->
   <footer class="footer">
     <div class="footer-in">
       <div class="footer-brand">
-        <p class="footer-wordmark">Leonardo&nbsp;Guarçoni</p>
-        <p class="footer-tag">Odontologia estética restauradora · {{endereco.cidade}}, {{endereco.uf}}</p>
+        <img class="footer-logo" src="/images/logo-full.webp" width="486" height="364" alt="Logotipo Dr. Leonardo Guarçoni" loading="lazy" decoding="async" />
       </div>
-      <div class="footer-contact">
-        <a class="footer-link" href="{{waLink}}" target="_blank" rel="noopener noreferrer">WhatsApp {{whatsappDisplay}}</a>
-        <a class="footer-link" href="mailto:{{email}}">{{email}}</a>
-        <a class="footer-link" href="https://instagram.com/{{instagramUser}}" target="_blank" rel="noopener noreferrer">@{{instagramUser}}</a>
-        <p class="footer-address">{{enderecoLinha}} · CEP {{endereco.cep}}</p>
+      <div class="footer-cols">
+        <nav class="footer-col" aria-label="Seções">
+          <p class="footer-h">Navegação</p>
+          <a class="footer-link" href="#tratamentos">Tratamentos</a>
+          <a class="footer-link" href="#processo">Como trabalhamos</a>
+          <a class="footer-link" href="#o-doutor">O doutor</a>
+          <a class="footer-link" href="#filosofia">Filosofia</a>
+          <a class="footer-link" href="#contato">Contato</a>
+        </nav>
+        <div class="footer-col">
+          <p class="footer-h">Contato</p>
+          <a class="footer-link" href="{{waLink}}" target="_blank" rel="noopener noreferrer">WhatsApp {{whatsappDisplay}}</a>
+          <a class="footer-link" href="mailto:{{email}}">{{email}}</a>
+          <a class="footer-link" href="https://instagram.com/{{instagramUser}}" target="_blank" rel="noopener noreferrer">@{{instagramUser}}</a>
+        </div>
+        <div class="footer-col">
+          <p class="footer-h">Endereço</p>
+          <address class="footer-address">
+            {{endereco.rua}}<br />
+            {{endereco.bairro}}, {{endereco.cidade}} · {{endereco.uf}}<br />
+            CEP {{endereco.cep}}
+          </address>
+          <a class="footer-link" href="{{mapsLink}}" target="_blank" rel="noopener noreferrer">Como chegar</a>
+        </div>
       </div>
       <div class="footer-legal">
         <p>Responsável técnico: {{nomeCompleto}} · {{croLinha}}.</p>
         <p>
-          As informações desta página têm caráter informativo e não substituem a avaliação
-          clínica. Resultados variam de pessoa para pessoa. Conteúdo em conformidade com as
-          normas do Conselho Federal de Odontologia.
+          As informações desta página têm caráter informativo e não substituem a
+          avaliação clínica. Resultados variam de pessoa para pessoa. Conteúdo em
+          conformidade com as normas do Conselho Federal de Odontologia.
         </p>
         <p class="footer-copy">© <span data-year>2026</span> {{nomeCurto}}. Todos os direitos reservados.</p>
       </div>

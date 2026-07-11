@@ -1,5 +1,7 @@
 /* ============================================================================
-   BASE — reset, tipografia, botões, foco, reveal
+   BASE — reset, tipografia, botões, foco, preloader, máscaras de linha
+   Estados iniciais de animação são aplicados via GSAP (gsap.set) no boot;
+   sem JS ou com prefers-reduced-motion, nada fica oculto.
    ========================================================================== */
 
 *,
@@ -13,12 +15,11 @@
 }
 
 html {
-  scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--ivory);
+  background: var(--porcelain);
   color: var(--ink);
   font-family: var(--sans);
   font-size: var(--fs-body);
@@ -30,7 +31,8 @@ body {
 }
 
 img,
-svg {
+svg,
+iframe {
   display: block;
   max-width: 100%;
 }
@@ -76,7 +78,7 @@ p {
 }
 
 ::selection {
-  background: color-mix(in oklab, var(--copper) 26%, var(--ivory));
+  background: color-mix(in oklab, var(--copper) 26%, var(--porcelain));
   color: var(--ink);
 }
 
@@ -90,7 +92,7 @@ p {
   position: fixed;
   top: 0.75rem;
   left: 0.75rem;
-  z-index: calc(var(--z-menu) + 10);
+  z-index: calc(var(--z-preloader) + 10);
   background: var(--espresso);
   color: var(--milk);
   font-size: var(--fs-small);
@@ -116,21 +118,29 @@ p {
   white-space: nowrap;
 }
 
-/* --- Títulos display -------------------------------------------------------- */
+/* --- Labels de capítulo -------------------------------------------------- */
 
-.display {
-  font-family: var(--serif);
-  font-size: var(--fs-h2);
-  font-weight: 460;
-  line-height: var(--lh-snug);
-  letter-spacing: -0.015em;
+.chapter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: var(--fs-micro);
+  font-weight: 650;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--copper-ink);
 }
 
-.display em,
-.hero-title em {
-  font-style: italic;
-  font-weight: 420;
-  color: var(--copper-ink);
+.chapter-label::before {
+  content: '';
+  width: 1.9rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.chapter-label--gold {
+  color: var(--gold-thread);
 }
 
 /* --- Botões ------------------------------------------------------------------ */
@@ -160,11 +170,24 @@ p {
 }
 
 .btn-solid:hover {
-  background: color-mix(in oklab, var(--espresso) 86%, var(--copper));
+  background: color-mix(in oklab, var(--espresso) 84%, var(--copper));
 }
 
 .btn-solid .ico-wa {
   color: var(--wa-green);
+}
+
+.btn-porcelain {
+  background: var(--porcelain);
+  color: var(--ink);
+}
+
+.btn-porcelain:hover {
+  background: var(--milk);
+}
+
+.btn-porcelain .ico-wa {
+  color: oklch(50% 0.14 152);
 }
 
 .btn-ivory {
@@ -177,14 +200,14 @@ p {
 }
 
 .btn-ivory .ico-wa {
-  color: oklch(52% 0.14 152);
+  color: oklch(50% 0.14 152);
 }
 
 .btn-line {
   padding-inline: 0.35rem;
   min-height: 48px;
   border-radius: 4px;
-  color: var(--ink);
+  color: inherit;
   font-weight: 600;
   position: relative;
 }
@@ -196,12 +219,13 @@ p {
   right: 0.35rem;
   bottom: 0.55rem;
   height: 1px;
-  background: var(--line-strong);
-  transition: background-color var(--dur-fast) ease;
+  background: currentColor;
+  opacity: 0.35;
+  transition: opacity var(--dur-fast) ease;
 }
 
 .btn-line:hover::after {
-  background: var(--copper-ink);
+  opacity: 1;
 }
 
 .btn-line .ico {
@@ -213,55 +237,103 @@ p {
 }
 
 .btn-lg {
-  min-height: 56px;
-  padding: 1rem 1.9rem;
+  min-height: 58px;
+  padding: 1.05rem 2rem;
   font-size: 1.05rem;
 }
 
-/* --- Reveal (só com JS e sem reduced-motion) --------------------------------- */
+/* --- Máscaras de linha (split de títulos) ---------------------------------- */
 
-@media (prefers-reduced-motion: no-preference) {
-  html.js [data-reveal] {
+.sl {
+  display: block;
+  overflow: hidden;
+  padding-block: 0.06em; /* respiro para ascendentes/descendentes */
+  margin-block: -0.06em;
+}
+
+.sl-i {
+  display: block;
+  will-change: transform;
+}
+
+/* palavras marcadas no split (ex-<em>): itálico preservado */
+.w.it {
+  font-style: italic;
+}
+
+/* --- Preloader ---------------------------------------------------------------- */
+
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-preloader);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: var(--porcelain);
+}
+
+html.preloading .preloader {
+  display: flex;
+}
+
+.preloader-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.preloader-mark {
+  width: clamp(84px, 20vw, 128px);
+  height: auto;
+}
+
+.preloader-line {
+  width: clamp(120px, 30vw, 180px);
+  height: 1px;
+  background: var(--line);
+  position: relative;
+  overflow: hidden;
+}
+
+.preloader-line i,
+.preloader-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--copper);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.preloader-place {
+  font-size: var(--fs-micro);
+  font-weight: 650;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* Failsafe: se o módulo JS não concluir, o preloader se retira sozinho. */
+html.preloading .preloader {
+  animation: preloader-failsafe 0.5s ease 4.5s forwards;
+}
+
+@keyframes preloader-failsafe {
+  to {
     opacity: 0;
-    transform: translateY(22px);
-    transition: opacity var(--dur-slow) var(--ease-out), transform var(--dur-slow) var(--ease-out);
+    visibility: hidden;
   }
+}
 
-  html.js [data-reveal].is-in {
-    opacity: 1;
-    transform: none;
-  }
-
-  html.js [data-reveal-delay='1'] { transition-delay: 90ms; }
-  html.js [data-reveal-delay='2'] { transition-delay: 180ms; }
-  html.js [data-reveal-delay='3'] { transition-delay: 270ms; }
-
-  /* O clip fica num FILHO (.img-reveal): clip-path que zera a área visível
-     impede o IntersectionObserver de disparar no próprio elemento observado. */
-  html.js [data-reveal-img] .img-reveal {
-    clip-path: inset(0 0 100% 0);
-    transition: clip-path 1100ms var(--ease-out);
-  }
-
-  html.js [data-reveal-img].is-in .img-reveal {
-    clip-path: inset(0 0 0 0);
-  }
-
-  html.js [data-reveal-img] .img-reveal img {
-    transform: scale(1.06);
-    transition: transform 1400ms var(--ease-out);
-  }
-
-  html.js [data-reveal-img].is-in .img-reveal img {
-    transform: none;
-  }
-
-  html.js [data-reveal-img] figcaption {
-    opacity: 0;
-    transition: opacity 600ms ease 350ms;
-  }
-
-  html.js [data-reveal-img].is-in figcaption {
-    opacity: 1;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
   }
 }

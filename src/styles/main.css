@@ -1,0 +1,9 @@
+/* ============================================================================
+   Dr. Leonardo Guarçoni — ponto de entrada de estilos
+   Ordem: fontes → tokens → base → site
+   ========================================================================== */
+
+@import './fonts.css';
+@import './tokens.css';
+@import './base.css';
+@import './site.css';

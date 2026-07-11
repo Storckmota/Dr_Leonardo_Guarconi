@@ -1,0 +1,22 @@
+{
+  "name": "dr-leonardo-guarconi",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Site institucional do Dr. Leonardo Pereira Guarçoni Duarte — Odontologia Estética Restauradora, Vila Velha ES",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "images": "node scripts/optimize-images.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1",
+    "sharp": "^0.34.2",
+    "vite": "^7.0.0"
+  },
+  "dependencies": {
+    "@fontsource-variable/hanken-grotesk": "^5.2.5",
+    "@fontsource-variable/literata": "^5.2.5"
+  }
+}

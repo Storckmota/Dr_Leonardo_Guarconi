@@ -1,0 +1,1198 @@
+/* ============================================================================
+   SITE — header, menu, seções e footer (mobile-first)
+   ========================================================================== */
+
+.container,
+.header-in,
+.hero-in,
+.pratica-in,
+.tx-in,
+.doutor-in,
+.filosofia-in,
+.contato-in,
+.footer-in {
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+main > section {
+  scroll-margin-top: 5.25rem;
+}
+
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
+
+.header {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: var(--z-header);
+  background: transparent;
+  transition: background-color var(--dur-med) ease, box-shadow var(--dur-med) ease;
+}
+
+.header.is-scrolled {
+  background: color-mix(in oklab, var(--ivory) 94%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 0 var(--line);
+}
+
+.header-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 4.25rem;
+}
+
+.wordmark {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  padding-block: 0.4rem;
+}
+
+.wordmark-name {
+  font-family: var(--serif);
+  font-size: 1.14rem;
+  font-weight: 540;
+  letter-spacing: 0.005em;
+}
+
+.wordmark-role {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 0.28rem;
+}
+
+.nav {
+  display: none;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.btn-header {
+  min-height: 42px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.88rem;
+}
+
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.5rem 0.25rem 0.5rem 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.menu-toggle-bars {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 22px;
+}
+
+.menu-toggle-bars i {
+  height: 1.5px;
+  background: currentColor;
+  transition: transform var(--dur-med) var(--ease-out), width var(--dur-med) var(--ease-out);
+}
+
+.menu-toggle-bars i:last-child {
+  width: 70%;
+  align-self: flex-end;
+}
+
+.menu-toggle[aria-expanded='true'] .menu-toggle-bars i:first-child {
+  transform: translateY(3.25px) rotate(45deg);
+}
+
+.menu-toggle[aria-expanded='true'] .menu-toggle-bars i:last-child {
+  width: 100%;
+  transform: translateY(-3.25px) rotate(-45deg);
+}
+
+/* Telas estreitas: compacta wordmark, pill e toggle para caber com folga */
+@media (max-width: 429px) {
+  .wordmark-name {
+    font-size: 1.02rem;
+  }
+
+  .wordmark-role {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+  }
+
+  .btn-header {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.84rem;
+  }
+
+  .menu-toggle-label {
+    display: none;
+  }
+
+  .menu-toggle {
+    justify-content: center;
+    padding: 0.5rem;
+  }
+}
+
+/* ==========================================================================
+   MENU OVERLAY
+   ========================================================================== */
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-menu);
+}
+
+.menu-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 6.5rem var(--gutter) 2.25rem;
+  background: var(--espresso);
+  color: var(--milk);
+  opacity: 0;
+  transition: opacity var(--dur-med) ease;
+}
+
+.menu.is-open .menu-panel {
+  opacity: 1;
+}
+
+.menu-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-link {
+  display: flex;
+  align-items: baseline;
+  gap: 1.1rem;
+  padding: 1.05rem 0;
+  border-bottom: 1px solid var(--line-dark);
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 6.4vw, 2.3rem);
+  font-weight: 460;
+  letter-spacing: -0.01em;
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out),
+    color var(--dur-fast) ease;
+}
+
+.menu.is-open .menu-link {
+  opacity: 1;
+  transform: none;
+}
+
+.menu.is-open li:nth-child(1) .menu-link { transition-delay: 60ms; }
+.menu.is-open li:nth-child(2) .menu-link { transition-delay: 120ms; }
+.menu.is-open li:nth-child(3) .menu-link { transition-delay: 180ms; }
+.menu.is-open li:nth-child(4) .menu-link { transition-delay: 240ms; }
+
+.menu-link:hover {
+  color: var(--gold-thread);
+}
+
+.menu-num {
+  font-family: var(--sans);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold-thread);
+}
+
+.menu-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.menu-address {
+  font-size: var(--fs-small);
+  color: var(--milk-soft);
+}
+
+body.menu-locked {
+  overflow: hidden;
+}
+
+/* Com o menu aberto, o header sobe acima do overlay para manter o botão
+   de fechar acessível; cores invertem para o fundo espresso. */
+body.menu-locked .header {
+  z-index: calc(var(--z-menu) + 1);
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+body.menu-locked .wordmark,
+body.menu-locked .menu-toggle {
+  color: var(--milk);
+}
+
+body.menu-locked .wordmark-role {
+  color: var(--milk-soft);
+}
+
+body.menu-locked .btn-header {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-panel,
+  .menu-link {
+    transition: none;
+  }
+}
+
+/* ==========================================================================
+   HERO
+   ========================================================================== */
+
+.hero {
+  padding-block: clamp(6.5rem, 4rem + 9vw, 9.5rem) clamp(3.5rem, 2rem + 5vw, 6rem);
+}
+
+.hero-in {
+  display: grid;
+  gap: clamp(2.75rem, 2rem + 4vw, 5rem);
+}
+
+.hero-id {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.7rem;
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.hero-id-sep {
+  width: 1.4rem;
+  height: 1px;
+  background: var(--line-strong);
+}
+
+.hero-title {
+  font-family: var(--serif);
+  font-size: var(--fs-h1);
+  font-weight: 440;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.02em;
+  max-width: 11.5em;
+  margin-top: 1.4rem;
+}
+
+.hero-sub {
+  font-size: var(--fs-body-lg);
+  color: var(--ink-soft);
+  max-width: 33em;
+  margin-top: 1.5rem;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem 1.4rem;
+  margin-top: 2.1rem;
+}
+
+.hero-figure {
+  position: relative;
+  max-width: 30rem;
+  /* espaço para a moldura deslocada dentro da própria caixa (o reveal usa
+     clip-path no limite do elemento) */
+  padding: 0 14px 14px 0;
+}
+
+.hero-frame {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--r-frame);
+  overflow: hidden;
+}
+
+.hero-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.hero-figure::before {
+  content: '';
+  position: absolute;
+  inset: 14px 0 auto auto;
+  width: calc(100% - 14px);
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-frame);
+  pointer-events: none;
+}
+
+.hero-caption {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1.6rem;
+  font-size: var(--fs-small);
+  color: var(--ink-soft);
+}
+
+.hero-caption::before {
+  content: '';
+  width: 1.6rem;
+  height: 1px;
+  background: var(--copper);
+  flex: none;
+}
+
+/* ==========================================================================
+   PRÁTICA (posicionamento)
+   ========================================================================== */
+
+.pratica {
+  padding-block: var(--section-y);
+}
+
+.pratica-in {
+  display: grid;
+  gap: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+}
+
+.pratica-copy .display {
+  max-width: 13em;
+}
+
+.pratica-text {
+  margin-top: 1.75rem;
+  max-width: 36em;
+  display: grid;
+  gap: 1.1rem;
+  font-size: var(--fs-body-lg);
+  color: var(--ink-soft);
+}
+
+.pratica-figure {
+  position: relative;
+  max-width: 26rem;
+}
+
+.pratica-frame {
+  border-radius: var(--r-frame);
+  overflow: hidden;
+}
+
+.pratica-figure img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.pratica-caption {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1.1rem;
+  font-size: var(--fs-small);
+  color: var(--ink-soft);
+}
+
+.pratica-caption::before {
+  content: '';
+  width: 1.6rem;
+  height: 1px;
+  background: var(--copper);
+  flex: none;
+}
+
+/* ==========================================================================
+   TRATAMENTOS
+   ========================================================================== */
+
+.tx {
+  background: var(--ivory-deep);
+  border-top: 1px solid var(--line);
+  padding-block: var(--section-y);
+}
+
+.tx-head {
+  display: grid;
+  gap: 1.25rem;
+  margin-bottom: clamp(2.5rem, 2rem + 3vw, 4.5rem);
+}
+
+.tx-lead {
+  font-size: var(--fs-body-lg);
+  color: var(--ink-soft);
+  max-width: 38em;
+}
+
+.tx-grid {
+  display: grid;
+  gap: 2.25rem;
+}
+
+.tx-index {
+  /* reset explícito: o JS troca role="list" por "tablist" e o reset
+     baseado em [role='list'] deixaria de valer */
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.tx-tab {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  width: 100%;
+  min-height: 56px;
+  padding: 1rem 0.35rem;
+  border-top: 1px solid var(--line);
+  transition: background-color var(--dur-fast) ease, padding-left var(--dur-fast) var(--ease-out);
+}
+
+.tx-num {
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: var(--copper-ink);
+  min-width: 1.7em;
+}
+
+.tx-name {
+  flex: 1;
+  font-family: var(--serif);
+  font-size: clamp(1.18rem, 1.05rem + 0.7vw, 1.45rem);
+  font-weight: 470;
+  letter-spacing: -0.008em;
+  line-height: 1.25;
+}
+
+.tx-mark {
+  width: 9px;
+  height: 9px;
+  border-top: 1.5px solid var(--ink-soft);
+  border-right: 1.5px solid var(--ink-soft);
+  transform: rotate(45deg);
+  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) ease;
+  flex: none;
+  margin-right: 0.3rem;
+}
+
+.tx-tab:hover {
+  background: color-mix(in oklab, var(--porcelain) 60%, transparent);
+}
+
+.tx-tab:hover .tx-mark {
+  transform: rotate(45deg) translate(2px, -2px);
+}
+
+.tx-tab[aria-selected='true'] {
+  background: var(--porcelain);
+  padding-left: 0.85rem;
+}
+
+.tx-tab[aria-selected='true'] .tx-name {
+  font-style: italic;
+  font-weight: 500;
+}
+
+.tx-tab[aria-selected='true'] .tx-mark {
+  border-color: var(--copper-ink);
+}
+
+/* Painéis */
+
+.tx-panel {
+  position: relative;
+  background: var(--porcelain);
+  border: 1px solid var(--line);
+  border-radius: var(--r-panel);
+  padding: clamp(1.6rem, 1.2rem + 2vw, 2.6rem);
+  scroll-margin-top: 5.5rem;
+}
+
+.tx-panel + .tx-panel {
+  margin-top: 1.25rem;
+}
+
+html.js .tx-panel + .tx-panel {
+  margin-top: 0;
+}
+
+.tx-panel[hidden] {
+  display: none;
+}
+
+.tx-panel-num {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.4rem;
+  font-family: var(--serif);
+  font-size: clamp(2.6rem, 2rem + 3vw, 4rem);
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: color-mix(in oklab, var(--copper) 34%, transparent);
+  pointer-events: none;
+}
+
+.tx-panel-title {
+  font-family: var(--serif);
+  font-size: clamp(1.55rem, 1.3rem + 1.2vw, 2.1rem);
+  font-weight: 470;
+  letter-spacing: -0.012em;
+  line-height: 1.15;
+  max-width: 12em;
+  padding-right: 3.5rem;
+}
+
+.tx-panel-body {
+  margin-top: 1.1rem;
+  max-width: 52ch;
+  color: var(--ink-soft);
+  font-size: 1.02rem;
+}
+
+.tx-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.75rem;
+  margin-top: 1.5rem;
+}
+
+.tx-panel-back {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--line-strong);
+}
+
+.tx-panel-back:hover {
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html.js .tx-panel.is-entering {
+    animation: tx-enter var(--dur-med) var(--ease-out);
+  }
+
+  @keyframes tx-enter {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* ==========================================================================
+   O DOUTOR (escuro)
+   ========================================================================== */
+
+.doutor {
+  background: linear-gradient(172deg, var(--espresso), var(--espresso-2));
+  color: var(--milk);
+  padding-block: var(--section-y);
+}
+
+.doutor-in {
+  display: grid;
+  gap: clamp(3rem, 2rem + 4vw, 4.5rem);
+}
+
+.doutor-title {
+  font-family: var(--serif);
+  font-size: clamp(1.95rem, 1.3rem + 3vw, 3.05rem);
+  font-weight: 450;
+  line-height: var(--lh-snug);
+  letter-spacing: -0.015em;
+  max-width: 14em;
+}
+
+.doutor-bio {
+  margin-top: 1.6rem;
+  max-width: 36em;
+  display: grid;
+  gap: 1.1rem;
+  font-size: var(--fs-body-lg);
+  color: var(--milk-soft);
+}
+
+.doutor-figure {
+  position: relative;
+  max-width: 24rem;
+  padding-top: 2.4rem;
+}
+
+.doutor-ghost {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 0;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(4.6rem, 3rem + 8vw, 7.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: color-mix(in oklab, var(--gold-thread) 22%, transparent);
+  pointer-events: none;
+}
+
+.doutor-frame {
+  position: relative;
+  z-index: 1;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--r-frame);
+  overflow: hidden;
+  border: 1px solid var(--line-dark);
+}
+
+.doutor-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 12%;
+}
+
+.doutor-caption {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1.2rem;
+  font-size: var(--fs-small);
+  color: var(--milk-soft);
+}
+
+.doutor-caption::before {
+  content: '';
+  width: 1.6rem;
+  height: 1px;
+  background: var(--gold-thread);
+  flex: none;
+}
+
+.doutor-marcos {
+  margin-top: clamp(1rem, 3vw, 2.5rem);
+}
+
+.marcos-title {
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-thread);
+  margin-bottom: 1.75rem;
+}
+
+.marcos {
+  display: grid;
+  gap: 1.9rem;
+}
+
+.marco {
+  border-top: 1px solid var(--line-dark);
+  padding-top: 1.3rem;
+}
+
+.marco-ano {
+  font-family: var(--serif);
+  font-size: 2rem;
+  font-weight: 350;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+  color: var(--gold-thread);
+  line-height: 1;
+}
+
+.marco-titulo {
+  font-size: 1.04rem;
+  font-weight: 600;
+  margin-top: 0.85rem;
+}
+
+.marco-inst {
+  font-size: var(--fs-small);
+  color: var(--milk-soft);
+  margin-top: 0.3rem;
+}
+
+/* ==========================================================================
+   FILOSOFIA (silenciosa)
+   ========================================================================== */
+
+.filosofia {
+  padding-block: calc(var(--section-y) * 1.12);
+}
+
+.filosofia-in {
+  display: grid;
+  gap: clamp(3.5rem, 2.5rem + 5vw, 6rem);
+  justify-items: center;
+}
+
+.credo {
+  max-width: 46rem;
+  text-align: center;
+}
+
+.credo p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: var(--fs-quote);
+  font-weight: 400;
+  line-height: 1.42;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.credo cite {
+  display: block;
+  margin-top: 1.9rem;
+  font-style: normal;
+  font-size: var(--fs-small);
+  color: var(--ink-soft);
+}
+
+.credo cite::before {
+  content: '';
+  display: block;
+  width: 1.6rem;
+  height: 1px;
+  background: var(--copper);
+  margin: 0 auto 0.85rem;
+}
+
+.principios {
+  width: 100%;
+  max-width: 62rem;
+  display: grid;
+  gap: 0;
+}
+
+.principio {
+  border-top: 1px solid var(--line);
+  padding: 1.6rem 0;
+}
+
+.principio h3 {
+  font-family: var(--serif);
+  font-size: 1.32rem;
+  font-weight: 490;
+  letter-spacing: -0.008em;
+}
+
+.principio p {
+  margin-top: 0.6rem;
+  color: var(--ink-soft);
+  max-width: 34em;
+}
+
+/* ==========================================================================
+   CONTATO
+   ========================================================================== */
+
+.contato {
+  background: var(--ivory-deep);
+  border-top: 1px solid var(--line);
+  padding-block: var(--section-y);
+}
+
+.contato-in {
+  display: grid;
+  gap: clamp(3rem, 2rem + 4vw, 5rem);
+}
+
+.contato-cta .display {
+  max-width: 12em;
+}
+
+.contato-lead {
+  margin-top: 1.4rem;
+  font-size: var(--fs-body-lg);
+  color: var(--ink-soft);
+  max-width: 30em;
+}
+
+.contato-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem 1.75rem;
+  margin-top: 2rem;
+}
+
+.contato-fone {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+
+.dado-lista {
+  display: grid;
+}
+
+.dado {
+  border-top: 1px solid var(--line);
+  padding: 1.35rem 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.dado dt {
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.dado dd {
+  margin: 0;
+}
+
+.dado-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 30px;
+  font-weight: 550;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--line-strong);
+  transition: color var(--dur-fast) ease, text-decoration-color var(--dur-fast) ease;
+  overflow-wrap: anywhere;
+}
+
+.dado-link:hover {
+  color: var(--copper-ink);
+  text-decoration-color: var(--copper-ink);
+}
+
+.dado address {
+  margin-bottom: 0.55rem;
+}
+
+.contato-logo {
+  margin-top: 2.25rem;
+  /* branco puro: o arquivo do logo tem fundo branco; painel branco elimina
+     a emenda visível independentemente do suporte a mix-blend-mode */
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-panel);
+  padding: 1.4rem 1.6rem;
+  width: fit-content;
+}
+
+.contato-logo img {
+  height: 58px;
+  width: auto;
+  mix-blend-mode: multiply;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+
+.footer {
+  background: var(--espresso-2);
+  color: var(--milk-soft);
+  padding-block: 3.5rem 2.5rem;
+}
+
+.footer-in {
+  display: grid;
+  gap: 2.25rem;
+}
+
+.footer-wordmark {
+  font-family: var(--serif);
+  font-size: 1.5rem;
+  font-weight: 480;
+  color: var(--milk);
+}
+
+.footer-tag {
+  margin-top: 0.45rem;
+  font-size: var(--fs-small);
+}
+
+.footer-contact {
+  display: grid;
+  gap: 0.55rem;
+  justify-items: start;
+}
+
+.footer-link {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--fs-small);
+  font-weight: 550;
+  color: var(--milk);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--line-dark);
+  overflow-wrap: anywhere;
+}
+
+.footer-link:hover {
+  color: var(--gold-thread);
+}
+
+.footer-address {
+  font-size: var(--fs-small);
+}
+
+.footer-legal {
+  border-top: 1px solid var(--line-dark);
+  padding-top: 1.6rem;
+  display: grid;
+  gap: 0.7rem;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  max-width: 56em;
+}
+
+.footer-copy {
+  color: color-mix(in oklab, var(--milk-soft) 75%, transparent);
+}
+
+.footer :focus-visible {
+  outline-color: var(--gold-thread);
+}
+
+.menu :focus-visible,
+.doutor :focus-visible {
+  outline-color: var(--gold-thread);
+}
+
+/* ==========================================================================
+   RESPONSIVO
+   ========================================================================== */
+
+@media (min-width: 640px) {
+  .marcos {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .footer-contact {
+    grid-template-columns: repeat(2, auto);
+    justify-content: start;
+    gap: 0.55rem 2.5rem;
+  }
+}
+
+@media (min-width: 860px) {
+  .pratica-in {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: start;
+  }
+
+  .pratica-figure {
+    justify-self: end;
+    width: min(100%, 24rem);
+  }
+
+  .pratica-figure img {
+    aspect-ratio: 10 / 14.5;
+  }
+
+  .pratica-frame {
+    height: 100%;
+  }
+}
+
+@media (min-width: 880px) {
+  .hero-in {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    gap: clamp(3rem, 6vw, 6rem);
+  }
+
+  .hero {
+    display: flex;
+    align-items: center;
+    min-height: min(56rem, 100svh);
+  }
+
+  .hero-figure {
+    justify-self: end;
+    width: 100%;
+  }
+
+  .contato-in {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: start;
+  }
+}
+
+@media (min-width: 1000px) {
+  .tx-head {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    align-items: end;
+  }
+
+  .tx-grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(2.5rem, 4vw, 4.5rem);
+    align-items: start;
+  }
+
+  .tx-panels {
+    position: sticky;
+    top: 6.5rem;
+  }
+
+  .tx-panel-back {
+    display: none;
+  }
+
+  .doutor-in {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: start;
+  }
+
+  .doutor-figure {
+    justify-self: end;
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .doutor-copy {
+    grid-row: 1;
+    grid-column: 1;
+    align-self: center;
+    max-width: 34rem;
+  }
+
+  .doutor-marcos {
+    grid-column: 1 / -1;
+  }
+
+  .principios {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem;
+  }
+
+  .principio {
+    padding: 1.75rem 0 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header-in {
+    min-height: 5rem;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.5rem, 2.5vw, 2.75rem);
+  }
+
+  .nav-link {
+    position: relative;
+    font-size: 0.92rem;
+    font-weight: 550;
+    padding: 0.55rem 0.1rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0.62rem;
+    width: 100%;
+    height: 1px;
+    background: var(--copper-ink);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--dur-med) var(--ease-out);
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+
+  main > section {
+    scroll-margin-top: 3.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .hero-title {
+    margin-top: 1.7rem;
+  }
+
+  .doutor-figure {
+    max-width: 26rem;
+  }
+}
+
+/* Motion global: respeito a reduced-motion */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

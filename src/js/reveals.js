@@ -53,7 +53,7 @@ export function initReveals() {
     });
   }
 
-  /* Curva da filosofia: aparece como conexão entre os três princípios. */
+  /* Curva da filosofia: conexão gráfica de baixa intensidade atrás do slider. */
   const philosophyPath = document.querySelector('[data-filosofia-path]');
   if (philosophyPath) {
     const length = philosophyPath.getTotalLength();
@@ -69,24 +69,6 @@ export function initReveals() {
       onUpdate: (self) => {
         gsap.set(philosophyPath, { strokeDashoffset: length * (1 - self.progress) });
       },
-    });
-  }
-
-  const principles = gsap.utils.toArray('[data-principio]');
-  if (principles.length) {
-    gsap.set(principles, { autoAlpha: 0, y: 26 });
-    ScrollTrigger.create({
-      trigger: '[data-filosofia-stage]',
-      start: 'top 82%',
-      once: true,
-      onEnter: () =>
-        gsap.to(principles, {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.75,
-          ease: 'power3.out',
-          stagger: 0.12,
-        }),
     });
   }
 

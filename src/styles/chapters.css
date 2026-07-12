@@ -623,34 +623,6 @@ html.motion .hero-cue i {
   display: none;
 }
 
-.galeria-frame {
-  flex: 0 0 min(74vw, 330px);
-  scroll-snap-align: center;
-  border-radius: var(--r-frame);
-  overflow: hidden;
-  background: var(--greige);
-}
-
-.galeria-frame img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  aspect-ratio: 4 / 3.6;
-}
-
-.galeria-frame--plate {
-  background: var(--umber);
-  display: grid;
-  place-items: center;
-}
-
-.galeria-frame--plate .galeria-mark {
-  width: 56%;
-  height: auto;
-  aspect-ratio: auto;
-  object-fit: contain;
-}
-
 @media (min-width: 880px) {
   .missao-cols {
     grid-template-columns: repeat(2, minmax(0, 26rem));
@@ -659,39 +631,6 @@ html.motion .hero-cue i {
 
   .missao-col--b {
     margin-top: 3.5rem;
-  }
-
-  .galeria {
-    overflow: visible;
-    display: grid;
-    grid-template-columns: 1.15fr 0.85fr 1fr;
-    align-items: start;
-    max-width: var(--container);
-    margin-inline: auto;
-  }
-
-  .galeria-frame {
-    flex: none;
-  }
-
-  .galeria-frame:nth-child(2) {
-    margin-top: 4.5rem;
-  }
-
-  .galeria-frame:nth-child(3) {
-    margin-top: 1.75rem;
-  }
-
-  .galeria-frame:nth-child(1) img {
-    aspect-ratio: 4 / 3.1;
-  }
-
-  .galeria-frame:nth-child(3) img {
-    object-position: center 18%;
-  }
-
-  .galeria-frame--plate {
-    aspect-ratio: 4 / 4.4;
   }
 }
 
@@ -1293,73 +1232,6 @@ html.motion .hero-cue i {
 .filosofia-in {
   display: grid;
   gap: clamp(4rem, 12vw, 8.5rem);
-}
-
-.credo-line {
-  font-family: var(--serif);
-  font-size: var(--fs-credo);
-  font-weight: 430;
-  line-height: 1.08;
-  letter-spacing: 0;
-  text-wrap: balance;
-}
-
-.credo-line em,
-.credo-line .it {
-  font-style: italic;
-  font-weight: 390;
-  color: var(--copper-ink);
-}
-
-.credo-sub {
-  margin-top: 1.1rem;
-  font-size: var(--fs-body-lg);
-  color: var(--ink-soft);
-  max-width: 30em;
-}
-
-.credo--a {
-  max-width: 34rem;
-}
-
-.credo--b {
-  justify-self: end;
-  text-align: right;
-  max-width: 34rem;
-}
-
-.credo--b .credo-sub {
-  margin-left: auto;
-}
-
-.credo--c {
-  justify-self: center;
-  text-align: center;
-  max-width: 36rem;
-}
-
-.credo--c .credo-sub {
-  margin-inline: auto;
-}
-
-.filosofia-macro {
-  justify-self: end;
-  width: min(62vw, 300px);
-  border-radius: var(--r-frame);
-  overflow: hidden;
-  margin-block: -1.5rem;
-}
-
-.filosofia-macro img {
-  width: 100%;
-  height: auto;
-}
-
-@media (min-width: 1024px) {
-  .filosofia-macro {
-    margin-right: 8vw;
-    margin-block: -3.5rem;
-  }
 }
 
 /* ==========================================================================
@@ -2757,7 +2629,7 @@ html:not(.motion) .hero-swipe {
   color: var(--ink-soft);
 }
 
-/* Tratamentos: palco sem retratos, com diagramas semânticos por área. */
+/* Tratamentos: palco sem retratos, com cartões tipográficos por área. */
 
 .tx-stage {
   background: var(--champagne);
@@ -2784,36 +2656,6 @@ html:not(.motion) .hero-swipe {
 .plate-photo,
 .plate-mark {
   display: none;
-}
-
-.plate-visual {
-  position: absolute;
-  z-index: 2;
-  right: clamp(1.3rem, 4.4vw, 4rem);
-  top: 50%;
-  width: min(53%, 24rem);
-  color: color-mix(in oklab, var(--ink) 58%, transparent);
-  transform: translateY(-50%);
-}
-
-.plate-visual svg {
-  width: 100%;
-  height: auto;
-}
-
-.plate-visual path,
-.plate-visual circle {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.45;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.plate-visual .tv-main {
-  stroke: var(--copper-logo);
-  stroke-width: 2.15;
 }
 
 .plate-rail {
@@ -2948,6 +2790,9 @@ html:not(.motion) .hero-swipe {
 .filosofia-stage {
   position: relative;
   min-height: clamp(34rem, 58vw, 44rem);
+  /* item de grid: precisa poder encolher abaixo da largura intrínseca do
+     track flex do slider, senão o palco estica e o card sai da tela no mobile */
+  min-width: 0;
 }
 
 .filosofia-curve {
@@ -2964,29 +2809,6 @@ html:not(.motion) .hero-swipe {
   stroke-width: 1.25;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
-}
-
-.principios {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  gap: clamp(2rem, 5vw, 4rem);
-}
-
-.principio {
-  position: relative;
-  max-width: 34rem;
-  padding-top: 1.1rem;
-  border-top: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
-}
-
-.principio-num {
-  display: inline-block;
-  margin-bottom: 0.65rem;
-  font-size: 0.86rem;
-  font-weight: 700;
-  color: var(--gold-logo);
-  font-variant-numeric: tabular-nums;
 }
 
 @media (min-width: 1024px) {
@@ -3007,27 +2829,6 @@ html:not(.motion) .hero-swipe {
     grid-column: 1 / -1;
   }
 
-  .principios {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    min-height: clamp(34rem, 48vw, 43rem);
-  }
-
-  .principio--a {
-    grid-column: 1 / 5;
-    align-self: start;
-    margin-top: 3rem;
-  }
-
-  .principio--b {
-    grid-column: 7 / 12;
-    align-self: center;
-  }
-
-  .principio--c {
-    grid-column: 3 / 8;
-    align-self: end;
-    margin-bottom: 2rem;
-  }
 }
 
 /* Mapa: híbrido com presença do baseline e ajustes técnicos atuais. */
@@ -3136,13 +2937,6 @@ html:not(.motion) .hero-swipe {
     max-width: 14rem;
   }
 
-  .plate-visual {
-    right: 0.2rem;
-    top: 48%;
-    width: 69%;
-    opacity: 0.74;
-  }
-
   .plate-name {
     max-width: 14rem;
   }
@@ -3157,15 +2951,602 @@ html:not(.motion) .hero-swipe {
     width: 156%;
   }
 
-  .principio {
-    background: color-mix(in oklab, var(--porcelain) 78%, transparent);
-  }
-
   .mapa {
     padding-top: 4rem;
   }
 
   .mapa-panel {
     border-radius: 0;
+  }
+}
+
+/* ==========================================================================
+   FINAL PASS 2026 · ajustes realistas de motion, interação e responsividade
+   ========================================================================== */
+
+.hero-in {
+  padding-top: clamp(5.05rem, 8svh, 6.4rem);
+}
+
+.hero-title {
+  margin-top: clamp(0.6rem, 1.8svh, 1.2rem);
+}
+
+.hero-foot {
+  padding-bottom: clamp(2.2rem, 5svh, 3.8rem);
+}
+
+.hero-actions {
+  gap: 0.85rem 1rem;
+}
+
+.hero-tag {
+  min-height: 38px;
+}
+
+@media (min-width: 1024px) and (max-height: 820px) {
+  .hero-in {
+    padding-top: 5rem;
+  }
+
+  .hero-word {
+    font-size: clamp(4.65rem, 7vw, 5.95rem);
+  }
+
+  .hero-kicker {
+    margin-bottom: 0.7rem;
+  }
+
+  .hero-foot {
+    max-width: min(31rem, calc(52vw - var(--gutter)));
+    padding-bottom: 2rem;
+  }
+
+  .hero-statement {
+    font-size: 0.98rem;
+    line-height: 1.52;
+  }
+
+  .hero-media {
+    height: min(92svh, 760px);
+  }
+
+  .hero-cue {
+    bottom: 1.05rem;
+  }
+}
+
+.mission-break {
+  display: none;
+}
+
+.missao-title {
+  max-width: 16.2em;
+  font-size: clamp(2.05rem, 1.2rem + 3vw, 3.45rem);
+  line-height: 1.13;
+}
+
+.missao-cta {
+  min-height: 52px;
+  padding-inline: 1.25rem;
+  color: var(--milk);
+  background:
+    linear-gradient(135deg, color-mix(in oklab, var(--graphite) 92%, var(--copper-logo)), var(--graphite-2));
+  border-color: color-mix(in oklab, var(--gold-logo) 36%, transparent);
+  box-shadow: 0 18px 44px -30px rgb(33 30 26 / 0.65);
+}
+
+.missao-cta:hover,
+.missao-cta:focus-visible {
+  color: var(--milk);
+  border-color: var(--gold-logo);
+  transform: translateY(-1px);
+}
+
+.galeria-system {
+  border-radius: clamp(10px, 1.1vw, 18px);
+  border: 1px solid color-mix(in oklab, var(--ink) 13%, transparent);
+  border-block: 1px solid color-mix(in oklab, var(--ink) 13%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in oklab, white 54%, transparent);
+}
+
+.galeria-system::after {
+  content: '';
+  position: absolute;
+  inset: 12% 10%;
+  border: 1px solid color-mix(in oklab, var(--gold-logo) 18%, transparent);
+  border-radius: clamp(10px, 1vw, 16px);
+  pointer-events: none;
+}
+
+.galeria-axis {
+  text-shadow: 0 1px 0 color-mix(in oklab, white 50%, transparent);
+}
+
+/* Tratamentos: cartões tipográficos, sem símbolos abstratos. */
+
+.tx-stage {
+  background: var(--greige);
+  border-radius: clamp(10px, 1vw, 16px);
+  box-shadow: 0 28px 70px -52px rgb(33 30 26 / 0.48);
+}
+
+.plate {
+  color: var(--ink);
+  overflow: hidden;
+}
+
+.plate::before {
+  content: '';
+  position: absolute;
+  inset: 1rem;
+  border: 1px solid color-mix(in oklab, currentColor 14%, transparent);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, color-mix(in oklab, currentColor 5%, transparent) 1px, transparent 1px),
+    linear-gradient(0deg, color-mix(in oklab, currentColor 4%, transparent) 1px, transparent 1px);
+  background-size: 4.8rem 4.8rem;
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+.plate--porcelain {
+  background: linear-gradient(135deg, var(--porcelain), color-mix(in oklab, var(--champagne) 38%, var(--porcelain)));
+}
+
+.plate--champagne {
+  background: linear-gradient(135deg, var(--champagne), color-mix(in oklab, var(--gold-logo) 10%, var(--porcelain)));
+}
+
+.plate--greige {
+  background: linear-gradient(135deg, var(--greige), color-mix(in oklab, var(--porcelain) 50%, var(--stone)));
+}
+
+.plate--stone {
+  background: linear-gradient(135deg, var(--stone), color-mix(in oklab, var(--copper-logo) 7%, var(--porcelain)));
+}
+
+.plate--taupe {
+  background: linear-gradient(135deg, #d9d0c5, #efe9e1);
+}
+
+.plate--ivory {
+  background: linear-gradient(135deg, var(--ivory), color-mix(in oklab, var(--gold-logo) 9%, var(--porcelain)));
+}
+
+.plate--copper {
+  color: var(--milk);
+  background:
+    radial-gradient(circle at 78% 18%, color-mix(in oklab, var(--gold-logo) 24%, transparent), transparent 15rem),
+    linear-gradient(135deg, #8e4b2b, #5d3525);
+}
+
+.plate--graphite {
+  color: var(--milk);
+  background:
+    radial-gradient(circle at 75% 20%, color-mix(in oklab, var(--gold-logo) 15%, transparent), transparent 16rem),
+    linear-gradient(135deg, var(--graphite), var(--graphite-2));
+}
+
+.plate--gold {
+  background: linear-gradient(135deg, #ead7aa, #f4efe4);
+}
+
+.plate-rail {
+  inset: 1rem;
+  border-radius: 12px;
+  border-color: color-mix(in oklab, currentColor 15%, transparent);
+}
+
+.plate-num {
+  top: clamp(1.25rem, 2.8vw, 2.4rem);
+  left: clamp(1.35rem, 3vw, 2.6rem);
+  color: color-mix(in oklab, currentColor 42%, transparent);
+  opacity: 1;
+}
+
+.plate-word {
+  left: clamp(1.35rem, 3vw, 2.6rem);
+  right: auto;
+  bottom: clamp(4.6rem, 11vw, 8.8rem);
+  max-width: 9.5ch;
+  color: currentColor;
+  opacity: 0.2;
+  font-size: clamp(2.9rem, 8.1vw, 7rem);
+}
+
+.plate-name {
+  left: clamp(1.35rem, 3vw, 2.6rem);
+  right: clamp(1.35rem, 9vw, 7rem);
+  bottom: clamp(2rem, 4.6vw, 4rem);
+  max-width: 12ch;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4.3vw, 4.6rem);
+  font-weight: 430;
+  line-height: 1.02;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 0.96;
+}
+
+.plate-note {
+  position: absolute;
+  z-index: 3;
+  top: clamp(1.6rem, 3.6vw, 2.8rem);
+  right: clamp(1.35rem, 3vw, 2.6rem);
+  max-width: 13rem;
+  font-size: clamp(0.8rem, 0.7rem + 0.35vw, 0.96rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: right;
+  color: currentColor;
+  opacity: 0.72;
+}
+
+.plate-field {
+  position: absolute;
+  z-index: 3;
+  right: clamp(1.35rem, 3vw, 2.6rem);
+  bottom: clamp(1.35rem, 3vw, 2.35rem);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: currentColor;
+  opacity: 0.56;
+}
+
+.plate-thread {
+  position: absolute;
+  z-index: 2;
+  left: clamp(1.35rem, 3vw, 2.6rem);
+  right: clamp(1.35rem, 3vw, 2.6rem);
+  top: 50%;
+  display: grid;
+  gap: 0.55rem;
+  opacity: 0.24;
+}
+
+.plate-thread i {
+  display: block;
+  height: 1px;
+  background: currentColor;
+  transform-origin: left;
+}
+
+.plate-thread i:nth-child(2) {
+  width: 76%;
+}
+
+.plate-thread i:nth-child(3) {
+  width: 52%;
+}
+
+.marco:last-child .marco-ano {
+  min-width: 4.6em;
+  font-family: var(--serif);
+  font-size: clamp(2.15rem, 1.7rem + 1.8vw, 3.2rem);
+  font-weight: 340;
+  line-height: 1;
+  color: var(--copper-ink);
+}
+
+/* Filosofia: slider acessível, com fallback em fluxo normal sem JS. */
+
+.filosofia-stage {
+  min-height: 0;
+}
+
+.filosofia-curve {
+  inset: -6% -4% auto;
+  height: min(82%, 34rem);
+  opacity: 0.52;
+}
+
+.filosofia-slider {
+  position: relative;
+  z-index: 1;
+  margin-top: clamp(1.5rem, 4vw, 3rem);
+  max-width: 100%;
+  min-width: 0;
+}
+
+.filosofia-slider-viewport {
+  width: 100%;
+  max-width: 100%;
+}
+
+.filosofia-cards {
+  display: grid;
+  gap: 1rem;
+}
+
+.filosofia-card {
+  position: relative;
+  min-height: clamp(18rem, 35vw, 25rem);
+  padding: clamp(1.2rem, 3vw, 2.2rem);
+  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+  border-radius: clamp(12px, 1.1vw, 18px);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 18%, color-mix(in oklab, var(--gold-logo) 12%, transparent), transparent 13rem),
+    linear-gradient(135deg, var(--ivory), var(--champagne));
+  box-shadow: 0 22px 70px -52px rgb(33 30 26 / 0.4);
+}
+
+.filosofia-card:nth-child(2) {
+  background:
+    radial-gradient(circle at 80% 20%, color-mix(in oklab, var(--copper-logo) 10%, transparent), transparent 13rem),
+    linear-gradient(135deg, var(--stone), var(--porcelain));
+}
+
+.filosofia-card:nth-child(3) {
+  background:
+    radial-gradient(circle at 78% 18%, color-mix(in oklab, var(--gold-logo) 15%, transparent), transparent 13rem),
+    linear-gradient(135deg, #ead7aa, #f5efe4);
+}
+
+.filosofia-card::after {
+  content: '';
+  position: absolute;
+  inset: 1rem;
+  border: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.filosofia-card-num {
+  display: inline-block;
+  margin-bottom: clamp(2.5rem, 7vw, 5.5rem);
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 7vw, 5.4rem);
+  line-height: 1;
+  color: var(--copper-ink);
+  opacity: 0.52;
+  font-variant-numeric: tabular-nums;
+}
+
+.filosofia-card-title {
+  max-width: 9.4em;
+  font-family: var(--serif);
+  font-size: clamp(1.85rem, 1.15rem + 2.6vw, 3.8rem);
+  font-weight: 430;
+  line-height: 1.04;
+  letter-spacing: 0;
+}
+
+.filosofia-card-title em {
+  color: var(--copper-ink);
+  font-style: italic;
+  font-weight: 410;
+}
+
+.filosofia-card-copy {
+  max-width: 31em;
+  margin-top: 1.2rem;
+  color: var(--ink-soft);
+}
+
+.filosofia-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: clamp(1rem, 2.4vw, 1.55rem);
+}
+
+.filosofia-nav {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid color-mix(in oklab, var(--ink) 23%, transparent);
+  border-radius: 50%;
+  color: var(--ink);
+  background: color-mix(in oklab, var(--porcelain) 72%, transparent);
+  transition:
+    color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    background var(--dur-fast) ease;
+}
+
+.filosofia-nav:hover,
+.filosofia-nav:focus-visible {
+  color: var(--milk);
+  border-color: var(--copper-logo);
+  background: var(--graphite);
+}
+
+.filosofia-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.filosofia-dot {
+  width: 44px;
+  height: 44px;
+  position: relative;
+}
+
+.filosofia-dot::before {
+  content: '';
+  position: absolute;
+  inset: 18px 5px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--ink) 24%, transparent);
+  transition:
+    inset var(--dur-fast) ease,
+    background var(--dur-fast) ease;
+}
+
+.filosofia-dot.is-active::before {
+  inset-inline: 0;
+  background: var(--gold-logo);
+}
+
+.filosofia-slider.is-ready .filosofia-slider-viewport {
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+}
+
+.filosofia-slider.is-dragging .filosofia-slider-viewport {
+  cursor: grabbing;
+}
+
+.filosofia-slider.is-ready .filosofia-cards {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  will-change: transform;
+}
+
+.filosofia-slider.is-ready .filosofia-card {
+  flex: 0 0 min(74vw, 34rem);
+  margin-inline: clamp(0.45rem, 1vw, 0.9rem);
+  will-change: transform, opacity;
+}
+
+.mapa {
+  padding-block: clamp(3rem, 7vw, 6rem) 0;
+}
+
+.mapa-shell {
+  margin-bottom: 0;
+}
+
+.final {
+  margin-top: 0;
+}
+
+@media (min-width: 880px) {
+  .mission-break {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .filosofia-slider {
+    width: min(100%, 78rem);
+    margin-left: auto;
+  }
+
+  .filosofia-slider.is-ready .filosofia-card {
+    flex-basis: min(42vw, 36rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .hero-in {
+    padding-top: 5.4rem;
+    padding-bottom: 27svh;
+  }
+
+  .hero-title {
+    margin-top: 0.6rem;
+  }
+
+  .hero-foot {
+    padding-bottom: 1.5rem;
+  }
+
+  .hero-statement {
+    max-width: 28rem;
+    font-size: 0.98rem;
+    line-height: 1.52;
+  }
+
+  .hero-actions {
+    align-items: flex-start;
+  }
+
+  .hero-tags {
+    gap: 0.45rem;
+  }
+
+  .hero-tag {
+    min-height: 36px;
+    padding-inline: 0.72rem;
+  }
+
+  .missao-title {
+    max-width: 12.2em;
+    font-size: clamp(1.86rem, 7.6vw, 2.5rem);
+  }
+
+  .galeria-system {
+    border-radius: 14px;
+  }
+
+  .galeria-system::after {
+    inset: 1rem;
+    border-radius: 12px;
+  }
+
+  .tx-stage {
+    height: 22.5rem;
+  }
+
+  .plate::before,
+  .plate-rail {
+    inset: 0.85rem;
+    border-radius: 10px;
+  }
+
+  .plate-word {
+    bottom: 6.8rem;
+    font-size: clamp(2.45rem, 14vw, 4rem);
+    max-width: 8ch;
+  }
+
+  .plate-name {
+    right: 1.15rem;
+    max-width: 10.5ch;
+    font-size: clamp(1.85rem, 8.8vw, 2.65rem);
+  }
+
+  .plate-note {
+    display: block;
+    max-width: 10rem;
+    font-size: 0.78rem;
+  }
+
+  .plate-field {
+    left: 1.2rem;
+    right: auto;
+    bottom: 1.2rem;
+    max-width: 13rem;
+  }
+
+  .filosofia-curve {
+    inset: 2rem -36% auto;
+    width: 168%;
+    opacity: 0.32;
+  }
+
+  .filosofia-card {
+    min-height: 21rem;
+  }
+
+  .filosofia-slider.is-ready .filosofia-card {
+    /* menor que o viewport para deixar o próximo card espiar na borda */
+    flex-basis: min(78vw, 22rem);
+    margin-inline: 0.5rem;
+  }
+
+  .filosofia-controls {
+    justify-content: center;
+  }
+
+  .mapa {
+    padding-block: 4rem 0;
   }
 }

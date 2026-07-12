@@ -36,14 +36,15 @@ src/main.js                 orquestração (funcional × coreografia)
 src/js/
   context.js                gsap+ScrollTrigger registrados, flags de motion
   smooth.js                 Lenis + integração ScrollTrigger + âncoras
-  split.js                  split de títulos em linhas mascaradas
+  text-reveals.js           SplitText responsivo (mask lines) de títulos/subtítulos
   preloader.js              marca + linha, sessionStorage, teto de tempo
   header.js                 estado de rolagem + tema claro/escuro por capítulo
   menu.js                   overlay tela cheia (wipe + cascata + trap de foco)
-  hero.js                   timeline de entrada + camadas nos primeiros pixels
-  reveals.js                splits, máscaras, parallax, ghosts, viagem de cor
-  treatments.js             lista + palco de placas + autoplay pausável
-  process.js                capítulo pinado com 6 etapas (scrub, só desktop)
+  hero.js                   timeline de entrada + curve swipe (MorphSVG) + camadas
+  reveals.js                blocos, máscaras, parallax (>=768px) e text-reveals
+  treatments.js             lista + palco de cartões tipográficos + autoplay pausável
+  process.js                capítulo pinado com 6 etapas + órbita (scrub, só desktop)
+  philosophy-slider.js      slider dos 3 princípios (Draggable, dots, teclado, a11y)
   mapa.js                   iframe lazy + revelação por máscara
 src/styles/                 fonts / tokens / base / chapters
 scripts/prepare-logo.mjs    corta margens e remove fundo branco do logo

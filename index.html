@@ -129,12 +129,6 @@
       </div>
 
       <div class="hero-in">
-        <p class="hero-meta" data-hero-meta>
-          <span>Consultório em <strong>Vila&nbsp;Velha,&nbsp;ES</strong></span>
-          <span class="hero-meta-sep" aria-hidden="true"></span>
-          <span>Atendimento <strong>individual</strong></span>
-        </p>
-
         <h1 class="hero-title">
           <span class="visually-hidden">Odontologia estética restauradora em Vila Velha: Dr. Leonardo Guarçoni</span>
           <span class="hero-kicker" aria-hidden="true" data-hero-kicker>Odontologia</span>
@@ -172,9 +166,8 @@
       <div class="missao-in">
         <p class="chapter-label" data-reveal>A nossa missão</p>
         <h2 class="missao-title" id="missao-title" data-split>
-          Oferecer um atendimento <em>humanizado</em>, pautado na confiança e na
-          qualidade, transformando sorrisos e elevando a autoestima com
-          resultados <em>naturais</em>.
+          Oferecer um atendimento <em>humanizado</em>, pautado na confiança e na qualidade,<br class="mission-break" />
+          transformando sorrisos e elevando a autoestima com resultados <em>naturais</em>.
         </h2>
 
         <div class="missao-cols">
@@ -188,7 +181,7 @@
           </p>
         </div>
 
-        <a class="btn btn-line missao-cta" href="#o-doutor" data-reveal>
+        <a class="btn btn-solid missao-cta" href="#o-doutor" data-reveal>
           Conhecer o Dr.&nbsp;Leonardo
           <svg class="ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2 8h11M9 3.5 13.5 8 9 12.5"/></svg>
         </a>
@@ -326,32 +319,54 @@
             <path class="filosofia-curve-path" data-filosofia-path d="M95 468 C242 180 462 132 565 302 C662 464 817 435 891 152" />
           </svg>
 
-          <ol class="principios" role="list">
-            <li class="principio principio--a" data-principio>
-              <span class="principio-num" aria-hidden="true">01</span>
-              <h3 class="credo-line" data-split>Escuta antes <em>da técnica</em>.</h3>
-              <p class="credo-sub" data-reveal>
-                Toda avaliação começa por entender o que incomoda e o que se espera.
-                O plano vem depois.
-              </p>
-            </li>
-            <li class="principio principio--b" data-principio>
-              <span class="principio-num" aria-hidden="true">02</span>
-              <h3 class="credo-line" data-split>Planejamento <em>individual</em>.</h3>
-              <p class="credo-sub" data-reveal>
-                Nenhum caso é igual ao outro. Cada tratamento é desenhado para uma
-                boca, um rosto, uma rotina.
-              </p>
-            </li>
-            <li class="principio principio--c" data-principio>
-              <span class="principio-num" aria-hidden="true">03</span>
-              <h3 class="credo-line" data-split>Naturalidade <em>como critério</em>.</h3>
-              <p class="credo-sub" data-reveal>
-                Um bom resultado é discreto: um sorriso saudável, em harmonia com a
-                sua expressão.
-              </p>
-            </li>
-          </ol>
+          <div class="filosofia-slider" data-filosofia-slider aria-label="Princípios de atendimento">
+            <p class="visually-hidden" aria-live="polite" data-filosofia-live>
+              Princípio 1 de 3: Escuta antes da técnica.
+            </p>
+
+            <div class="filosofia-slider-viewport" data-filosofia-viewport>
+              <ol class="filosofia-cards" data-filosofia-track role="list">
+                <li class="filosofia-card is-active" data-filosofia-card tabindex="0" aria-current="true">
+                  <span class="filosofia-card-num" aria-hidden="true">01</span>
+                  <h3 class="filosofia-card-title">Escuta antes <em>da técnica</em>.</h3>
+                  <p class="filosofia-card-copy" data-reveal>
+                    Toda avaliação começa por entender o que incomoda e o que se espera.
+                    O plano vem depois.
+                  </p>
+                </li>
+                <li class="filosofia-card" data-filosofia-card tabindex="-1">
+                  <span class="filosofia-card-num" aria-hidden="true">02</span>
+                  <h3 class="filosofia-card-title">Planejamento <em>individual</em>.</h3>
+                  <p class="filosofia-card-copy" data-reveal>
+                    Nenhum caso é igual ao outro. Cada tratamento é desenhado para uma
+                    boca, um rosto, uma rotina.
+                  </p>
+                </li>
+                <li class="filosofia-card" data-filosofia-card tabindex="-1">
+                  <span class="filosofia-card-num" aria-hidden="true">03</span>
+                  <h3 class="filosofia-card-title">Naturalidade <em>como critério</em>.</h3>
+                  <p class="filosofia-card-copy" data-reveal>
+                    Um bom resultado é discreto: um sorriso saudável, em harmonia com a
+                    sua expressão.
+                  </p>
+                </li>
+              </ol>
+            </div>
+
+            <div class="filosofia-controls" aria-label="Navegar pelos princípios">
+              <button class="filosofia-nav" type="button" data-filosofia-prev aria-label="Princípio anterior">
+                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10.5 3.5 6 8l4.5 4.5"/></svg>
+              </button>
+              <div class="filosofia-dots" role="tablist" aria-label="Selecionar princípio">
+                <button class="filosofia-dot is-active" type="button" data-filosofia-dot="0" aria-label="Mostrar Escuta antes da técnica" aria-current="true"></button>
+                <button class="filosofia-dot" type="button" data-filosofia-dot="1" aria-label="Mostrar Planejamento individual"></button>
+                <button class="filosofia-dot" type="button" data-filosofia-dot="2" aria-label="Mostrar Naturalidade como critério"></button>
+              </div>
+              <button class="filosofia-nav" type="button" data-filosofia-next aria-label="Próximo princípio">
+                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5 3.5 10 8l-4.5 4.5"/></svg>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -381,7 +396,7 @@
 
         <div class="mapa-panel" data-mapa-panel>
           <p class="chapter-label chapter-label--gold">Onde estamos</p>
-          <h2 class="mapa-title" id="mapa-title">Centro de Vila&nbsp;Velha</h2>
+          <h2 class="mapa-title" id="mapa-title" data-split>Centro de Vila&nbsp;Velha</h2>
           <address class="mapa-endereco">
             {{endereco.rua}}<br />
             {{endereco.bairro}}, {{endereco.cidade}} · {{endereco.uf}}<br />

@@ -10,6 +10,7 @@ import { initHeader } from './js/header.js';
 import { initMenu } from './js/menu.js';
 import { initTreatments } from './js/treatments.js';
 import { initMapa } from './js/mapa.js';
+import { initPhilosophySlider } from './js/philosophy-slider.js';
 import { runPreloader } from './js/preloader.js';
 import { prepareHero, enterHero } from './js/hero.js';
 import { initReveals } from './js/reveals.js';
@@ -20,6 +21,7 @@ initHeader();
 initMenu();
 initTreatments();
 initMapa();
+initPhilosophySlider();
 
 if (motionOK) {
   prepareHero();

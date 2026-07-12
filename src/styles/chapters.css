@@ -47,7 +47,7 @@ main > section {
 }
 
 .header[data-on='dark'].is-scrolled {
-  background: color-mix(in oklab, var(--espresso-2) 88%, transparent);
+  background: color-mix(in oklab, var(--graphite-2) 88%, transparent);
   box-shadow: 0 1px 0 var(--line-dark);
 }
 
@@ -194,7 +194,7 @@ main > section {
   justify-content: space-between;
   gap: 2rem;
   padding: 6.5rem var(--gutter) 2.25rem;
-  background: var(--espresso-2);
+  background: var(--graphite-2);
   color: var(--milk);
   overflow: hidden;
 }
@@ -302,8 +302,8 @@ body.menu-locked .btn-header {
   min-height: 100svh;
   display: flex;
   flex-direction: column;
-  background: var(--espresso-2);
-  color: var(--milk);
+  background: var(--porcelain);
+  color: var(--ink);
   overflow: hidden;
 }
 
@@ -328,19 +328,19 @@ body.menu-locked .btn-header {
   font-weight: 600;
   letter-spacing: 0.13em;
   text-transform: uppercase;
-  color: var(--milk-soft);
+  color: var(--ink-soft);
 }
 
 .hero-meta strong {
-  color: var(--milk);
+  color: var(--ink);
   font-weight: 650;
 }
 
 .hero-meta-sep {
   width: 1.5rem;
   height: 1px;
-  background: var(--gold-thread);
-  opacity: 0.6;
+  background: var(--copper);
+  opacity: 0.7;
 }
 
 .hero-title {
@@ -358,7 +358,7 @@ body.menu-locked .btn-header {
   font-weight: 650;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--gold-thread);
+  color: var(--copper-ink);
   margin-bottom: clamp(0.8rem, 2svh, 1.4rem);
 }
 
@@ -372,11 +372,11 @@ body.menu-locked .btn-header {
 
 .hero-word--it {
   font-style: italic;
-  font-weight: 380;
-  color: var(--gold-soft);
+  font-weight: 390;
+  color: var(--copper-ink);
   margin-left: 0.06em;
-  /* legibilidade no trecho que atravessa o retrato */
-  text-shadow: 0 1px 34px oklch(20.5% 0.019 52 / 0.55), 0 0 3px oklch(20.5% 0.019 52 / 0.35);
+  /* halo claro: legibilidade no trecho que atravessa o retrato */
+  text-shadow: 0 0 26px oklch(98% 0.005 92 / 0.85), 0 0 3px oklch(98% 0.005 92 / 0.6);
 }
 
 /* Painel de mídia */
@@ -386,7 +386,7 @@ body.menu-locked .btn-header {
   z-index: 1;
   order: 2;
   margin-top: clamp(1.4rem, 3.5svh, 2.5rem);
-  background: var(--umber);
+  background: var(--greige);
   overflow: hidden;
 }
 
@@ -412,7 +412,7 @@ body.menu-locked .btn-header {
   bottom: -10%;
   width: 46%;
   height: auto;
-  opacity: 0.09;
+  opacity: 0.12;
   pointer-events: none;
 }
 
@@ -425,7 +425,7 @@ body.menu-locked .btn-header {
 
 .hero-statement {
   font-size: var(--fs-body-lg);
-  color: var(--milk-soft);
+  color: var(--ink-soft);
   max-width: 34em;
 }
 
@@ -447,17 +447,17 @@ body.menu-locked .btn-header {
   align-items: center;
   min-height: 44px;
   padding: 0.5rem 1.05rem;
-  border: 1px solid color-mix(in oklab, var(--milk) 26%, transparent);
+  border: 1px solid var(--line-strong);
   border-radius: var(--r-pill);
   font-size: 0.84rem;
   font-weight: 550;
-  color: var(--milk-soft);
+  color: var(--ink-soft);
   transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease;
 }
 
 .hero-tag:hover {
-  border-color: var(--gold-thread);
-  color: var(--milk);
+  border-color: var(--copper);
+  color: var(--ink);
 }
 
 .hero-cue {
@@ -473,13 +473,13 @@ body.menu-locked .btn-header {
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--milk-soft);
+  color: var(--ink-soft);
 }
 
 .hero-cue i {
   width: 2.6rem;
   height: 1px;
-  background: var(--gold-thread);
+  background: var(--copper);
   transform-origin: left;
 }
 
@@ -595,21 +595,6 @@ html.motion .hero-cue i {
   gap: 1.6rem;
 }
 
-.missao-ghost {
-  position: absolute;
-  right: -0.5rem;
-  top: -1.5rem;
-  z-index: 0;
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 300;
-  font-size: clamp(7rem, 22vw, 17rem);
-  line-height: 1;
-  letter-spacing: -0.04em;
-  color: color-mix(in oklab, var(--copper) 14%, transparent);
-  pointer-events: none;
-  white-space: nowrap;
-}
 
 .missao-col {
   position: relative;
@@ -643,7 +628,7 @@ html.motion .hero-cue i {
   scroll-snap-align: center;
   border-radius: var(--r-frame);
   overflow: hidden;
-  background: var(--ivory-deep);
+  background: var(--greige);
 }
 
 .galeria-frame img {
@@ -752,10 +737,10 @@ html.motion .hero-cue i {
   position: sticky;
   top: 4.35rem;
   z-index: 5;
-  height: min(44svh, 380px);
+  height: min(40svh, 380px);
   border-radius: var(--r-frame);
   overflow: hidden;
-  background: var(--espresso);
+  background: var(--greige);
 }
 
 .plate {
@@ -769,14 +754,15 @@ html.motion .hero-cue i {
   opacity: 1;
 }
 
-.plate--espresso { background: var(--espresso); }
-.plate--umber { background: var(--umber); }
+.plate--graphite { background: var(--graphite); }
 .plate--rust { background: var(--rust); }
 
-.plate--bone {
-  background: var(--ivory-deep);
+.plate--bone,
+.plate--greige {
   color: var(--ink);
 }
+.plate--bone { background: var(--porcelain); }
+.plate--greige { background: var(--greige); }
 
 .plate-num {
   position: absolute;
@@ -790,7 +776,8 @@ html.motion .hero-cue i {
   opacity: 0.34;
 }
 
-.plate--bone .plate-num {
+.plate--bone .plate-num,
+.plate--greige .plate-num {
   color: var(--copper-ink);
   opacity: 0.55;
 }
@@ -819,7 +806,8 @@ html.motion .hero-cue i {
   opacity: 0.14;
 }
 
-.plate--bone .plate-mark {
+.plate--bone .plate-mark,
+.plate--greige .plate-mark {
   opacity: 0.3;
 }
 
@@ -838,14 +826,19 @@ html.motion .hero-cue i {
 
 .tx-hud {
   position: absolute;
-  right: 1rem;
-  bottom: 0.9rem;
+  right: 0.8rem;
+  bottom: 0.75rem;
   z-index: 3;
   display: flex;
   align-items: center;
   gap: 0.8rem;
-  color: var(--milk);
-  mix-blend-mode: normal;
+  color: var(--ink);
+  background: color-mix(in oklab, var(--porcelain) 88%, transparent);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  padding: 0.45rem 0.7rem 0.45rem 0.95rem;
 }
 
 .tx-counter {
@@ -1014,7 +1007,7 @@ html.motion .hero-cue i {
    ========================================================================== */
 
 .processo {
-  background: var(--espresso-2);
+  background: var(--graphite);
   color: var(--milk);
 }
 
@@ -1167,25 +1160,12 @@ html.motion .hero-cue i {
 
 .doutor {
   position: relative;
-  background: var(--espresso);
-  color: var(--milk);
+  background: var(--ivory);
+  color: var(--ink);
   padding-block: var(--section-y);
   overflow: hidden;
 }
 
-.doutor-ghost {
-  position: absolute;
-  top: 2rem;
-  right: -2rem;
-  font-family: var(--serif);
-  font-style: italic;
-  font-weight: 300;
-  font-size: clamp(8rem, 26vw, 22rem);
-  line-height: 1;
-  color: color-mix(in oklab, var(--gold-thread) 9%, transparent);
-  pointer-events: none;
-  white-space: nowrap;
-}
 
 .doutor-in {
   position: relative;
@@ -1196,7 +1176,7 @@ html.motion .hero-cue i {
 .doutor-frame {
   border-radius: var(--r-frame);
   overflow: hidden;
-  border: 1px solid var(--line-dark);
+  border: 1px solid var(--line);
   max-width: 26rem;
 }
 
@@ -1212,14 +1192,14 @@ html.motion .hero-cue i {
   gap: 0.7rem;
   margin-top: 1.1rem;
   font-size: var(--fs-small);
-  color: var(--milk-soft);
+  color: var(--ink-soft);
 }
 
 .doutor-caption::before {
   content: '';
   width: 1.6rem;
   height: 1px;
-  background: var(--gold-thread);
+  background: var(--copper);
   flex: none;
 }
 
@@ -1237,7 +1217,7 @@ html.motion .hero-cue i {
 .doutor-title .it {
   font-style: italic;
   font-weight: 400;
-  color: var(--gold-soft);
+  color: var(--copper-ink);
 }
 
 .doutor-bio {
@@ -1245,7 +1225,7 @@ html.motion .hero-cue i {
   display: grid;
   gap: 1.1rem;
   font-size: var(--fs-body-lg);
-  color: var(--milk-soft);
+  color: var(--ink-soft);
   max-width: 36em;
 }
 
@@ -1258,7 +1238,7 @@ html.motion .hero-cue i {
   display: flex;
   align-items: baseline;
   gap: clamp(1.25rem, 3vw, 2.5rem);
-  border-top: 1px solid var(--line-dark);
+  border-top: 1px solid var(--line);
   padding: 1.2rem 0;
 }
 
@@ -1268,7 +1248,7 @@ html.motion .hero-cue i {
   font-weight: 340;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
-  color: var(--gold-thread);
+  color: var(--copper-ink);
   line-height: 1;
   min-width: 3.6em;
 }
@@ -1280,7 +1260,7 @@ html.motion .hero-cue i {
 
 .marco-inst {
   font-size: var(--fs-small);
-  color: var(--milk-soft);
+  color: var(--ink-soft);
   margin-top: 0.25rem;
 }
 
@@ -1397,7 +1377,7 @@ html.motion .hero-cue i {
 .mapa-embed {
   position: relative;
   height: min(58svh, 520px);
-  background: var(--ivory-deep);
+  background: var(--greige);
   overflow: hidden;
 }
 
@@ -1411,7 +1391,7 @@ html.motion .hero-cue i {
 
 .mapa-panel {
   position: relative;
-  background: var(--espresso-2);
+  background: var(--graphite-2);
   color: var(--milk);
   padding: clamp(1.9rem, 5vw, 3rem);
   display: grid;
@@ -1485,11 +1465,9 @@ html.motion .hero-cue i {
   color: var(--gold-thread);
 }
 
-.mapa :focus-visible,
-.doutor :focus-visible,
+.mapa-panel :focus-visible,
 .processo :focus-visible,
 .menu :focus-visible,
-.hero :focus-visible,
 .final :focus-visible,
 .footer :focus-visible {
   outline-color: var(--gold-thread);
@@ -1525,7 +1503,7 @@ html.motion .hero-cue i {
    ========================================================================== */
 
 .final {
-  background: var(--espresso-2);
+  background: var(--graphite-2);
   color: var(--milk);
   display: flex;
   align-items: center;
@@ -1578,7 +1556,7 @@ html.motion .hero-cue i {
    ========================================================================== */
 
 .footer {
-  background: var(--espresso-2);
+  background: var(--graphite-2);
   color: var(--milk-soft);
   border-top: 1px solid var(--line-dark);
   padding-block: 3.5rem 2.5rem;

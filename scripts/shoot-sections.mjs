@@ -19,7 +19,7 @@ for (const vp of [
     deviceScaleFactor: 1,
   });
   const page = await ctx.newPage();
-  await page.goto('http://localhost:4173/', { waitUntil: 'networkidle' });
+  await page.goto(process.env.QA_BASE || 'http://localhost:4173/', { waitUntil: 'networkidle' });
   await page.waitForTimeout(3400);
 
   /* varredura lenta para disparar reveals */

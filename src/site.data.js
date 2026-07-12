@@ -200,7 +200,7 @@ export function renderTreatmentItems() {
 /* Palco decorativo dos tratamentos: placas cromático-tipográficas.
    Sem fotos clínicas inventadas; superfícies, numeral, palavra e marca. */
 export function renderTreatmentPlates() {
-  const tones = ['espresso', 'umber', 'rust', 'bone'];
+  const tones = ['graphite', 'bone', 'rust', 'greige'];
   return site.tratamentos
     .map((t, i) => {
       const tone = tones[i % tones.length];

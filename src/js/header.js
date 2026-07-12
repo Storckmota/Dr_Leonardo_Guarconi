@@ -8,7 +8,7 @@ export function initHeader() {
   const header = document.querySelector('[data-header]');
   if (!header) return;
 
-  header.dataset.on = 'dark'; /* a página abre no hero escuro */
+  header.dataset.on = 'light'; /* a página abre no hero claro */
 
   ScrollTrigger.create({
     start: 8,

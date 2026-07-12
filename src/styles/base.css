@@ -93,7 +93,7 @@ p {
   top: 0.75rem;
   left: 0.75rem;
   z-index: calc(var(--z-preloader) + 10);
-  background: var(--espresso);
+  background: var(--graphite);
   color: var(--milk);
   font-size: var(--fs-small);
   font-weight: 600;
@@ -165,12 +165,12 @@ p {
 }
 
 .btn-solid {
-  background: var(--espresso);
+  background: var(--graphite);
   color: var(--milk);
 }
 
 .btn-solid:hover {
-  background: color-mix(in oklab, var(--espresso) 84%, var(--copper));
+  background: color-mix(in oklab, var(--graphite) 86%, var(--copper));
 }
 
 .btn-solid .ico-wa {

@@ -13,7 +13,7 @@ const root = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const outDir = process.env.QA_OUT || path.join(root, 'qa-shots');
 await mkdir(outDir, { recursive: true });
 
-const BASE = 'http://localhost:4173/';
+const BASE = process.env.QA_BASE || 'http://localhost:4173/';
 const viewports = [
   { name: 'm390', width: 390, height: 844, mobile: true },
   { name: 'm430', width: 430, height: 932, mobile: true },
@@ -125,7 +125,7 @@ for (const vp of viewports) {
   if (plate4 === null) problems.push('[tx] placa ativa não sincronizou');
   await page.screenshot({ path: path.join(outDir, 'tx-mobile-active.png') });
 
-  const wa = await page.getAttribute('.hero-actions a.btn-porcelain', 'href');
+  const wa = await page.getAttribute('.hero-actions a.btn-solid', 'href');
   if (!wa || !wa.startsWith('https://wa.me/5527998113025?text='))
     problems.push(`[wa] href inesperado: ${wa}`);
 

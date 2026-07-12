@@ -1,39 +1,39 @@
 /* ============================================================================
-   TOKENS — Dr. Leonardo Guarçoni · direção Aventura
-   Identidade extraída do logotipo real (dourado + cobre queimado sobre
-   branco): superfícies porcelana, espresso profundo, úmbria e ferrugem
-   como planos cromáticos, fio dourado pontual sobre escuro.
+   TOKENS — Dr. Leonardo Guarçoni · paleta luminosa da marca pessoal
+   Extraída do logo.jpg real: dourado suave (dente/perfis ≈ oklch 78% .09 85)
+   e cobre queimado (monograma/texto ≈ oklch 55% .12 45) sobre branco.
+   Base: ~75% superfícies claras · 15% grafite quente · 7% greige · 3% ouro/cobre.
    ========================================================================== */
 
 :root {
-  /* --- Cor: superfícies claras --------------------------------------------- */
-  --porcelain:    oklch(97.6% 0.008 88);   /* superfície clara principal      */
-  --ivory:        oklch(95.8% 0.012 84);   /* variação de viagem de cor       */
-  --ivory-deep:   oklch(93.2% 0.016 82);   /* fim do trajeto claro            */
+  /* --- Cor: superfícies claras (base do site) -------------------------------- */
+  --porcelain:    oklch(97.9% 0.005 92);   /* superfície principal            */
+  --ivory:        oklch(96.2% 0.008 90);   /* variação de viagem de cor       */
+  --greige:       oklch(92.6% 0.011 88);   /* apoio quente (painéis, placas)  */
 
-  /* --- Cor: superfícies escuras --------------------------------------------- */
-  --espresso:     oklch(24.5% 0.021 55);   /* capítulo escuro                 */
-  --espresso-2:   oklch(20.5% 0.019 52);   /* hero, CTA final, footer         */
-  --umber:        oklch(31% 0.045 55);     /* painel do hero, placas          */
-  --rust:         oklch(38% 0.085 42);     /* placa cobre-queimado            */
+  /* --- Cor: neutros escuros (estrutura, ~15%) --------------------------------- */
+  --graphite:     oklch(28% 0.014 75);     /* capítulo escuro, botões         */
+  --graphite-2:   oklch(23% 0.013 78);     /* CTA final, footer, menu         */
+  --umber:        oklch(31% 0.045 55);     /* marrom quente pontual (marca)   */
+  --rust:         oklch(38% 0.085 42);     /* placa cobre-queimado (acento)   */
 
-  /* --- Cor: texto ------------------------------------------------------------ */
-  --ink:          oklch(24.5% 0.021 55);
-  --ink-soft:     oklch(40% 0.028 55);
-  --milk:         oklch(96.5% 0.009 84);
-  --milk-soft:    oklch(85% 0.018 78);
+  /* --- Cor: texto --------------------------------------------------------------- */
+  --ink:          oklch(27% 0.015 78);     /* grafite quente sobre claro      */
+  --ink-soft:     oklch(43% 0.018 76);
+  --milk:         oklch(96.8% 0.006 92);
+  --milk-soft:    oklch(85.5% 0.012 90);
 
-  /* --- Cor: acentos ------------------------------------------------------------ */
-  --copper:       oklch(56% 0.104 45);     /* cobre (peças grandes)           */
+  /* --- Cor: acentos da logo ------------------------------------------------------- */
+  --copper:       oklch(56% 0.104 45);     /* cobre (display grande)          */
   --copper-ink:   oklch(46.5% 0.098 45);   /* cobre para texto pequeno        */
   --gold-thread:  oklch(78% 0.072 84);     /* fio dourado sobre escuro        */
-  --gold-soft:    oklch(87% 0.052 88);     /* dourado claro (detalhe raro)    */
+  --gold-soft:    oklch(87% 0.052 88);     /* dourado claro sobre escuro      */
   --wa-green:     oklch(66% 0.15 152);
 
-  /* --- Linhas ------------------------------------------------------------------ */
-  --line:         color-mix(in oklab, var(--espresso) 16%, transparent);
-  --line-strong:  color-mix(in oklab, var(--espresso) 34%, transparent);
-  --line-dark:    color-mix(in oklab, var(--milk) 16%, transparent);
+  /* --- Linhas --------------------------------------------------------------------- */
+  --line:         color-mix(in oklab, var(--ink) 15%, transparent);
+  --line-strong:  color-mix(in oklab, var(--ink) 32%, transparent);
+  --line-dark:    color-mix(in oklab, var(--milk) 17%, transparent);
 
   /* --- Tipografia ---------------------------------------------------------------- */
   --serif: 'Literata Variable', 'Literata-fallback', Georgia, 'Times New Roman', serif;

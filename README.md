@@ -2,8 +2,10 @@
 
 One page do Dr. Leonardo Pereira Guarçoni Duarte, cirurgião-dentista
 especialista em odontologia estética restauradora, em Vila Velha, ES.
-Segunda direção visual: arquitetura em capítulos, coreografia de rolagem
-(GSAP + ScrollTrigger) e smooth scroll (Lenis).
+Direção atual: arquitetura em capítulos com coreografia de rolagem
+(GSAP + ScrollTrigger), smooth scroll (Lenis) e paleta luminosa extraída do
+logotipo pessoal: porcelana dominante, grafite quente para tipografia e
+blocos escuros pontuais, greige de apoio, dourado/cobre da marca como acento.
 
 ## Como rodar
 

@@ -57,44 +57,20 @@ export function initReveals() {
     });
   });
 
-  /* Parallax por coeficiente */
-  document.querySelectorAll('[data-para]').forEach((el) => {
-    const c = parseFloat(el.dataset.para || '0.2');
-    gsap.fromTo(
-      el,
-      { y: () => c * -90 },
-      {
-        y: () => c * 90,
-        ease: 'none',
-        scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
-      }
-    );
-  });
-
-  /* Números fantasmas: deriva horizontal lenta */
-  const missaoGhost = document.querySelector('[data-missao-ghost]');
-  if (missaoGhost) {
-    gsap.fromTo(
-      missaoGhost,
-      { xPercent: 6 },
-      {
-        xPercent: -7,
-        ease: 'none',
-        scrollTrigger: { trigger: missaoGhost, start: 'top bottom', end: 'bottom top', scrub: 0.8 },
-      }
-    );
-  }
-  const doutorGhost = document.querySelector('[data-doutor-ghost]');
-  if (doutorGhost) {
-    gsap.fromTo(
-      doutorGhost,
-      { xPercent: 8 },
-      {
-        xPercent: -10,
-        ease: 'none',
-        scrollTrigger: { trigger: '.doutor', start: 'top bottom', end: 'bottom top', scrub: 0.8 },
-      }
-    );
+  /* Parallax por coeficiente: só a partir do tablet (peso zero no mobile) */
+  if (window.matchMedia('(min-width: 768px)').matches) {
+    document.querySelectorAll('[data-para]').forEach((el) => {
+      const c = parseFloat(el.dataset.para || '0.2');
+      gsap.fromTo(
+        el,
+        { y: () => c * -90 },
+        {
+          y: () => c * 90,
+          ease: 'none',
+          scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: 0.6 },
+        }
+      );
+    });
   }
 
   /* Marcos da formação: cascata própria */

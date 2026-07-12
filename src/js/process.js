@@ -26,7 +26,7 @@ export function initProcess() {
       scrollTrigger: {
         trigger: pinEl,
         start: 'top top',
-        end: () => '+=' + steps * 62 + '%',
+        end: () => '+=' + steps * 56 + '%',
         pin: true,
         scrub: 0.5,
         anticipatePin: 1,

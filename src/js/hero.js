@@ -34,7 +34,7 @@ export function enterHero() {
   gsap.timeline({ defaults: { ease: 'power4.out' } })
     .to(els.panel, { clipPath: 'inset(0 0 0 0%)', duration: 1.15, ease: 'power4.inOut' }, 0)
     .to(els.img, { y: 0, scale: 1, autoAlpha: 1, duration: 1.3 }, 0.35)
-    .to(els.mark, { autoAlpha: 1, duration: 1.2, ease: 'power2.out' }, 0.8)
+    .to(els.mark, { autoAlpha: 0.12, duration: 1.2, ease: 'power2.out' }, 0.8)
     .to(els.kicker, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.55)
     .to(els.words, { yPercent: 0, duration: 1.15, ease: 'expo.out', stagger: 0.14 }, 0.62)
     .to(els.meta, { autoAlpha: 1, y: 0, duration: 0.7 }, 0.9)

@@ -178,6 +178,18 @@ export function initTreatments() {
     /* hover apenas antecipa a placa no desktop; clique continua o gesto oficial */
   });
 
+  /* Entrada dos itens da lista em cascata */
+  if (motionOK && items.length) {
+    gsap.set(items, { autoAlpha: 0, y: 20 });
+    ScrollTrigger.create({
+      trigger: '[data-tx-list]',
+      start: 'top 84%',
+      once: true,
+      onEnter: () =>
+        gsap.to(items, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.055 }),
+    });
+  }
+
   /* Entrada do palco */
   if (motionOK && stage) {
     gsap.set(stage, { clipPath: 'inset(0 0 100% 0)' });

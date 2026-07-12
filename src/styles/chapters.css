@@ -460,39 +460,6 @@ body.menu-locked .btn-header {
   color: var(--ink);
 }
 
-.hero-cue {
-  order: 4;
-  margin-top: clamp(1.6rem, 4svh, 3rem);
-  margin-bottom: 0.5rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.8rem;
-  width: fit-content;
-  min-height: 44px;
-  font-size: var(--fs-micro);
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-.hero-cue i {
-  width: 2.6rem;
-  height: 1px;
-  background: var(--copper);
-  transform-origin: left;
-}
-
-html.motion .hero-cue i {
-  animation: cue-draw 2.4s var(--ease-out) infinite;
-}
-
-@keyframes cue-draw {
-  0% { transform: scaleX(0); }
-  55% { transform: scaleX(1); }
-  100% { transform: scaleX(1); opacity: 0; }
-}
-
 /* Hero desktop: painel à direita, tipografia atravessando */
 
 @media (min-width: 1024px) {
@@ -548,12 +515,6 @@ html.motion .hero-cue i {
     align-items: center;
     flex-wrap: wrap;
     gap: 1rem 1.4rem;
-  }
-
-  .hero-cue {
-    position: absolute;
-    left: var(--gutter);
-    bottom: 2rem;
   }
 }
 
@@ -1756,10 +1717,6 @@ main > section {
   display: none;
 }
 
-.hero-cue {
-  display: none;
-}
-
 @media (min-width: 768px) {
   .hero-panel {
     height: 38svh;
@@ -1839,10 +1796,6 @@ main > section {
 
   .hero-tags {
     display: flex;
-  }
-
-  .hero-cue {
-    display: inline-flex;
   }
 }
 
@@ -3010,10 +2963,6 @@ html:not(.motion) .hero-swipe {
   .hero-media {
     height: min(92svh, 760px);
   }
-
-  .hero-cue {
-    bottom: 1.05rem;
-  }
 }
 
 .mission-break {
@@ -3153,13 +3102,17 @@ html:not(.motion) .hero-swipe {
 }
 
 .plate-word {
+  top: clamp(4.6rem, 13vw, 9.5rem);
   left: clamp(1.35rem, 3vw, 2.6rem);
-  right: auto;
-  bottom: clamp(4.6rem, 11vw, 8.8rem);
-  max-width: 9.5ch;
+  right: clamp(1.35rem, 5vw, 3.5rem);
+  bottom: auto;
+  max-width: none;
   color: currentColor;
-  opacity: 0.2;
-  font-size: clamp(2.9rem, 8.1vw, 7rem);
+  opacity: 0.13;
+  font-size: clamp(1.55rem, 4.3vw, 3.3rem);
+  line-height: 1;
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .plate-name {
@@ -3502,9 +3455,11 @@ html:not(.motion) .hero-swipe {
   }
 
   .plate-word {
-    bottom: 6.8rem;
-    font-size: clamp(2.45rem, 14vw, 4rem);
-    max-width: 8ch;
+    top: 5.7rem;
+    right: 1.15rem;
+    bottom: auto;
+    font-size: clamp(1.3rem, 6vw, 2.05rem);
+    max-width: none;
   }
 
   .plate-name {

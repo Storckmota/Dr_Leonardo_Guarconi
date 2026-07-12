@@ -1,5 +1,27 @@
+# Dependencies & build
 node_modules/
 dist/
-qa-shots/
-qa-*/
+.vite/
+.cache/
+
+# Logs & runtime artifacts
 *.log
+*.pid
+
+# QA outputs (screenshots / reports gerados localmente)
+qa-*/
+test-results/
+playwright-report/
+coverage/
+
+# Local tooling & agents
+.agents/
+.claude/settings.local.json
+
+# Environment & secrets
+.env
+.env.*
+
+# OS junk
+.DS_Store
+Thumbs.db

@@ -1,11 +1,16 @@
-# Dr. Leonardo Guarçoni — Site institucional (direção Aventura)
+# Dr. Leonardo Guarçoni — Site institucional
 
 One page do Dr. Leonardo Pereira Guarçoni Duarte, cirurgião-dentista
 especialista em odontologia estética restauradora, em Vila Velha, ES.
-Direção atual: arquitetura em capítulos com coreografia de rolagem
-(GSAP + ScrollTrigger), smooth scroll (Lenis) e paleta luminosa extraída do
-logotipo pessoal: porcelana dominante, grafite quente para tipografia e
-blocos escuros pontuais, greige de apoio, dourado/cobre da marca como acento.
+Arquitetura em capítulos com coreografia de rolagem (GSAP + ScrollTrigger),
+smooth scroll (Lenis) e paleta luminosa extraída do logotipo pessoal:
+porcelana dominante, grafite quente para tipografia e blocos escuros
+pontuais, greige de apoio, dourado/cobre da marca como acento.
+
+## Stack
+
+Vite · HTML/CSS · JavaScript (ES modules) · GSAP + ScrollTrigger + SplitText +
+MorphSVG + Draggable · Lenis · fontes Hanken Grotesk / Literata (self-hosted).
 
 ## Como rodar
 
@@ -48,10 +53,9 @@ src/js/
   mapa.js                   iframe lazy + revelação por máscara
 src/styles/                 fonts / tokens / base / chapters
 scripts/prepare-logo.mjs    corta margens e remove fundo branco do logo
-scripts/optimize-images.mjs retratos → WebP (+ recorte macro do rosto)
+scripts/optimize-images.mjs retratos → WebP (+ OG JPEG)
 scripts/qa.mjs              QA Playwright (console, overflow, interações,
                             reduced-motion) — requer `npm run preview`
-scripts/shoot-sections.mjs  screenshots por seção (m390 + d1440)
 scripts/contrast.mjs        auditoria WCAG dos tokens
 ```
 

@@ -197,15 +197,15 @@ export function renderTreatmentItems() {
 }
 
 const treatmentCards = [
-  { tone: 'porcelain', note: 'reposição planejada', word: 'Repor' },
-  { tone: 'champagne', note: 'mordida e alinhamento', word: 'Alinhar' },
-  { tone: 'greige', note: 'forma, cor e função', word: 'Reabilitar' },
-  { tone: 'stone', note: 'preservação do dente', word: 'Preservar' },
-  { tone: 'taupe', note: 'gengiva e suporte', word: 'Cuidar' },
-  { tone: 'ivory', note: 'prevenção desde cedo', word: 'Acolher' },
-  { tone: 'copper', note: 'gesto clínico preciso', word: 'Planejar' },
-  { tone: 'graphite', note: 'proteção e conforto', word: 'Proteger' },
-  { tone: 'gold', note: 'leitura natural da face', word: 'Harmonizar' },
+  { tone: 'porcelain', note: 'reposição planejada' },
+  { tone: 'champagne', note: 'mordida e alinhamento' },
+  { tone: 'greige', note: 'forma, cor e função' },
+  { tone: 'stone', note: 'preservação do dente' },
+  { tone: 'taupe', note: 'gengiva e suporte' },
+  { tone: 'ivory', note: 'prevenção desde cedo' },
+  { tone: 'copper', note: 'gesto clínico preciso' },
+  { tone: 'graphite', note: 'proteção e conforto' },
+  { tone: 'gold', note: 'leitura natural da face' },
 ];
 
 /* Palco dos tratamentos: cartões tipográficos reconhecíveis, sem desenhos
@@ -218,7 +218,7 @@ export function renderTreatmentPlates() {
         <figure class="plate plate--${card.tone}" data-tx-plate="${i}"${i === 0 ? ' data-active' : ''} aria-hidden="true">
           <span class="plate-rail" aria-hidden="true"></span>
           <span class="plate-num">${pad(i)}</span>
-          <span class="plate-word">${esc(card.word)}</span>
+          <span class="plate-word">${esc(t.nome)}</span>
           <span class="plate-name">${esc(t.nome)}</span>
           <span class="plate-note">${esc(card.note)}</span>
           <span class="plate-field">avaliação individual</span>

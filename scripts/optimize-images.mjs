@@ -1,10 +1,7 @@
 /* ============================================================================
    Otimização de imagens: assets-src/ → public/images/ (WebP + OG JPEG)
    Uso: npm run images
-   Observações:
-   - sorriso-01.png (casal genérico da 1ª versão) NÃO é mais publicado;
-     permanece apenas em assets-src/ como material recebido.
-   - Derivados do logo ficam em scripts/prepare-logo.mjs.
+   Observação: derivados do logo ficam em scripts/prepare-logo.mjs.
    ========================================================================== */
 
 import sharp from 'sharp';
@@ -30,15 +27,6 @@ for (const job of jobs) {
   console.log(
     `${job.from} (${meta.width}x${meta.height}) → ${job.to}  ${(info.size / 1024).toFixed(1)} KB`
   );
-}
-
-/* Recorte macro do rosto (retrato-01, 455x569 → região do olhar). */
-{
-  const info = await sharp(src('retrato-01.png'))
-    .extract({ left: 56, top: 64, width: 360, height: 330 })
-    .webp({ quality: 82 })
-    .toFile(out('retrato-01-face.webp'));
-  console.log(`retrato-01-face.webp  360x330  ${(info.size / 1024).toFixed(1)} KB`);
 }
 
 /* Open Graph: JPEG (compatibilidade com WhatsApp/redes) */

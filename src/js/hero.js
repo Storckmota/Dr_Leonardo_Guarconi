@@ -19,7 +19,6 @@ export function prepareHero() {
     kicker: document.querySelector('[data-hero-kicker]'),
     words: gsap.utils.toArray('[data-hero-word]'),
     foot: document.querySelector('[data-hero-foot]'),
-    cue: document.querySelector('[data-hero-cue]'),
     swipe: document.querySelector('[data-hero-swipe]'),
     swipeFill: document.querySelector('[data-hero-swipe-fill]'),
     swipeEdge: document.querySelector('[data-hero-swipe-edge]'),
@@ -32,7 +31,7 @@ export function prepareHero() {
   gsap.set(els.kicker, { autoAlpha: 0, y: 18 });
   if (els.meta) gsap.set(els.meta, { autoAlpha: 0, y: 18 });
   gsap.set(els.words, { yPercent: 112 });
-  gsap.set([els.foot, els.cue], { autoAlpha: 0, y: 24 });
+  gsap.set(els.foot, { autoAlpha: 0, y: 24 });
   if (els.swipe) gsap.set(els.swipe, { autoAlpha: 0 });
 }
 
@@ -45,8 +44,7 @@ export function enterHero() {
     .to(els.mark, { autoAlpha: 0.12, duration: 1.2, ease: 'power2.out' }, 0.8)
     .to(els.kicker, { autoAlpha: 1, y: 0, duration: 0.6 }, 0.55)
     .to(els.words, { yPercent: 0, duration: 1.15, ease: 'expo.out', stagger: 0.14 }, 0.62)
-    .to(els.foot, { autoAlpha: 1, y: 0, duration: 0.8 }, 1.1)
-    .to(els.cue, { autoAlpha: 1, y: 0, duration: 0.7 }, 1.3);
+    .to(els.foot, { autoAlpha: 1, y: 0, duration: 0.8 }, 1.1);
 
   /* Camadas em velocidades diferentes ao começar a rolar */
   const scrub = gsap.timeline({
@@ -59,8 +57,7 @@ export function enterHero() {
   });
   scrub
     .to(els.img, { yPercent: -9, ease: 'none' }, 0)
-    .to('.hero-title', { yPercent: -16, ease: 'none' }, 0)
-    .to(els.cue, { autoAlpha: 0, ease: 'none' }, 0);
+    .to('.hero-title', { yPercent: -16, ease: 'none' }, 0);
 
   if (els.swipe && els.swipeFill && els.swipeEdge) {
     const startFill = 'M 0 100 V 99 Q 50 96 100 99 V 100 Z';

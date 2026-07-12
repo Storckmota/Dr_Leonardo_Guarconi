@@ -222,7 +222,7 @@ main > section {
   font-family: var(--serif);
   font-size: clamp(1.75rem, 6.6vw, 2.9rem);
   font-weight: 450;
-  letter-spacing: -0.012em;
+  letter-spacing: 0;
   transition: color var(--dur-fast) ease;
 }
 
@@ -367,7 +367,7 @@ body.menu-locked .btn-header {
   font-family: var(--serif);
   font-size: var(--fs-hero);
   font-weight: 420;
-  letter-spacing: -0.022em;
+  letter-spacing: 0;
 }
 
 .hero-word--it {
@@ -577,7 +577,7 @@ html.motion .hero-cue i {
   font-size: var(--fs-display);
   font-weight: 450;
   line-height: var(--lh-snug);
-  letter-spacing: -0.015em;
+  letter-spacing: 0;
   max-width: 21em;
 }
 
@@ -714,7 +714,7 @@ html.motion .hero-cue i {
   font-size: var(--fs-display);
   font-weight: 450;
   line-height: var(--lh-snug);
-  letter-spacing: -0.015em;
+  letter-spacing: 0;
   max-width: 17em;
 }
 
@@ -791,7 +791,7 @@ html.motion .hero-cue i {
   font-weight: 320;
   font-size: clamp(2.7rem, 8.5vw, 6.9rem);
   line-height: 0.9;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   opacity: 0.16;
   white-space: nowrap;
 }
@@ -927,7 +927,7 @@ html.motion .hero-cue i {
   font-family: var(--serif);
   font-size: clamp(1.35rem, 1rem + 1.9vw, 2.35rem);
   font-weight: 450;
-  letter-spacing: -0.012em;
+  letter-spacing: 0;
   line-height: 1.16;
   color: color-mix(in oklab, var(--ink) 62%, transparent);
   transition: color var(--dur-fast) ease;
@@ -1027,7 +1027,7 @@ html.motion .hero-cue i {
   font-size: var(--fs-display);
   font-weight: 440;
   line-height: var(--lh-snug);
-  letter-spacing: -0.015em;
+  letter-spacing: 0;
 }
 
 .processo-title em,
@@ -1061,7 +1061,7 @@ html.motion .hero-cue i {
   font-size: var(--fs-passo);
   font-weight: 400;
   line-height: 1.02;
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
   margin-top: 0.5rem;
 }
 
@@ -1209,7 +1209,7 @@ html.motion .hero-cue i {
   font-size: clamp(2.1rem, 1.2rem + 4.4vw, 4rem);
   font-weight: 440;
   line-height: 1.08;
-  letter-spacing: -0.018em;
+  letter-spacing: 0;
   max-width: 13em;
 }
 
@@ -1247,7 +1247,7 @@ html.motion .hero-cue i {
   font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3rem);
   font-weight: 340;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.01em;
+  letter-spacing: 0;
   color: var(--copper-ink);
   line-height: 1;
   min-width: 3.6em;
@@ -1300,7 +1300,7 @@ html.motion .hero-cue i {
   font-size: var(--fs-credo);
   font-weight: 430;
   line-height: 1.08;
-  letter-spacing: -0.018em;
+  letter-spacing: 0;
   text-wrap: balance;
 }
 
@@ -1403,7 +1403,7 @@ html.motion .hero-cue i {
   font-family: var(--serif);
   font-size: clamp(1.7rem, 1.2rem + 2.2vw, 2.6rem);
   font-weight: 450;
-  letter-spacing: -0.014em;
+  letter-spacing: 0;
   line-height: 1.12;
 }
 
@@ -1528,7 +1528,7 @@ html.motion .hero-cue i {
   font-size: var(--fs-display);
   font-weight: 430;
   line-height: var(--lh-snug);
-  letter-spacing: -0.016em;
+  letter-spacing: 0;
   max-width: 15em;
 }
 
@@ -1687,5 +1687,885 @@ html.motion .hero-cue i {
 
   .brand-mark {
     height: 46px;
+  }
+}
+
+/* ==========================================================================
+   DIRECAO CODEX 2026 · retrato, linha cirurgica e porcelana fria
+   ========================================================================== */
+
+body * {
+  letter-spacing: 0 !important;
+}
+
+main > section {
+  background: var(--porcelain);
+}
+
+.missao,
+.tx,
+.filosofia {
+  background: var(--porcelain);
+}
+
+.doutor {
+  background: var(--ivory);
+}
+
+.chapter-label {
+  gap: 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-transform: none;
+  color: var(--copper-ink);
+}
+
+.chapter-label::before {
+  width: 3.2rem;
+  background: color-mix(in oklab, currentColor 58%, transparent);
+}
+
+.header {
+  color: var(--ink);
+}
+
+.header.is-scrolled {
+  background: color-mix(in oklab, var(--porcelain) 88%, transparent);
+  box-shadow: 0 1px 0 color-mix(in oklab, var(--ink) 12%, transparent);
+}
+
+.header[data-on='dark'].is-scrolled {
+  background: color-mix(in oklab, var(--graphite-2) 82%, transparent);
+}
+
+.brand-mark {
+  filter: drop-shadow(0 12px 24px rgb(77 54 35 / 0.1));
+}
+
+/* Hero -------------------------------------------------------------------- */
+
+.hero {
+  min-height: 100svh;
+  background:
+    linear-gradient(90deg, var(--porcelain) 0 50%, var(--mist) 50% 100%);
+  isolation: isolate;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: auto 0 0;
+  height: 18svh;
+  background: linear-gradient(0deg, color-mix(in oklab, var(--porcelain) 96%, transparent), transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.hero-linework {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-linework i {
+  position: absolute;
+  border: 1px solid color-mix(in oklab, var(--copper) 34%, transparent);
+  border-radius: 50%;
+  transform: rotate(-12deg);
+}
+
+.hero-linework i:first-child {
+  width: 36rem;
+  height: 20rem;
+  left: -8rem;
+  top: 18svh;
+}
+
+.hero-linework i:last-child {
+  width: 28rem;
+  height: 16rem;
+  right: 6vw;
+  bottom: 8svh;
+  opacity: 0.42;
+}
+
+.hero-in {
+  z-index: 3;
+  padding-top: 5.9rem;
+  padding-bottom: 34svh;
+}
+
+.hero-meta {
+  max-width: 18rem;
+  font-size: 0.84rem;
+  text-transform: none;
+  color: var(--ink-soft);
+}
+
+.hero-title {
+  margin-top: 1.35rem;
+  max-width: 11ch;
+  overflow: visible;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.hero-kicker {
+  margin-bottom: 1rem;
+  font-size: 0.86rem;
+  text-transform: none;
+  color: var(--copper-ink);
+}
+
+.hero-word {
+  font-size: var(--fs-hero);
+  letter-spacing: 0;
+  line-height: 0.98;
+}
+
+.hero-word--it {
+  color: var(--rust);
+  text-shadow: 0 0 22px oklch(98% 0.003 96 / 0.9);
+}
+
+.hero-panel {
+  position: absolute;
+  inset: auto var(--gutter) 0;
+  z-index: 2;
+  height: 31svh;
+  margin: 0;
+  background: var(--mist);
+  border-radius: 0;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+}
+
+.hero-media {
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.hero-media img {
+  height: 115%;
+  max-width: none;
+  object-position: center top;
+  filter: saturate(0.94) contrast(1.02);
+}
+
+.hero-panel-mark {
+  left: 1rem;
+  bottom: 1rem;
+  width: 6rem;
+  opacity: 0.08;
+}
+
+.hero-panel-caption {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.85rem;
+  z-index: 2;
+  color: var(--ink-soft);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.hero-foot {
+  margin-top: 1.45rem;
+  gap: 1rem;
+}
+
+.hero-statement {
+  max-width: 27rem;
+  color: var(--ink);
+}
+
+.hero-tags {
+  display: none;
+}
+
+.hero-cue {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hero-panel {
+    height: 38svh;
+  }
+
+  .hero-in {
+    padding-bottom: 40svh;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    background:
+      linear-gradient(90deg, var(--porcelain) 0 50%, var(--mist) 50% 100%);
+  }
+
+  .hero::before {
+    display: none;
+  }
+
+  .hero-panel {
+    inset: 0 0 0 auto;
+    width: 50vw;
+    height: auto;
+    border-top: 0;
+    border-left: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
+  }
+
+  .hero-media {
+    position: absolute;
+    inset: auto 0 0;
+    height: min(92svh, 860px);
+    justify-content: center;
+  }
+
+  .hero-media img {
+    height: 100%;
+  }
+
+  .hero-panel-mark {
+    right: -8%;
+    left: auto;
+    bottom: 4%;
+    width: 20rem;
+    opacity: 0.055;
+  }
+
+  .hero-panel-caption {
+    right: 2.2rem;
+    bottom: 2rem;
+    color: color-mix(in oklab, var(--ink) 72%, transparent);
+  }
+
+  .hero-in {
+    padding-top: 7.4rem;
+    padding-bottom: 2.4rem;
+  }
+
+  .hero-title {
+    max-width: none;
+    margin-top: 2rem;
+  }
+
+  .hero-word {
+    width: max-content;
+  }
+
+  .hero-word--it {
+    margin-left: 19vw;
+    color: var(--rust);
+  }
+
+  .hero-foot {
+    max-width: 31rem;
+    padding-bottom: 5rem;
+  }
+
+  .hero-tags {
+    display: flex;
+  }
+
+  .hero-cue {
+    display: inline-flex;
+  }
+}
+
+/* Missao + galeria -------------------------------------------------------- */
+
+.missao {
+  padding-block: var(--section-y) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.missao::after {
+  content: '';
+  position: absolute;
+  left: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
+  right: var(--gutter);
+  bottom: 0;
+  height: 1px;
+  background: color-mix(in oklab, var(--ink) 12%, transparent);
+}
+
+.missao-title,
+.tx-title,
+.processo-title,
+.doutor-title,
+.filosofia-title,
+.credo-line,
+.final-title {
+  letter-spacing: 0;
+}
+
+.missao-title {
+  max-width: 16em;
+}
+
+.missao-cols {
+  margin-top: 3rem;
+  align-items: start;
+}
+
+.galeria {
+  margin-top: clamp(3rem, 6rem, 6rem);
+  padding-bottom: clamp(4rem, 6rem, 6rem);
+}
+
+.galeria-frame {
+  background: var(--ivory);
+  box-shadow: 0 28px 70px -44px rgb(46 37 29 / 0.35);
+}
+
+.galeria-frame--line {
+  min-height: 17rem;
+  padding: 1.4rem;
+  display: grid;
+  align-content: space-between;
+  background:
+    linear-gradient(135deg, var(--porcelain), var(--mist));
+  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+  color: var(--ink);
+}
+
+.galeria-frame--line span {
+  font-family: var(--serif);
+  font-size: 2rem;
+  line-height: 1;
+}
+
+.galeria-frame--line span:nth-child(2) {
+  justify-self: center;
+  color: var(--rust);
+  font-style: italic;
+}
+
+.galeria-frame--line span:nth-child(3) {
+  justify-self: end;
+}
+
+.galeria-frame--line i {
+  position: absolute;
+  inset: 20% 12%;
+  border: 1px solid color-mix(in oklab, var(--copper) 35%, transparent);
+  border-radius: 50%;
+  transform: rotate(-16deg);
+}
+
+@media (min-width: 880px) {
+  .galeria {
+    grid-template-columns: 1.25fr 0.78fr 1fr;
+  }
+
+  .galeria-frame--line {
+    aspect-ratio: 4 / 4.4;
+  }
+}
+
+/* Tratamentos ------------------------------------------------------------- */
+
+.tx {
+  padding-block: clamp(4.5rem, 7rem, 7rem) var(--section-y);
+  background: var(--porcelain);
+}
+
+.tx-head {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.tx-title {
+  max-width: 13.5em;
+}
+
+.tx-grid {
+  position: relative;
+}
+
+.tx-stage {
+  top: 5rem;
+  background: var(--ivory);
+  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+  box-shadow: 0 36px 90px -58px rgb(46 37 29 / 0.42);
+}
+
+.plate {
+  color: var(--ink);
+  overflow: hidden;
+  background: var(--ivory);
+}
+
+.plate--mist {
+  background: var(--mist);
+}
+
+.plate--copper {
+  background: color-mix(in oklab, var(--rust) 15%, var(--porcelain));
+}
+
+.plate--pearl,
+.plate--ivory {
+  background: var(--porcelain);
+}
+
+.plate-rail {
+  position: absolute;
+  inset: 1.2rem;
+  z-index: 2;
+  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+  pointer-events: none;
+}
+
+.plate-rail::before,
+.plate-rail::after {
+  content: '';
+  position: absolute;
+  border: 1px solid color-mix(in oklab, var(--copper) 34%, transparent);
+  border-radius: 50%;
+}
+
+.plate-rail::before {
+  width: 68%;
+  height: 46%;
+  right: -12%;
+  top: 13%;
+  transform: rotate(-12deg);
+}
+
+.plate-rail::after {
+  width: 46%;
+  height: 28%;
+  left: -8%;
+  bottom: 12%;
+  transform: rotate(11deg);
+}
+
+.plate-photo {
+  position: absolute;
+  right: -4%;
+  bottom: 0;
+  z-index: 1;
+  width: min(58%, 26rem);
+  height: 86%;
+  object-fit: cover;
+  object-position: center top;
+  opacity: 0.84;
+  filter: grayscale(0.18) saturate(0.86) contrast(1.04);
+  mix-blend-mode: multiply;
+}
+
+.plate-num {
+  z-index: 3;
+  top: 1.4rem;
+  left: 1.55rem;
+  font-size: 4.6rem;
+  opacity: 0.18;
+  color: var(--rust);
+}
+
+.plate-word {
+  z-index: 3;
+  left: 1.5rem;
+  right: auto;
+  bottom: 4.4rem;
+  max-width: 9ch;
+  font-size: 3.6rem;
+  opacity: 0.26;
+  color: var(--rust);
+}
+
+.plate-name {
+  z-index: 3;
+  left: 1.55rem;
+  bottom: 1.45rem;
+  max-width: 18rem;
+  font-size: 0.9rem;
+  text-transform: none;
+  color: var(--ink);
+}
+
+.plate-note {
+  position: absolute;
+  z-index: 3;
+  right: 1.55rem;
+  top: 1.55rem;
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: var(--ink-soft);
+}
+
+.plate-mark {
+  left: 42%;
+  top: 42%;
+  width: 10rem;
+  opacity: 0.06;
+}
+
+.tx-hud {
+  color: var(--ink);
+  background: color-mix(in oklab, var(--porcelain) 92%, transparent);
+}
+
+.tx-word {
+  font-size: 1.58rem;
+  letter-spacing: 0;
+}
+
+@media (min-width: 768px) {
+  .tx-word {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 1080px) {
+  .tx-grid {
+    grid-template-columns: minmax(0, 1.08fr) minmax(28rem, 0.92fr);
+  }
+
+  .tx-stage {
+    height: calc(100svh - 8.5rem);
+    max-height: 48rem;
+  }
+
+  .plate-num {
+    font-size: 6.1rem;
+  }
+
+  .plate-word {
+    font-size: 6.2rem;
+  }
+}
+
+/* Processo --------------------------------------------------------------- */
+
+.processo {
+  background:
+    radial-gradient(circle at 86% 22%, oklch(34% 0.04 54 / 0.28), transparent 27rem),
+    var(--graphite-2);
+  color: var(--milk);
+}
+
+.processo-pin {
+  overflow: hidden;
+}
+
+.processo-in {
+  position: relative;
+}
+
+.processo-title {
+  max-width: 12em;
+}
+
+.processo-diagram {
+  display: none;
+}
+
+.processo-mark {
+  display: none;
+}
+
+.processo-dot {
+  position: absolute;
+  display: grid;
+  gap: 0.25rem;
+  color: color-mix(in oklab, var(--milk) 52%, transparent);
+  transform: translate(-50%, -50%);
+  transition: color var(--dur-med) ease, opacity var(--dur-med) ease;
+}
+
+.processo-dot i {
+  font-style: normal;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--gold-thread);
+}
+
+.processo-dot b {
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.processo-dot.is-active {
+  color: var(--milk);
+}
+
+.processo-dot:nth-child(1) { left: 50%; top: 4%; }
+.processo-dot:nth-child(2) { left: 84%; top: 25%; }
+.processo-dot:nth-child(3) { left: 82%; top: 70%; }
+.processo-dot:nth-child(4) { left: 50%; top: 96%; }
+.processo-dot:nth-child(5) { left: 16%; top: 70%; }
+.processo-dot:nth-child(6) { left: 16%; top: 25%; }
+
+.processo-ring-mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(42%, 13rem);
+  opacity: 0.08;
+  transform: translate(-50%, -50%);
+}
+
+@media (min-width: 1024px) {
+  html.motion .processo-in {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(22rem, 0.92fr);
+    align-items: center;
+    gap: clamp(3rem, 6rem, 6rem);
+  }
+
+  html.motion .processo-head,
+  html.motion .passos,
+  html.motion .processo-hud {
+    grid-column: 1;
+  }
+
+  html.motion .processo-diagram {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    display: grid;
+    place-items: center;
+    min-height: 32rem;
+  }
+
+  .processo-ring {
+    position: relative;
+    width: min(37vw, 32rem);
+    aspect-ratio: 1;
+    border: 1px solid color-mix(in oklab, var(--gold-thread) 28%, transparent);
+    border-radius: 50%;
+  }
+
+  .processo-ring::before,
+  .processo-ring::after {
+    content: '';
+    position: absolute;
+    inset: 12%;
+    border: 1px solid color-mix(in oklab, var(--milk) 12%, transparent);
+    border-radius: 50%;
+  }
+
+  .processo-ring::after {
+    inset: 28%;
+    border-color: color-mix(in oklab, var(--rust) 34%, transparent);
+    transform: rotate(-18deg) scaleX(1.35);
+  }
+}
+
+/* Doutor ------------------------------------------------------------------ */
+
+.doutor {
+  background: linear-gradient(90deg, var(--ivory), var(--porcelain));
+}
+
+.doutor::before {
+  content: 'Leonardo';
+  position: absolute;
+  left: -0.08em;
+  bottom: -0.23em;
+  font-family: var(--serif);
+  font-size: 8rem;
+  line-height: 1;
+  color: color-mix(in oklab, var(--ink) 5%, transparent);
+  pointer-events: none;
+}
+
+.doutor-frame {
+  max-width: none;
+  aspect-ratio: 4 / 5.15;
+  border: 0;
+  background: var(--greige);
+  box-shadow: 0 34px 90px -54px rgb(46 37 29 / 0.38);
+}
+
+.doutor-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.doutor-title {
+  font-size: var(--fs-display);
+  max-width: 11.2em;
+}
+
+.doutor-bio {
+  color: var(--ink);
+}
+
+.marco-ano {
+  font-size: 2.6rem;
+  letter-spacing: 0;
+}
+
+@media (min-width: 1024px) {
+  .doutor::before {
+    font-size: 13rem;
+  }
+
+  .doutor-in {
+    grid-template-columns: minmax(24rem, 0.86fr) minmax(0, 1.14fr);
+    align-items: start;
+  }
+
+  .doutor-copy {
+    padding-top: 1.4rem;
+  }
+}
+
+/* Filosofia --------------------------------------------------------------- */
+
+.filosofia {
+  position: relative;
+  padding-block: var(--section-y);
+  background: var(--porcelain);
+}
+
+.filosofia::before {
+  content: '';
+  position: absolute;
+  inset: 8% auto 8% 50%;
+  width: 1px;
+  background: color-mix(in oklab, var(--ink) 10%, transparent);
+}
+
+.filosofia-in {
+  gap: 2.5rem;
+}
+
+.filosofia-title {
+  font-family: var(--serif);
+  font-size: var(--fs-display);
+  line-height: var(--lh-snug);
+  max-width: 13em;
+}
+
+.credo-line {
+  font-size: var(--fs-credo);
+}
+
+.filosofia-macro {
+  width: min(82vw, 30rem);
+  justify-self: stretch;
+  margin: 0;
+  background: var(--mist);
+  box-shadow: 0 32px 80px -54px rgb(46 37 29 / 0.42);
+}
+
+.filosofia-macro img {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  filter: saturate(0.84) contrast(1.04);
+}
+
+@media (min-width: 1024px) {
+  .filosofia-in {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: center;
+    gap: 3rem 2rem;
+  }
+
+  .filosofia-in > .chapter-label {
+    grid-column: 1 / 4;
+  }
+
+  .filosofia-title {
+    grid-column: 1 / 8;
+  }
+
+  .credo--a {
+    grid-column: 1 / 5;
+  }
+
+  .filosofia-macro {
+    grid-column: 7 / 13;
+    grid-row: 2 / span 2;
+    width: 100%;
+  }
+
+  .credo--b {
+    grid-column: 5 / 10;
+    justify-self: stretch;
+    text-align: left;
+  }
+
+  .credo--b .credo-sub {
+    margin-left: 0;
+  }
+
+  .credo--c {
+    grid-column: 2 / 7;
+    justify-self: stretch;
+    text-align: left;
+  }
+
+  .credo--c .credo-sub {
+    margin-inline: 0;
+  }
+}
+
+/* Mapa + CTA -------------------------------------------------------------- */
+
+.mapa {
+  background: var(--porcelain);
+}
+
+.mapa-panel {
+  border-radius: 0;
+  background: var(--graphite);
+}
+
+.final {
+  min-height: min(82svh, 52rem);
+  background:
+    radial-gradient(circle at 20% 20%, oklch(43% 0.07 43 / 0.28), transparent 24rem),
+    var(--graphite-2);
+}
+
+.final-mark {
+  opacity: 0.82;
+}
+
+.footer-logo {
+  opacity: 0.9;
+}
+
+@media (max-width: 767px) {
+  .tx-stage {
+    height: 21rem;
+  }
+
+  .plate-photo {
+    width: 62%;
+    height: 82%;
+  }
+
+  .plate-word {
+    font-size: 3rem;
+  }
+
+  .plate-note {
+    display: none;
+  }
+
+  .processo-diagram {
+    display: none;
+  }
+
+  .filosofia::before {
+    display: none;
+  }
+
+  .marco {
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .marco-ano {
+    min-width: 0;
   }
 }

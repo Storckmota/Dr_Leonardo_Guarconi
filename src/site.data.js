@@ -200,17 +200,27 @@ export function renderTreatmentItems() {
 /* Palco decorativo dos tratamentos: placas cromático-tipográficas.
    Sem fotos clínicas inventadas; superfícies, numeral, palavra e marca. */
 export function renderTreatmentPlates() {
-  const tones = ['graphite', 'bone', 'rust', 'greige'];
+  const tones = ['pearl', 'mist', 'copper', 'ivory'];
+  const images = [
+    '/images/retrato-01-face.webp',
+    '/images/retrato-02.webp',
+    '/images/retrato-03.webp',
+    '/images/retrato-01.webp',
+  ];
   return site.tratamentos
     .map((t, i) => {
       const tone = tones[i % tones.length];
+      const image = images[i % images.length];
       const word = esc(t.nome.split(' ')[0]);
       return `
         <figure class="plate plate--${tone}" data-tx-plate="${i}"${i === 0 ? ' data-active' : ''} aria-hidden="true">
+          <span class="plate-rail" aria-hidden="true"></span>
           <span class="plate-num">${pad(i)}</span>
           <span class="plate-word">${word}</span>
-          <img class="plate-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" />
           <span class="plate-name">${esc(t.nome)}</span>
+          <span class="plate-note">avaliacao individual</span>
+          <img class="plate-photo" src="${image}" alt="" width="455" height="569" loading="lazy" decoding="async" />
+          <img class="plate-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" />
         </figure>`;
     })
     .join('\n');
@@ -231,6 +241,18 @@ export function renderProcesso() {
 }
 
 /* Marcos de formação. */
+export function renderProcessDots() {
+  return site.processo
+    .map(
+      (p, i) => `
+        <span class="processo-dot${i === 0 ? ' is-active' : ''}" data-processo-dot="${i}">
+          <i>${pad(i)}</i>
+          <b>${esc(p.titulo)}</b>
+        </span>`
+    )
+    .join('\n');
+}
+
 export function renderFormacao() {
   return site.formacao
     .map(

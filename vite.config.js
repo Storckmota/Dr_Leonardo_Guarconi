@@ -4,6 +4,7 @@ import {
   renderTreatmentItems,
   renderTreatmentPlates,
   renderProcesso,
+  renderProcessDots,
   renderFormacao,
   renderSchema,
 } from './src/site.data.js';
@@ -21,6 +22,7 @@ function siteDataPlugin() {
         '@tratamentos_items': renderTreatmentItems(),
         '@tratamentos_plates': renderTreatmentPlates(),
         '@processo': renderProcesso(),
+        '@processo_dots': renderProcessDots(),
         '@formacao': renderFormacao(),
         '@schema': renderSchema(),
       };

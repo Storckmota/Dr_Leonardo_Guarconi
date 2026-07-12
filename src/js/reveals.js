@@ -86,25 +86,6 @@ export function initReveals() {
     });
   }
 
-  /* Viagem de cor entre capítulos claros */
-  const travel = [
-    { trigger: '.tx', from: 'var(--porcelain)', to: 'var(--ivory)' },
-    { trigger: '.filosofia', from: 'var(--ivory)', to: 'var(--porcelain)' },
-  ];
-  for (const t of travel) {
-    const sec = document.querySelector(t.trigger);
-    if (!sec) continue;
-    gsap.fromTo(
-      document.body,
-      { backgroundColor: t.from },
-      {
-        backgroundColor: t.to,
-        ease: 'none',
-        scrollTrigger: { trigger: sec, start: 'top 90%', end: 'top 30%', scrub: 0.5 },
-      }
-    );
-  }
-
   /* Re-split em mudança de largura (linhas medidas mudam) */
   let lastW = window.innerWidth;
   let timer = null;

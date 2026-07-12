@@ -109,6 +109,7 @@
   <main id="conteudo">
     <!-- ============ CAP. 03 · HERO ============ -->
     <section class="hero" id="inicio" data-theme="light" aria-label="Apresentação">
+      <div class="hero-linework" aria-hidden="true"><i></i><i></i></div>
       <div class="hero-panel" data-hero-panel>
         <div class="hero-media" data-hero-media>
           <img
@@ -120,13 +121,14 @@
           />
         </div>
         <img class="hero-panel-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" aria-hidden="true" />
+        <p class="hero-panel-caption" aria-hidden="true">Dr. Leonardo Guarçoni</p>
       </div>
 
       <div class="hero-in">
         <p class="hero-meta" data-hero-meta>
           <span>Consultório em <strong>Vila&nbsp;Velha,&nbsp;ES</strong></span>
           <span class="hero-meta-sep" aria-hidden="true"></span>
-          <span>Desde <strong>1991</strong></span>
+          <span>Atendimento <strong>individual</strong></span>
         </p>
 
         <h1 class="hero-title">
@@ -139,7 +141,7 @@
         <div class="hero-foot" data-hero-foot>
           <p class="hero-statement">
             Ciência, técnica e escuta a serviço de sorrisos naturais.
-            O Dr.&nbsp;Leonardo Guarçoni acompanha cada paciente de perto, desde&nbsp;1991.
+            O Dr.&nbsp;Leonardo Guarçoni acompanha cada paciente de perto, do diagnóstico ao acabamento.
           </p>
           <div class="hero-actions">
             <a class="btn btn-solid" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
@@ -192,8 +194,11 @@
         <figure class="galeria-frame" data-mask data-para="0.18">
           <img src="/images/retrato-01-face.webp" width="360" height="330" alt="Detalhe do olhar do Dr. Leonardo Guarçoni" loading="lazy" decoding="async" />
         </figure>
-        <figure class="galeria-frame galeria-frame--plate" data-mask data-para="-0.14">
-          <img class="galeria-mark" src="/images/logo-mark.webp" width="376" height="305" alt="Símbolo do consultório: dente com monograma LG" loading="lazy" decoding="async" />
+        <figure class="galeria-frame galeria-frame--line" data-mask data-para="-0.14" aria-label="Saúde, função e estética">
+          <span>Saúde</span>
+          <span>Função</span>
+          <span>Estética</span>
+          <i aria-hidden="true"></i>
         </figure>
         <figure class="galeria-frame" data-mask data-para="0.1">
           <img src="/images/retrato-02.webp" width="402" height="505" alt="Dr. Leonardo Guarçoni sorrindo, de camisa clara" loading="lazy" decoding="async" />
@@ -247,6 +252,13 @@
           <ol class="passos" data-passos role="list">
 {{@processo}}
           </ol>
+
+          <div class="processo-diagram" aria-hidden="true">
+            <div class="processo-ring">
+{{@processo_dots}}
+              <img class="processo-ring-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" />
+            </div>
+          </div>
 
           <div class="processo-hud" data-processo-hud aria-hidden="true">
             <p class="processo-counter"><span data-processo-current>01</span><i>/</i><span>06</span></p>
@@ -303,7 +315,9 @@
     <section class="filosofia" id="filosofia" data-theme="light" aria-labelledby="filosofia-title">
       <div class="filosofia-in">
         <p class="chapter-label" data-reveal>Filosofia</p>
-        <h2 class="visually-hidden" id="filosofia-title">Filosofia de atendimento</h2>
+        <h2 class="filosofia-title" id="filosofia-title" data-split>
+          Antes de desenhar um sorriso, é preciso ler a pessoa.
+        </h2>
 
         <div class="credo credo--a">
           <p class="credo-line" data-split>Escuta antes <em>da técnica</em>.</p>
@@ -391,7 +405,7 @@
       <div class="final-in">
         <img class="final-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" aria-hidden="true" data-reveal />
         <h2 class="final-title" id="final-title" data-split>
-          Um sorriso natural começa com <em>uma conversa</em>.
+          Um cuidado natural começa com <em>uma conversa</em>.
         </h2>
         <div class="final-actions" data-reveal>
           <a class="btn btn-porcelain btn-lg" href="{{waLink}}" target="_blank" rel="noopener noreferrer">

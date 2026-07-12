@@ -7,19 +7,20 @@
 
 :root {
   /* --- Cor: superfícies claras (base do site) -------------------------------- */
-  --porcelain:    oklch(97.9% 0.005 92);   /* superfície principal            */
-  --ivory:        oklch(96.2% 0.008 90);   /* variação de viagem de cor       */
-  --greige:       oklch(92.6% 0.011 88);   /* apoio quente (painéis, placas)  */
+  --porcelain:    oklch(98.4% 0.003 96);
+  --ivory:        oklch(96.3% 0.006 88);
+  --greige:       oklch(91.6% 0.009 86);
+  --mist:         oklch(93.5% 0.008 230);
 
   /* --- Cor: neutros escuros (estrutura, ~15%) --------------------------------- */
-  --graphite:     oklch(28% 0.014 75);     /* capítulo escuro, botões         */
-  --graphite-2:   oklch(23% 0.013 78);     /* CTA final, footer, menu         */
-  --umber:        oklch(31% 0.045 55);     /* marrom quente pontual (marca)   */
-  --rust:         oklch(38% 0.085 42);     /* placa cobre-queimado (acento)   */
+  --graphite:     oklch(24% 0.012 72);
+  --graphite-2:   oklch(18.5% 0.011 74);
+  --umber:        oklch(34% 0.044 54);
+  --rust:         oklch(42% 0.082 43);
 
   /* --- Cor: texto --------------------------------------------------------------- */
-  --ink:          oklch(27% 0.015 78);     /* grafite quente sobre claro      */
-  --ink-soft:     oklch(43% 0.018 76);
+  --ink:          oklch(24.5% 0.012 76);
+  --ink-soft:     oklch(39% 0.014 76);
   --milk:         oklch(96.8% 0.006 92);
   --milk-soft:    oklch(85.5% 0.012 90);
 
@@ -39,12 +40,12 @@
   --serif: 'Literata Variable', 'Literata-fallback', Georgia, 'Times New Roman', serif;
   --sans:  'Hanken Grotesk Variable', 'Hanken-fallback', 'Segoe UI', Arial, sans-serif;
 
-  --fs-hero:     clamp(3.1rem, 1.1rem + 9.4vw, 6rem);
-  --fs-display:  clamp(2.1rem, 1.15rem + 4.2vw, 4.3rem);
-  --fs-credo:    clamp(2rem, 1.1rem + 4.4vw, 4.1rem);
-  --fs-passo:    clamp(2.6rem, 1.4rem + 6.5vw, 5.6rem);
-  --fs-h3:       clamp(1.2rem, 1.05rem + 0.65vw, 1.5rem);
-  --fs-body-lg:  clamp(1.06rem, 1rem + 0.28vw, 1.19rem);
+  --fs-hero:     3.45rem;
+  --fs-display:  2.35rem;
+  --fs-credo:    2.25rem;
+  --fs-passo:    2.9rem;
+  --fs-h3:       1.25rem;
+  --fs-body-lg:  1.08rem;
   --fs-body:     1rem;
   --fs-small:    0.875rem;
   --fs-micro:    0.78rem;
@@ -72,4 +73,26 @@
   --z-header: 100;
   --z-menu: 200;
   --z-preloader: 300;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --fs-hero: 4.9rem;
+    --fs-display: 3.45rem;
+    --fs-credo: 3.1rem;
+    --fs-passo: 4rem;
+    --fs-h3: 1.38rem;
+    --fs-body-lg: 1.14rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  :root {
+    --fs-hero: 6.65rem;
+    --fs-display: 4.65rem;
+    --fs-credo: 3.85rem;
+    --fs-passo: 5.15rem;
+    --fs-h3: 1.48rem;
+    --fs-body-lg: 1.18rem;
+  }
 }

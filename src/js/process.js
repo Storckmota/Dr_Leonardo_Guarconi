@@ -12,6 +12,7 @@ export function initProcess() {
   mm.add('(min-width: 1024px)', () => {
     const pinEl = document.querySelector('[data-processo-pin]');
     const passos = gsap.utils.toArray('.passo');
+    const dots = gsap.utils.toArray('[data-processo-dot]');
     const current = document.querySelector('[data-processo-current]');
     const bar = document.querySelector('[data-processo-progress]');
     if (!pinEl || passos.length < 2) return;
@@ -34,17 +35,18 @@ export function initProcess() {
           const idx = Math.min(steps - 1, Math.floor(self.progress * steps));
           if (current) current.textContent = pad(idx);
           if (bar) gsap.set(bar, { scaleX: self.progress });
+          dots.forEach((dot, i) => dot.classList.toggle('is-active', i === idx));
         },
       },
     });
 
     for (let i = 1; i < steps; i++) {
-      tl.to(passos[i - 1], { autoAlpha: 0, y: -40, duration: 0.42, ease: 'power2.in' }, i)
+      tl.to(passos[i - 1], { autoAlpha: 0, y: -34, duration: 0.26, ease: 'power2.in' }, i)
         .fromTo(
           passos[i],
-          { autoAlpha: 0, y: 46 },
-          { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power3.out' },
-          i + 0.18
+          { autoAlpha: 0, y: 34 },
+          { autoAlpha: 1, y: 0, duration: 0.34, ease: 'power3.out' },
+          i + 0.28
         );
     }
     /* respiro final para o último passo assentar antes do unpin */

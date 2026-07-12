@@ -29,6 +29,22 @@ export function initSmooth() {
 }
 
 function bindAnchors(l) {
+  const scrollToHash = ({ focus = false } = {}) => {
+    const target = location.hash ? document.querySelector(location.hash) : document.querySelector('#inicio');
+    if (!target) return;
+    const done = () => {
+      if (!focus) return;
+      if (!/^(a|button|input|select|textarea)$/i.test(target.tagName)) target.tabIndex = -1;
+      target.focus({ preventScroll: true });
+    };
+    if (l) {
+      l.scrollTo(target, { offset: HEADER_OFFSET, duration: 0.9, lock: true, onComplete: done });
+    } else {
+      target.scrollIntoView();
+      done();
+    }
+  };
+
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a) return;
@@ -52,6 +68,9 @@ function bindAnchors(l) {
       target.scrollIntoView();
       focusTarget();
     }
-    history.replaceState(null, '', id);
+    if (location.hash === id) history.replaceState(null, '', id);
+    else history.pushState(null, '', id);
   });
+
+  window.addEventListener('popstate', () => scrollToHash());
 }

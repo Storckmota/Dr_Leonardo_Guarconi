@@ -1,6 +1,5 @@
-/* Header: estado de rolagem + tema conforme o capítulo sob o topo.
-   ScrollTrigger é usado apenas como observador (funciona também com
-   prefers-reduced-motion: nenhum tween aqui). */
+/* Header: estado de rolagem + tema pela secao que cruza a linha do topo.
+   Evita estados obsoletos em anchors, reload no meio da pagina e resize. */
 
 import { ScrollTrigger } from './context.js';
 
@@ -8,35 +7,39 @@ export function initHeader() {
   const header = document.querySelector('[data-header]');
   if (!header) return;
 
-  header.dataset.on = 'light'; /* a página abre no hero claro */
+  const sections = [
+    ...document.querySelectorAll('main > section[data-theme]'),
+    ...document.querySelectorAll('footer'),
+  ];
+
+  const readTheme = () => {
+    const probe = Math.max(72, header.offsetHeight + 8);
+    let theme = 'light';
+
+    for (const sec of sections) {
+      const rect = sec.getBoundingClientRect();
+      if (rect.top <= probe && rect.bottom > probe) {
+        theme = sec.dataset.theme || 'dark';
+        break;
+      }
+    }
+
+    header.dataset.on = theme;
+    header.classList.toggle('is-scrolled', window.scrollY > 8);
+  };
+
+  header.dataset.on = 'light';
+  readTheme();
 
   ScrollTrigger.create({
-    start: 8,
-    onEnter: () => header.classList.add('is-scrolled'),
-    onLeaveBack: () => header.classList.remove('is-scrolled'),
+    start: 0,
+    end: 'max',
+    onUpdate: readTheme,
+    onRefresh: readTheme,
   });
 
-  document.querySelectorAll('main > section[data-theme]').forEach((sec) => {
-    ScrollTrigger.create({
-      trigger: sec,
-      start: 'top 4.5rem',
-      end: 'bottom 4.5rem',
-      onToggle: (self) => {
-        if (self.isActive) header.dataset.on = sec.dataset.theme;
-      },
-    });
-  });
-
-  /* footer é escuro */
-  const footer = document.querySelector('.footer');
-  if (footer) {
-    ScrollTrigger.create({
-      trigger: footer,
-      start: 'top 4.5rem',
-      end: 'bottom top',
-      onToggle: (self) => {
-        if (self.isActive) header.dataset.on = 'dark';
-      },
-    });
-  }
+  window.addEventListener('scroll', readTheme, { passive: true });
+  window.addEventListener('resize', readTheme);
+  window.addEventListener('hashchange', () => requestAnimationFrame(readTheme));
+  window.addEventListener('load', readTheme);
 }

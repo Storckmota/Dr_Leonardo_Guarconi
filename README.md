@@ -69,16 +69,16 @@ scripts/contrast.mjs        auditoria WCAG dos tokens
 ## ⚠️ Pendências obrigatórias antes da publicação
 
 1. **Número do CRO-ES**: campo `cro` vazio em `src/site.data.js`; o site
-   omite o número (footer exibe "Cirurgião-Dentista · CRO-ES"). O site
-   antigo exibia "CRO-ES 2126", não validado. Confirmar e preencher.
+   omite o número (footer exibe "Cirurgião-Dentista · CRO-ES"). Confirmar e
+   preencher apenas com dado validado.
 2. **Horários**: não confirmados; formulação neutra via WhatsApp
    (campo `disponibilidade`).
 3. **Domínio final**: trocar `og:image`/schema para URL absoluta e
    adicionar `<link rel="canonical">`.
 4. **Fotos reais**: não há imagens da clínica/atendimento; a foto genérica
-   de casal da v1 foi removida. Hero/galeria usam apenas os retratos reais
-   e a marca. Sessão fotográfica recomendada (consultório, detalhes,
-   atendimento) para elevar as placas de tratamentos.
+   de casal da v1 foi removida. Hero e seção do doutor usam retratos reais;
+   tratamentos usam diagramas semânticos. Sessão fotográfica recomendada
+   (consultório, detalhes, atendimento) para elevar futuras versões.
 5. **Grafia do logo**: o arquivo novo (`logo.jpg`) traz "GUARÇONI" com
    cedilha — pendência da v1 resolvida pelo cliente.
 

@@ -1,7 +1,7 @@
 /* ============================================================================
    TOKENS — Dr. Leonardo Guarçoni · paleta luminosa da marca pessoal
-   Extraída do logo.jpg real: dourado suave (dente/perfis ≈ oklch 78% .09 85)
-   e cobre queimado (monograma/texto ≈ oklch 55% .12 45) sobre branco.
+   Extraída do logo.jpg real: cobre #b05418 e dourado #d8ac54
+   sobre branco quente.
    Base: ~75% superfícies claras · 15% grafite quente · 7% greige · 3% ouro/cobre.
    ========================================================================== */
 
@@ -10,7 +10,9 @@
   --porcelain:    oklch(98.4% 0.003 96);
   --ivory:        oklch(96.3% 0.006 88);
   --greige:       oklch(91.6% 0.009 86);
-  --mist:         oklch(93.5% 0.008 230);
+  --champagne:    #e9e1d7;
+  --stone:        #e5dcd1;
+  --mist:         var(--champagne);
 
   /* --- Cor: neutros escuros (estrutura, ~15%) --------------------------------- */
   --graphite:     oklch(24% 0.012 72);
@@ -25,10 +27,12 @@
   --milk-soft:    oklch(85.5% 0.012 90);
 
   /* --- Cor: acentos da logo ------------------------------------------------------- */
-  --copper:       oklch(56% 0.104 45);     /* cobre (display grande)          */
-  --copper-ink:   oklch(46.5% 0.098 45);   /* cobre para texto pequeno        */
-  --gold-thread:  oklch(78% 0.072 84);     /* fio dourado sobre escuro        */
-  --gold-soft:    oklch(87% 0.052 88);     /* dourado claro sobre escuro      */
+  --copper-logo:  #b05418;
+  --gold-logo:    #d8ac54;
+  --copper:       var(--copper-logo);       /* cobre extraído do monograma     */
+  --copper-ink:   #8d4218;                  /* cobre para texto pequeno        */
+  --gold-thread:  var(--gold-logo);         /* fio dourado sobre escuro        */
+  --gold-soft:    #ead2a0;                  /* dourado claro sobre escuro      */
   --wa-green:     oklch(66% 0.15 152);
 
   /* --- Linhas --------------------------------------------------------------------- */

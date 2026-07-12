@@ -7,9 +7,8 @@
    (ou apenas salve, se o `npm run dev` estiver aberto).
 
    PENDÊNCIA OBRIGATÓRIA ANTES DA PUBLICAÇÃO:
-   - `cro`: número do CRO-ES ainda não confirmado pelo cliente. O site atual
-     exibe "CRO-ES 2126", mas esse número não foi validado. Enquanto o campo
-     estiver vazio, o site omite o número (nunca publica um número falso).
+   - `cro`: número do CRO-ES ainda não confirmado pelo cliente. Enquanto o
+     campo estiver vazio, o site omite o número (nunca publica um número falso).
    ========================================================================== */
 
 export const site = {
@@ -55,9 +54,9 @@ export const site = {
       instituicao: 'Universidade Gama Filho · Rio de Janeiro',
     },
     {
-      ano: 'Hoje',
+      ano: 'Mais de 30 anos de trajetória',
       titulo: 'Odontologia estética restauradora',
-      instituicao: 'Consultório próprio · Vila Velha, ES',
+      instituicao: 'Clínica própria em Vila Velha, ES',
     },
   ],
 
@@ -142,7 +141,7 @@ export const site = {
   meta: {
     title: 'Dr. Leonardo Guarçoni · Odontologia Estética Restauradora em Vila Velha, ES',
     description:
-      'Cirurgião-dentista desde 1991, o Dr. Leonardo Guarçoni une saúde, função e estética em Vila Velha, ES. Implantes, ortodontia, próteses, endodontia e harmonização facial com atendimento humanizado. Agende pelo WhatsApp.',
+      'Cirurgião-dentista formado pela UFES, o Dr. Leonardo Guarçoni une saúde, função e estética em Vila Velha, ES. Implantes, ortodontia, próteses, endodontia e harmonização facial com atendimento humanizado. Agende pelo WhatsApp.',
   },
 };
 
@@ -197,20 +196,61 @@ export function renderTreatmentItems() {
     .join('\n');
 }
 
-/* Palco decorativo dos tratamentos: placas cromático-tipográficas.
-   Sem fotos clínicas inventadas; superfícies, numeral, palavra e marca. */
+const treatmentVisuals = [
+  {
+    tone: 'pearl',
+    note: 'raiz e suporte',
+    svg: `<svg viewBox="0 0 420 420" aria-hidden="true"><path class="tv-main" d="M168 88c-38 18-57 59-43 101 9 27 25 42 29 76 4 31 12 62 33 62 17 0 19-43 31-43s14 43 31 43c21 0 29-31 33-62 4-34 20-49 29-76 14-42-5-83-43-101-27-13-46 7-50 7s-23-20-50-7Z"/><path d="M218 162v128"/><path d="M188 196h60"/><path d="M190 226h56"/><path d="M195 256h46"/></svg>`,
+  },
+  {
+    tone: 'ivory',
+    note: 'alinhamento',
+    svg: `<svg viewBox="0 0 420 420" aria-hidden="true"><path class="tv-main" d="M86 222c44 68 204 68 248 0"/><path d="M118 206v43M164 222v45M210 228v45M256 222v45M302 206v43"/><path d="M105 198h26M151 214h26M197 220h26M243 214h26M289 198h26"/></svg>`,
+  },
+  {
+    tone: 'stone',
+    note: 'forma e luz',
+    svg: `<svg viewBox="0 0 420 420" aria-hidden="true"><path class="tv-main" d="M146 122h128l34 74-98 116-98-116 34-74Z"/><path d="M146 122l64 190 64-190"/><path d="M112 104l-34-34M308 104l34-34M334 184h48M38 184h48"/></svg>`,
+  },
+  {
+    tone: 'pearl',
+    note: 'preservação',
+    svg: `<svg viewBox="0 0 420 420" aria-hidden="true"><path class="tv-main" d="M148 92c-36 19-54 58-41 99 9 27 27 45 30 77 4 36 18 66 39 66 19 0 18-65 34-65s15 65 34 65c21 0 35-30 39-66 3-32 21-50 30-77 13-41-5-80-41-99-28-14-51 9-62 9s-34-23-62-9Z"/><path d="M210 136c-18 38-22 75-12 112"/><path d="M210 136c18 38 22 75 12 112"/><path d="M178 168h64"/></svg>`,
+  },
+  {
+    tone: 'ivory',
+    note: 'tecido de suporte',
+    svg: `<svg viewBox="0 0 420 420" aria-hidden="true"><path class="tv-main" d="M102 224c34-40 64-40 94 0 30 40 60 40 94 0"/><path d="M140 126c-24 34-26 72-8 105"/><path d="M210 112c-20 42-20 84 0 126"/><path d="M280 126c24 34 26 72 8 105"/><path d="M116 270h188"/></svg>`,
+  },
+  {
+    tone: 'stone',
+    note: 'cuidado desde cedo',
+    svg: `<svg viewBox="0 0 420 420" aria-hidden="true"><path class="tv-main" d="M160 130c-29 16-43 48-31 83 7 21 20 35 24 60 4 27 14 48 31 48 13 0 15-38 26-38s13 38 26 38c17 0 27-21 31-48 4-25 17-39 24-60 12-35-2-67-31-83-24-13-42 8-50 8s-26-21-50-8Z"/><path d="M96 106c30-34 70-52 114-52s84 18 114 52"/><path d="M108 322c31 29 65 43 102 43s71-14 102-43"/></svg>`,
+  },
+  {
+    tone: 'pearl',
+    note: 'gesto planejado',
+    svg: `<svg viewBox="0 0 420 420" aria-hidden="true"><path class="tv-main" d="M105 286c55-94 126-148 210-162"/><path d="M154 246l58 58"/><path d="M210 190l58 58"/><path d="M122 314l46-46"/><path d="M252 184l62-62"/><circle cx="315" cy="124" r="18"/></svg>`,
+  },
+  {
+    tone: 'ivory',
+    note: 'proteção noturna',
+    svg: `<svg viewBox="0 0 420 420" aria-hidden="true"><path class="tv-main" d="M96 214c37 70 191 70 228 0"/><path d="M126 194c44 42 124 42 168 0"/><path d="M132 246c48 32 108 32 156 0"/><path d="M112 164c50-42 146-42 196 0"/></svg>`,
+  },
+  {
+    tone: 'stone',
+    note: 'harmonia facial',
+    svg: `<svg viewBox="0 0 420 420" aria-hidden="true"><path class="tv-main" d="M235 70c-54 22-80 70-72 128 5 38 28 66 68 92 22 15 21 42-6 60"/><path d="M226 132c25 5 43 18 54 39"/><path d="M196 212c34 20 65 19 94-4"/><circle cx="225" cy="158" r="5"/><circle cx="278" cy="210" r="5"/><circle cx="216" cy="288" r="5"/></svg>`,
+  },
+];
+
+/* Palco dos tratamentos: diagramas semânticos, sem fotos clínicas inventadas
+   e sem reutilizar retratos do Dr. Leonardo como imagem de serviço. */
 export function renderTreatmentPlates() {
-  const tones = ['pearl', 'mist', 'copper', 'ivory'];
-  const images = [
-    '/images/retrato-01-face.webp',
-    '/images/retrato-02.webp',
-    '/images/retrato-03.webp',
-    '/images/retrato-01.webp',
-  ];
   return site.tratamentos
     .map((t, i) => {
-      const tone = tones[i % tones.length];
-      const image = images[i % images.length];
+      const visual = treatmentVisuals[i % treatmentVisuals.length];
+      const tone = visual.tone;
       const word = esc(t.nome.split(' ')[0]);
       return `
         <figure class="plate plate--${tone}" data-tx-plate="${i}"${i === 0 ? ' data-active' : ''} aria-hidden="true">
@@ -218,9 +258,8 @@ export function renderTreatmentPlates() {
           <span class="plate-num">${pad(i)}</span>
           <span class="plate-word">${word}</span>
           <span class="plate-name">${esc(t.nome)}</span>
-          <span class="plate-note">avaliacao individual</span>
-          <img class="plate-photo" src="${image}" alt="" width="455" height="569" loading="lazy" decoding="async" />
-          <img class="plate-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" />
+          <span class="plate-note">${esc(visual.note)}</span>
+          <span class="plate-visual">${visual.svg}</span>
         </figure>`;
     })
     .join('\n');

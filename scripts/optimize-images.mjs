@@ -21,7 +21,6 @@ await mkdir(path.join(root, 'public', 'images'), { recursive: true });
 const jobs = [
   { from: 'retrato-01.png', to: 'retrato-01.webp', webp: { quality: 82 } },
   { from: 'retrato-02.png', to: 'retrato-02.webp', webp: { quality: 82 } },
-  { from: 'retrato-03.png', to: 'retrato-03.webp', webp: { quality: 84 } },
 ];
 
 for (const job of jobs) {

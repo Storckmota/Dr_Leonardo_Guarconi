@@ -35,7 +35,14 @@ for (const vp of [
   for (const sel of sections) {
     const el = page.locator(sel).first();
     try {
-      await el.scrollIntoViewIfNeeded();
+      await page.evaluate((selector) => {
+        document.activeElement?.blur();
+        const target = document.querySelector(selector);
+        if (!target) return;
+        const offset = selector === '.hero' ? 0 : 96;
+        const y = window.scrollY + target.getBoundingClientRect().top - offset;
+        window.scrollTo(0, Math.max(0, y));
+      }, sel);
       await page.waitForTimeout(350);
       await el.screenshot({ path: path.join(out, `${vp.name}${sel.replace('.', '-')}.png`) });
     } catch (e) {

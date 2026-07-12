@@ -14,8 +14,9 @@ export function initSmooth() {
   }
 
   lenis = new Lenis({
-    duration: 1.05,
-    easing: (t) => 1 - Math.pow(1 - t, 3.2),
+    duration: 0.92,
+    easing: (t) => 1 - Math.pow(1 - t, 3),
+    wheelMultiplier: 0.9,
     smoothWheel: true,
     syncTouch: false, /* toque permanece nativo: leve no mobile */
   });

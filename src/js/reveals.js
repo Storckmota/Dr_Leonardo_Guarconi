@@ -1,34 +1,14 @@
-/* Coreografia genérica de rolagem: títulos por linha ([data-split]),
-   blocos ([data-reveal]), imagens por máscara ([data-mask]), parallax
+/* Coreografia genérica de rolagem: blocos ([data-reveal]),
+   imagens por máscara ([data-mask]), parallax
    ([data-para]), números fantasmas e viagem de cor do fundo.
    Tudo aqui só roda com motionOK. */
 
 import { gsap, ScrollTrigger } from './context.js';
-import { splitLines, unsplit } from './split.js';
-
-const splitEntries = [];
-
-function buildSplit(el) {
-  const inners = splitLines(el);
-  gsap.set(inners, { yPercent: 115 });
-  const trigger = ScrollTrigger.create({
-    trigger: el,
-    start: 'top 84%',
-    once: true,
-    onEnter: () =>
-      gsap.to(inners, {
-        yPercent: 0,
-        duration: 1.05,
-        ease: 'expo.out',
-        stagger: 0.095,
-      }),
-  });
-  splitEntries.push({ el, trigger });
-}
+import { initTextReveals } from './text-reveals.js';
 
 export function initReveals() {
-  /* Títulos por linha (exceto os do hero, coreografados à parte) */
-  document.querySelectorAll('[data-split]').forEach(buildSplit);
+  /* Títulos por linha (SplitText responsivo, exceto hero coreografado à parte) */
+  initTextReveals();
 
   /* Blocos */
   document.querySelectorAll('[data-reveal]').forEach((el) => {
@@ -73,6 +53,43 @@ export function initReveals() {
     });
   }
 
+  /* Curva da filosofia: aparece como conexão entre os três princípios. */
+  const philosophyPath = document.querySelector('[data-filosofia-path]');
+  if (philosophyPath) {
+    const length = philosophyPath.getTotalLength();
+    gsap.set(philosophyPath, {
+      strokeDasharray: length,
+      strokeDashoffset: length,
+    });
+    ScrollTrigger.create({
+      trigger: '[data-filosofia-stage]',
+      start: 'top 78%',
+      end: 'bottom 48%',
+      scrub: 0.45,
+      onUpdate: (self) => {
+        gsap.set(philosophyPath, { strokeDashoffset: length * (1 - self.progress) });
+      },
+    });
+  }
+
+  const principles = gsap.utils.toArray('[data-principio]');
+  if (principles.length) {
+    gsap.set(principles, { autoAlpha: 0, y: 26 });
+    ScrollTrigger.create({
+      trigger: '[data-filosofia-stage]',
+      start: 'top 82%',
+      once: true,
+      onEnter: () =>
+        gsap.to(principles, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.75,
+          ease: 'power3.out',
+          stagger: 0.12,
+        }),
+    });
+  }
+
   /* Marcos da formação: cascata própria */
   const marcos = gsap.utils.toArray('[data-marco]');
   if (marcos.length) {
@@ -86,25 +103,5 @@ export function initReveals() {
     });
   }
 
-  /* Re-split em mudança de largura (linhas medidas mudam) */
-  let lastW = window.innerWidth;
-  let timer = null;
-  window.addEventListener('resize', () => {
-    if (window.innerWidth === lastW) return;
-    lastW = window.innerWidth;
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      for (const entry of splitEntries) {
-        entry.trigger.kill();
-        unsplit(entry.el);
-      }
-      splitEntries.length = 0;
-      document.querySelectorAll('[data-split]').forEach((el) => {
-        /* já revelados: reconstruir visível, sem esconder de novo */
-        const inners = splitLines(el);
-        gsap.set(inners, { yPercent: 0 });
-      });
-      ScrollTrigger.refresh();
-    }, 280);
-  });
+  window.addEventListener('resize', () => ScrollTrigger.refresh());
 }

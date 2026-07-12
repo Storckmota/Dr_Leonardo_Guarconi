@@ -76,8 +76,16 @@ export function initTreatments() {
     gsap.fromTo(inn, { autoAlpha: 0, scale: 1.05 }, { autoAlpha: 1, scale: 1, duration: 0.7, ease: 'power3.out' });
     const word = inn.querySelector('.plate-word');
     const num = inn.querySelector('.plate-num');
+    const visual = inn.querySelector('.plate-visual');
     if (word) gsap.fromTo(word, { xPercent: 5 }, { xPercent: 0, duration: 0.9, ease: 'power3.out' });
     if (num) gsap.fromTo(num, { yPercent: 18, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.6, ease: 'power3.out' });
+    if (visual) {
+      gsap.fromTo(
+        visual,
+        { clipPath: 'inset(0 0 0 100%)', scale: 0.98 },
+        { clipPath: 'inset(0 0 0 0%)', scale: 1, duration: 0.8, ease: 'power3.out' }
+      );
+    }
   }
 
   function select(i, { user = false } = {}) {

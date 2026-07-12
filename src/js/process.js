@@ -13,14 +13,29 @@ export function initProcess() {
     const pinEl = document.querySelector('[data-processo-pin]');
     const passos = gsap.utils.toArray('.passo');
     const dots = gsap.utils.toArray('[data-processo-dot]');
+    const ring = document.querySelector('.processo-ring');
     const current = document.querySelector('[data-processo-current]');
     const bar = document.querySelector('[data-processo-progress]');
     if (!pinEl || passos.length < 2) return;
 
     const pad = (n) => String(n + 1).padStart(2, '0');
+    const layoutOrbit = () => {
+      if (!ring || !dots.length) return;
+      const radiusRatio = 0.44;
+      dots.forEach((dot, i) => {
+        const angle = (-90 + i * (360 / dots.length)) * (Math.PI / 180);
+        const x = 50 + Math.cos(angle) * radiusRatio * 100;
+        const y = 50 + Math.sin(angle) * radiusRatio * 100;
+        const cos = Math.cos(angle);
+        dot.style.setProperty('--orbit-x', `${x.toFixed(3)}%`);
+        dot.style.setProperty('--orbit-y', `${y.toFixed(3)}%`);
+        dot.dataset.orbitAlign = cos > 0.28 ? 'right' : cos < -0.28 ? 'left' : 'center';
+      });
+    };
 
     gsap.set(passos, { autoAlpha: 0, y: 44 });
     gsap.set(passos[0], { autoAlpha: 1, y: 0 });
+    layoutOrbit();
 
     const steps = passos.length;
     const tl = gsap.timeline({
@@ -52,8 +67,16 @@ export function initProcess() {
     /* respiro final para o último passo assentar antes do unpin */
     tl.to({}, { duration: 0.6 });
 
+    window.addEventListener('resize', layoutOrbit);
+
     return () => {
+      window.removeEventListener('resize', layoutOrbit);
       gsap.set(passos, { clearProps: 'all' });
+      dots.forEach((dot) => {
+        dot.style.removeProperty('--orbit-x');
+        dot.style.removeProperty('--orbit-y');
+        delete dot.dataset.orbitAlign;
+      });
     };
   });
 }

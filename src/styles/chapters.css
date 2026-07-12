@@ -2569,3 +2569,603 @@ main > section {
     min-width: 0;
   }
 }
+
+/* ==========================================================================
+   REFINAMENTO CODEX 2026 · motion, conteúdo e direção cromática
+   ========================================================================== */
+
+[data-split] {
+  text-wrap: normal;
+}
+
+.split-line {
+  will-change: transform, opacity;
+}
+
+/* Hero: champanhe quente no plano direito, sem azul-cinza. */
+
+.hero {
+  background:
+    linear-gradient(90deg, #f8f6f2 0 50%, var(--champagne) 50% 100%);
+}
+
+.hero-panel {
+  background:
+    radial-gradient(circle at 68% 30%, color-mix(in oklab, var(--gold-logo) 18%, transparent), transparent 22rem),
+    linear-gradient(145deg, var(--champagne), var(--stone));
+}
+
+.hero::before {
+  background: linear-gradient(0deg, color-mix(in oklab, var(--porcelain) 98%, transparent), transparent);
+}
+
+.hero-linework i {
+  border-color: color-mix(in oklab, var(--copper-logo) 38%, transparent);
+}
+
+.hero-linework i:first-child {
+  border-color: color-mix(in oklab, var(--copper-logo) 48%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--gold-logo) 14%, transparent);
+}
+
+.hero-linework i:last-child {
+  border-color: color-mix(in oklab, var(--gold-logo) 36%, transparent);
+}
+
+.hero-swipe {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.hero-swipe-fill {
+  fill: var(--porcelain);
+}
+
+.hero-swipe-edge {
+  fill: none;
+  stroke: color-mix(in oklab, var(--gold-logo) 70%, var(--copper-logo));
+  stroke-width: 0.28;
+  vector-effect: non-scaling-stroke;
+}
+
+html:not(.motion) .hero-swipe {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .hero {
+    background:
+      linear-gradient(90deg, #f8f6f2 0 50%, var(--champagne) 50% 100%);
+  }
+
+  .hero-media {
+    height: min(94svh, 880px);
+  }
+
+  .hero-media img {
+    object-position: center top;
+    filter: saturate(1.02) contrast(1.02);
+  }
+}
+
+/* Missão e galeria: escala menor, campo gráfico sem retratos repetidos. */
+
+.missao {
+  padding-block: clamp(4.25rem, 7.5vw, 7.5rem) 0;
+}
+
+.missao-title {
+  max-width: 14.5em;
+  font-size: clamp(1.95rem, 1.12rem + 3.35vw, 3.65rem);
+  line-height: 1.14;
+}
+
+.missao-cols {
+  margin-top: clamp(2rem, 4.6vw, 3.5rem);
+}
+
+.missao-col {
+  max-width: 28em;
+}
+
+.galeria {
+  display: block;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+  overflow: visible;
+}
+
+.galeria-system {
+  position: relative;
+  min-height: clamp(19rem, 36vw, 32rem);
+  overflow: hidden;
+  border-block: 1px solid color-mix(in oklab, var(--ink) 13%, transparent);
+  background:
+    radial-gradient(circle at 80% 20%, color-mix(in oklab, var(--gold-logo) 18%, transparent), transparent 19rem),
+    linear-gradient(120deg, var(--porcelain), var(--champagne));
+}
+
+.galeria-system::before {
+  content: '';
+  position: absolute;
+  width: min(70vw, 36rem);
+  aspect-ratio: 1.72;
+  left: -8%;
+  bottom: -18%;
+  border: 1px solid color-mix(in oklab, var(--copper-logo) 27%, transparent);
+  border-radius: 50%;
+  transform: rotate(-14deg);
+}
+
+.galeria-curve {
+  position: absolute;
+  inset: 9% 5%;
+  width: 90%;
+  height: 82%;
+}
+
+.galeria-curve path {
+  fill: none;
+  stroke: color-mix(in oklab, var(--copper-logo) 34%, transparent);
+  stroke-width: 1.1;
+  vector-effect: non-scaling-stroke;
+}
+
+.galeria-curve path + path {
+  stroke: color-mix(in oklab, var(--gold-logo) 42%, transparent);
+}
+
+.galeria-axis {
+  position: absolute;
+  font-family: var(--serif);
+  font-size: clamp(2.35rem, 7.5vw, 6.4rem);
+  line-height: 0.92;
+  color: var(--ink);
+}
+
+.galeria-axis--a {
+  left: clamp(1.2rem, 6vw, 5rem);
+  top: clamp(1.5rem, 8vw, 5.2rem);
+}
+
+.galeria-axis--b {
+  left: 50%;
+  top: 50%;
+  color: var(--copper-ink);
+  font-style: italic;
+  transform: translate(-50%, -50%);
+}
+
+.galeria-axis--c {
+  right: clamp(1.2rem, 5vw, 4.6rem);
+  bottom: clamp(1.8rem, 7vw, 4.8rem);
+}
+
+.galeria-caption {
+  position: absolute;
+  left: clamp(1.25rem, 4vw, 3rem);
+  bottom: clamp(1.1rem, 3vw, 2.2rem);
+  max-width: 18rem;
+  font-size: var(--fs-small);
+  font-weight: 650;
+  color: var(--ink-soft);
+}
+
+/* Tratamentos: palco sem retratos, com diagramas semânticos por área. */
+
+.tx-stage {
+  background: var(--champagne);
+}
+
+.plate--stone,
+.plate--mist {
+  background:
+    radial-gradient(circle at 78% 18%, color-mix(in oklab, var(--gold-logo) 20%, transparent), transparent 15rem),
+    var(--stone);
+}
+
+.plate--pearl {
+  background:
+    radial-gradient(circle at 18% 18%, color-mix(in oklab, var(--copper-logo) 9%, transparent), transparent 15rem),
+    var(--porcelain);
+}
+
+.plate--ivory {
+  background:
+    linear-gradient(135deg, var(--ivory), color-mix(in oklab, var(--gold-logo) 10%, var(--porcelain)));
+}
+
+.plate-photo,
+.plate-mark {
+  display: none;
+}
+
+.plate-visual {
+  position: absolute;
+  z-index: 2;
+  right: clamp(1.3rem, 4.4vw, 4rem);
+  top: 50%;
+  width: min(53%, 24rem);
+  color: color-mix(in oklab, var(--ink) 58%, transparent);
+  transform: translateY(-50%);
+}
+
+.plate-visual svg {
+  width: 100%;
+  height: auto;
+}
+
+.plate-visual path,
+.plate-visual circle {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.45;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.plate-visual .tv-main {
+  stroke: var(--copper-logo);
+  stroke-width: 2.15;
+}
+
+.plate-rail {
+  border-color: color-mix(in oklab, var(--ink) 14%, transparent);
+}
+
+.plate-rail::before {
+  border-color: color-mix(in oklab, var(--gold-logo) 42%, transparent);
+}
+
+.plate-rail::after {
+  border-color: color-mix(in oklab, var(--copper-logo) 32%, transparent);
+}
+
+.plate-num {
+  color: var(--gold-logo);
+  opacity: 0.34;
+}
+
+.plate-word {
+  max-width: 7.5ch;
+  color: var(--copper-ink);
+  opacity: 0.18;
+}
+
+.plate-note {
+  color: color-mix(in oklab, var(--ink) 58%, transparent);
+}
+
+/* Processo: pontos calculados por JS na mesma órbita externa. */
+
+.processo-ring .processo-dot {
+  left: var(--orbit-x, 50%) !important;
+  top: var(--orbit-y, 50%) !important;
+  width: 0;
+  height: 0;
+  max-width: none;
+  white-space: nowrap;
+  transform: none;
+}
+
+.processo-dot i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid color-mix(in oklab, var(--gold-logo) 42%, transparent);
+  border-radius: 50%;
+  color: var(--gold-thread);
+  background: color-mix(in oklab, var(--graphite-2) 82%, transparent);
+  transform: translate(-50%, -50%);
+}
+
+.processo-dot b {
+  position: absolute;
+  top: 1.35rem;
+  left: 50%;
+  text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
+  transform: translateX(-50%);
+}
+
+.processo-dot[data-orbit-align='right'] b {
+  left: 1.35rem;
+  top: -0.6rem;
+  text-align: left;
+  transform: none;
+}
+
+.processo-dot[data-orbit-align='left'] b {
+  right: 1.35rem;
+  left: auto;
+  top: -0.6rem;
+  text-align: right;
+  transform: none;
+}
+
+.processo-dot.is-active i {
+  color: var(--graphite-2);
+  background: var(--gold-thread);
+  box-shadow: 0 0 28px color-mix(in oklab, var(--gold-logo) 34%, transparent);
+}
+
+/* O doutor: sem nome fantasma; marco atual factual, sem gimmick de ano. */
+
+.doutor::before {
+  content: none !important;
+}
+
+.marco {
+  align-items: center;
+}
+
+.marco-ano {
+  min-width: 4.6em;
+}
+
+.marco:last-child .marco-ano {
+  min-width: min(42vw, 12.5rem);
+  font-family: var(--sans);
+  font-size: clamp(1.05rem, 0.86rem + 0.8vw, 1.42rem);
+  font-weight: 650;
+  line-height: 1.18;
+  color: var(--copper-ink);
+}
+
+/* Filosofia: nova composição conectada por curva, sem linha vertical e sem foto. */
+
+.filosofia::before {
+  display: none !important;
+}
+
+.filosofia {
+  background:
+    radial-gradient(circle at 88% 22%, color-mix(in oklab, var(--gold-logo) 10%, transparent), transparent 22rem),
+    var(--porcelain);
+}
+
+.filosofia-in {
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.filosofia-title {
+  max-width: 12.5em;
+  font-family: var(--serif);
+  font-size: clamp(2.3rem, 1.2rem + 4vw, 5rem);
+  line-height: 1.05;
+}
+
+.filosofia-stage {
+  position: relative;
+  min-height: clamp(34rem, 58vw, 44rem);
+}
+
+.filosofia-curve {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.filosofia-curve-path {
+  fill: none;
+  stroke: color-mix(in oklab, var(--copper-logo) 34%, transparent);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.principios {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+}
+
+.principio {
+  position: relative;
+  max-width: 34rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid color-mix(in oklab, var(--ink) 14%, transparent);
+}
+
+.principio-num {
+  display: inline-block;
+  margin-bottom: 0.65rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--gold-logo);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 1024px) {
+  .filosofia-in {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .filosofia-in > .chapter-label {
+    grid-column: 1 / 4;
+  }
+
+  .filosofia-title {
+    grid-column: 1 / 9;
+  }
+
+  .filosofia-stage {
+    grid-column: 1 / -1;
+  }
+
+  .principios {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    min-height: clamp(34rem, 48vw, 43rem);
+  }
+
+  .principio--a {
+    grid-column: 1 / 5;
+    align-self: start;
+    margin-top: 3rem;
+  }
+
+  .principio--b {
+    grid-column: 7 / 12;
+    align-self: center;
+  }
+
+  .principio--c {
+    grid-column: 3 / 8;
+    align-self: end;
+    margin-bottom: 2rem;
+  }
+}
+
+/* Mapa: híbrido com presença do baseline e ajustes técnicos atuais. */
+
+.mapa {
+  padding-top: clamp(3rem, 7vw, 6rem);
+  background: var(--porcelain);
+}
+
+.mapa-embed {
+  height: min(64svh, 560px);
+  background: var(--champagne);
+}
+
+.mapa-embed::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background:
+    linear-gradient(28deg, transparent 0 46%, color-mix(in oklab, var(--copper-logo) 16%, transparent) 46% 46.35%, transparent 46.35%),
+    linear-gradient(148deg, transparent 0 38%, color-mix(in oklab, var(--ink) 10%, transparent) 38% 38.28%, transparent 38.28%),
+    linear-gradient(92deg, transparent 0 62%, color-mix(in oklab, var(--gold-logo) 18%, transparent) 62% 62.32%, transparent 62.32%),
+    radial-gradient(circle at 67% 42%, color-mix(in oklab, var(--copper-logo) 28%, transparent) 0 0.42rem, transparent 0.45rem),
+    var(--champagne);
+  opacity: 0.95;
+}
+
+.mapa-embed iframe {
+  z-index: 1;
+  filter: saturate(0.88) contrast(1.03) brightness(0.98);
+}
+
+.mapa-panel {
+  border-radius: var(--r-panel);
+  background:
+    radial-gradient(circle at 92% 14%, color-mix(in oklab, var(--gold-logo) 14%, transparent), transparent 12rem),
+    var(--graphite-2);
+  box-shadow: 0 28px 80px -38px rgb(0 0 0 / 0.48);
+}
+
+@media (min-width: 1024px) {
+  .mapa-embed {
+    height: min(80svh, 710px);
+  }
+
+  .mapa-panel {
+    width: min(440px, 36vw);
+  }
+}
+
+/* CTA e footer: acento de encerramento controlado. */
+
+.final-title em,
+.final-title .it {
+  color: var(--gold-soft);
+}
+
+.final-mark {
+  width: clamp(68px, 10vw, 96px);
+}
+
+@media (max-width: 767px) {
+  .hero {
+    background:
+      linear-gradient(180deg, #f8f6f2 0 52%, var(--champagne) 52% 100%);
+  }
+
+  .hero-linework i:first-child {
+    width: 24rem;
+    height: 13rem;
+    left: -8rem;
+    top: 20svh;
+  }
+
+  .hero-linework i:last-child {
+    width: 18rem;
+    height: 10rem;
+    right: -7rem;
+    bottom: 22svh;
+  }
+
+  .missao-title {
+    font-size: clamp(1.9rem, 8.1vw, 2.55rem);
+  }
+
+  .galeria-system {
+    min-height: 22rem;
+  }
+
+  .galeria-axis--a {
+    top: 2rem;
+  }
+
+  .galeria-axis--b {
+    left: 46%;
+  }
+
+  .galeria-axis--c {
+    right: 1.2rem;
+    bottom: 4.8rem;
+  }
+
+  .galeria-caption {
+    right: 1.2rem;
+    max-width: 14rem;
+  }
+
+  .plate-visual {
+    right: 0.2rem;
+    top: 48%;
+    width: 69%;
+    opacity: 0.74;
+  }
+
+  .plate-name {
+    max-width: 14rem;
+  }
+
+  .filosofia-stage {
+    min-height: auto;
+  }
+
+  .filosofia-curve {
+    opacity: 0.46;
+    inset: 6% -28% 0;
+    width: 156%;
+  }
+
+  .principio {
+    background: color-mix(in oklab, var(--porcelain) 78%, transparent);
+  }
+
+  .mapa {
+    padding-top: 4rem;
+  }
+
+  .mapa-panel {
+    border-radius: 0;
+  }
+}

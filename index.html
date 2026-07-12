@@ -110,6 +110,10 @@
     <!-- ============ CAP. 03 · HERO ============ -->
     <section class="hero" id="inicio" data-theme="light" aria-label="Apresentação">
       <div class="hero-linework" aria-hidden="true"><i></i><i></i></div>
+      <svg class="hero-swipe" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" data-hero-swipe>
+        <path class="hero-swipe-fill" data-hero-swipe-fill d="M 0 100 V 100 Q 50 100 100 100 V 100 Z" />
+        <path class="hero-swipe-edge" data-hero-swipe-edge d="M 0 100 Q 50 100 100 100" />
+      </svg>
       <div class="hero-panel" data-hero-panel>
         <div class="hero-media" data-hero-media>
           <img
@@ -190,19 +194,17 @@
         </a>
       </div>
 
-      <div class="galeria" aria-hidden="false">
-        <figure class="galeria-frame" data-mask data-para="0.18">
-          <img src="/images/retrato-01-face.webp" width="360" height="330" alt="Detalhe do olhar do Dr. Leonardo Guarçoni" loading="lazy" decoding="async" />
-        </figure>
-        <figure class="galeria-frame galeria-frame--line" data-mask data-para="-0.14" aria-label="Saúde, função e estética">
-          <span>Saúde</span>
-          <span>Função</span>
-          <span>Estética</span>
-          <i aria-hidden="true"></i>
-        </figure>
-        <figure class="galeria-frame" data-mask data-para="0.1">
-          <img src="/images/retrato-02.webp" width="402" height="505" alt="Dr. Leonardo Guarçoni sorrindo, de camisa clara" loading="lazy" decoding="async" />
-        </figure>
+      <div class="galeria" aria-label="Saúde, função e estética">
+        <div class="galeria-system" data-mask data-para="0.08">
+          <svg class="galeria-curve" viewBox="0 0 900 420" aria-hidden="true">
+            <path d="M74 292 C198 70 392 72 492 216 C581 345 734 342 826 128" />
+            <path d="M122 322 C258 204 388 172 514 214 C627 252 724 226 802 98" />
+          </svg>
+          <span class="galeria-axis galeria-axis--a">Saúde</span>
+          <span class="galeria-axis galeria-axis--b">Função</span>
+          <span class="galeria-axis galeria-axis--c">Estética</span>
+          <span class="galeria-caption">Três leituras clínicas, um plano individual.</span>
+        </div>
       </div>
     </section>
 
@@ -319,32 +321,37 @@
           Antes de desenhar um sorriso, é preciso ler a pessoa.
         </h2>
 
-        <div class="credo credo--a">
-          <p class="credo-line" data-split>Escuta antes <em>da técnica</em>.</p>
-          <p class="credo-sub" data-reveal>
-            Toda avaliação começa por entender o que incomoda e o que se espera.
-            O plano vem depois.
-          </p>
-        </div>
+        <div class="filosofia-stage" data-filosofia-stage>
+          <svg class="filosofia-curve" viewBox="0 0 980 620" aria-hidden="true">
+            <path class="filosofia-curve-path" data-filosofia-path d="M95 468 C242 180 462 132 565 302 C662 464 817 435 891 152" />
+          </svg>
 
-        <figure class="filosofia-macro" data-mask data-para="0.22">
-          <img src="/images/retrato-01-face.webp" width="360" height="330" alt="Detalhe do rosto do Dr. Leonardo Guarçoni" loading="lazy" decoding="async" />
-        </figure>
-
-        <div class="credo credo--b">
-          <p class="credo-line" data-split>Planejamento <em>individual</em>.</p>
-          <p class="credo-sub" data-reveal>
-            Nenhum caso é igual ao outro. Cada tratamento é desenhado para uma
-            boca, um rosto, uma rotina.
-          </p>
-        </div>
-
-        <div class="credo credo--c">
-          <p class="credo-line" data-split>Naturalidade <em>como critério</em>.</p>
-          <p class="credo-sub" data-reveal>
-            Um bom resultado é discreto: um sorriso saudável, em harmonia com a
-            sua expressão.
-          </p>
+          <ol class="principios" role="list">
+            <li class="principio principio--a" data-principio>
+              <span class="principio-num" aria-hidden="true">01</span>
+              <h3 class="credo-line" data-split>Escuta antes <em>da técnica</em>.</h3>
+              <p class="credo-sub" data-reveal>
+                Toda avaliação começa por entender o que incomoda e o que se espera.
+                O plano vem depois.
+              </p>
+            </li>
+            <li class="principio principio--b" data-principio>
+              <span class="principio-num" aria-hidden="true">02</span>
+              <h3 class="credo-line" data-split>Planejamento <em>individual</em>.</h3>
+              <p class="credo-sub" data-reveal>
+                Nenhum caso é igual ao outro. Cada tratamento é desenhado para uma
+                boca, um rosto, uma rotina.
+              </p>
+            </li>
+            <li class="principio principio--c" data-principio>
+              <span class="principio-num" aria-hidden="true">03</span>
+              <h3 class="credo-line" data-split>Naturalidade <em>como critério</em>.</h3>
+              <p class="credo-sub" data-reveal>
+                Um bom resultado é discreto: um sorriso saudável, em harmonia com a
+                sua expressão.
+              </p>
+            </li>
+          </ol>
         </div>
       </div>
     </section>

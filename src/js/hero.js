@@ -2,6 +2,9 @@
    e transformação nos primeiros pixels de rolagem. */
 
 import { gsap, ScrollTrigger } from './context.js';
+import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+
+gsap.registerPlugin(MorphSVGPlugin);
 
 let els = null;
 
@@ -17,6 +20,9 @@ export function prepareHero() {
     words: gsap.utils.toArray('[data-hero-word]'),
     foot: document.querySelector('[data-hero-foot]'),
     cue: document.querySelector('[data-hero-cue]'),
+    swipe: document.querySelector('[data-hero-swipe]'),
+    swipeFill: document.querySelector('[data-hero-swipe-fill]'),
+    swipeEdge: document.querySelector('[data-hero-swipe-edge]'),
   };
   if (!els.section) return;
 
@@ -26,6 +32,7 @@ export function prepareHero() {
   gsap.set([els.meta, els.kicker], { autoAlpha: 0, y: 18 });
   gsap.set(els.words, { yPercent: 112 });
   gsap.set([els.foot, els.cue], { autoAlpha: 0, y: 24 });
+  if (els.swipe) gsap.set(els.swipe, { autoAlpha: 0 });
 }
 
 export function enterHero() {
@@ -55,6 +62,34 @@ export function enterHero() {
     .to('.hero-title', { yPercent: -16, ease: 'none' }, 0)
     .to(els.meta, { autoAlpha: 0, y: -18, ease: 'none' }, 0)
     .to(els.cue, { autoAlpha: 0, ease: 'none' }, 0);
+
+  if (els.swipe && els.swipeFill && els.swipeEdge) {
+    const startFill = 'M 0 100 V 99 Q 50 96 100 99 V 100 Z';
+    const midFill = 'M 0 100 V 58 Q 49 28 100 56 V 100 Z';
+    const endFill = 'M 0 100 V 0 Q 50 0 100 0 V 100 Z';
+    const startEdge = 'M 0 99 Q 50 96 100 99';
+    const midEdge = 'M 0 58 Q 49 28 100 56';
+    const endEdge = 'M 0 0 Q 50 0 100 0';
+
+    gsap.set(els.swipeFill, { morphSVG: startFill });
+    gsap.set(els.swipeEdge, { morphSVG: startEdge });
+
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: els.section,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 0.35,
+        invalidateOnRefresh: true,
+      },
+    })
+      .to(els.swipe, { autoAlpha: 1, duration: 0.08, ease: 'none' }, 0.42)
+      .to(els.swipeFill, { morphSVG: midFill, ease: 'power2.in' }, 0.48)
+      .to(els.swipeEdge, { morphSVG: midEdge, ease: 'power2.in' }, 0.48)
+      .to(els.swipeFill, { morphSVG: endFill, ease: 'power2.out' }, 0.66)
+      .to(els.swipeEdge, { morphSVG: endEdge, ease: 'power2.out' }, 0.66)
+      .to(els.swipe, { autoAlpha: 0, duration: 0.08, ease: 'none' }, 0.96);
+  }
 }
 
 /* Sem motion: garante tudo visível (nada foi escondido). */

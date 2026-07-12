@@ -39,9 +39,10 @@ for (const vp of viewports) {
       problems.push(`[console:${msg.type()}] ${vp.name}: ${msg.text()}`);
   });
   page.on('pageerror', (err) => problems.push(`[pageerror] ${vp.name}: ${err.message}`));
-  page.on('requestfailed', (req) =>
-    problems.push(`[requestfailed] ${vp.name}: ${req.url()} ${req.failure()?.errorText}`)
-  );
+  page.on('requestfailed', (req) => {
+    if (req.url().includes('google.com/maps')) return;
+    problems.push(`[requestfailed] ${vp.name}: ${req.url()} ${req.failure()?.errorText}`);
+  });
 
   await page.goto(BASE, { waitUntil: 'networkidle' });
   await page.waitForTimeout(3400); /* preloader + entrada do hero */

@@ -27,11 +27,19 @@ function ratio(fg, bg) {
   return (hi + 0.05) / (lo + 0.05);
 }
 
+function hexToSrgb(hex) {
+  const raw = hex.replace('#', '');
+  const n = Number.parseInt(raw, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255].map((v) => v / 255);
+}
+
 const T = {
   porcelain:  [0.984, 0.003, 96],
   ivory:      [0.963, 0.006, 88],
   greige:     [0.916, 0.009, 86],
-  mist:       [0.935, 0.008, 230],
+  champagne:  '#e9e1d7',
+  stone:      '#e5dcd1',
+  mist:       '#e9e1d7',
   graphite:   [0.24, 0.012, 72],
   graphite2:  [0.185, 0.011, 74],
   umber:      [0.34, 0.044, 54],
@@ -40,23 +48,26 @@ const T = {
   inkSoft:    [0.39, 0.014, 76],
   milk:       [0.968, 0.006, 92],
   milkSoft:   [0.855, 0.012, 90],
-  copper:     [0.56, 0.104, 45],
-  copperInk:  [0.465, 0.098, 45],
-  goldThread: [0.78, 0.072, 84],
-  goldSoft:   [0.87, 0.052, 88],
+  copper:     '#b05418',
+  copperInk:  '#8d4218',
+  goldThread: '#d8ac54',
+  goldSoft:   '#ead2a0',
 };
 
-const rgb = Object.fromEntries(Object.entries(T).map(([k, v]) => [k, oklchToSrgb(...v)]));
+const rgb = Object.fromEntries(
+  Object.entries(T).map(([k, v]) => [k, Array.isArray(v) ? oklchToSrgb(...v) : hexToSrgb(v)])
+);
 
 const pairs = [
   ['ink @ porcelain (corpo)', 'ink', 'porcelain', 4.5],
   ['ink @ ivory (doutor)', 'ink', 'ivory', 4.5],
   ['ink @ greige (placas claras)', 'ink', 'greige', 4.5],
-  ['ink @ mist (planos clinicos)', 'ink', 'mist', 4.5],
+  ['ink @ champagne (hero/tratamentos)', 'ink', 'champagne', 4.5],
+  ['ink @ stone (hero/tratamentos)', 'ink', 'stone', 4.5],
   ['inkSoft @ porcelain (secundário)', 'inkSoft', 'porcelain', 4.5],
   ['inkSoft @ ivory', 'inkSoft', 'ivory', 4.5],
   ['inkSoft @ greige', 'inkSoft', 'greige', 4.5],
-  ['inkSoft @ mist', 'inkSoft', 'mist', 4.5],
+  ['inkSoft @ champagne', 'inkSoft', 'champagne', 4.5],
   ['copperInk @ porcelain (acentos, kicker)', 'copperInk', 'porcelain', 4.5],
   ['copperInk @ ivory (anos marcos, display)', 'copperInk', 'ivory', 4.5],
   ['copperInk @ greige (nums placas, display)', 'copperInk', 'greige', 3],

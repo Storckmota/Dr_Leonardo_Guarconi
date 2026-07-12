@@ -3505,3 +3505,135 @@ html:not(.motion) .hero-swipe {
     padding-block: 4rem 0;
   }
 }
+
+/* ==========================================================================
+   RODADA MOBILE FINAL (<= 767.98px) — sem alterar >= 768px
+   Superfície única na hero · tratamentos em accordion · processo em
+   slides verticais · legenda repetida do doutor oculta.
+   ========================================================================== */
+@media (max-width: 767.98px) {
+  /* --- 6 · HERO: uma única superfície clara ------------------------------- */
+  .hero {
+    background: var(--porcelain);
+  }
+
+  .hero::before {
+    display: none; /* remove o esmaecido inferior que criava faixa */
+  }
+
+  .hero-panel {
+    background: transparent; /* sem painel/bloco bege */
+    border-top: 0; /* sem linha horizontal atravessando */
+  }
+
+  /* --- 7 · TRATAMENTOS: sem palco; lista vira accordion ------------------- */
+  .tx-stage {
+    display: none; /* oculta o grande card editorial e seus controles */
+  }
+
+  .tx-list {
+    margin-top: 0;
+  }
+
+  .tx-name {
+    position: relative;
+    padding-right: 2.4rem; /* espaço para o indicador de abrir/fechar */
+  }
+
+  /* Indicador discreto (chevron) — puramente CSS, só no mobile */
+  .tx-name::after {
+    content: '';
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    width: 0.66rem;
+    height: 0.66rem;
+    margin-top: -0.5rem;
+    border-right: 1.5px solid var(--copper-ink);
+    border-bottom: 1.5px solid var(--copper-ink);
+    transform: rotate(45deg);
+    transition: transform var(--dur-fast) var(--ease-out);
+    opacity: 0.65;
+  }
+
+  .tx-name[aria-expanded='true']::after {
+    margin-top: -0.22rem;
+    transform: rotate(-135deg);
+  }
+
+  /* Fallback sem JavaScript: descrições permanecem visíveis */
+  html:not(.js) .tx-body[hidden] {
+    display: block;
+  }
+
+  /* --- 8 · PROCESSO: slides verticais (apenas com motion) ----------------- */
+  html.motion .processo-pin {
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-block: 5rem 4rem;
+  }
+
+  html.motion .passos {
+    display: grid;
+    margin-top: clamp(1.4rem, 4svh, 2.4rem);
+    min-height: 44svh;
+  }
+
+  html.motion .passo {
+    grid-area: 1 / 1;
+    border-top: 0;
+    padding-top: 0;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  html.motion .passo .passo-num::after {
+    content: ' / 06';
+    opacity: 0.6;
+  }
+
+  html.motion .processo-hud {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: clamp(1.4rem, 4svh, 2.4rem);
+  }
+
+  html.motion .processo-counter {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.3rem;
+    font-size: var(--fs-micro);
+    font-weight: 650;
+    letter-spacing: 0.1em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  html.motion .processo-counter i {
+    opacity: 0.5;
+    font-style: normal;
+  }
+
+  html.motion .processo-track {
+    flex: 1;
+    max-width: 16rem;
+    height: 1px;
+    background: var(--line-dark);
+    overflow: hidden;
+  }
+
+  html.motion .processo-track i {
+    display: block;
+    height: 100%;
+    background: var(--gold-thread);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  /* --- 9 · DOUTOR: oculta a legenda repetida sob a foto ------------------- */
+  .doutor-caption {
+    display: none; /* nome completo já aparece como heading principal */
+  }
+}

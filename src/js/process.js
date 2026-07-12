@@ -79,4 +79,56 @@ export function initProcess() {
       });
     };
   });
+
+  /* Mobile: sem órbita. Etapas em slides verticais conduzidos pelo scroll,
+     uma protagonista por vez, com contador e linha de progresso. Pin curto,
+     proporcional às seis etapas. Reduced-motion cai na lista empilhada (CSS). */
+  mm.add('(max-width: 767.98px)', () => {
+    const pinEl = document.querySelector('[data-processo-pin]');
+    const passos = gsap.utils.toArray('.passo');
+    const current = document.querySelector('[data-processo-current]');
+    const bar = document.querySelector('[data-processo-progress]');
+    if (!pinEl || passos.length < 2) return;
+
+    const pad = (n) => String(n + 1).padStart(2, '0');
+    const steps = passos.length;
+
+    gsap.set(passos, { autoAlpha: 0, yPercent: 40 });
+    gsap.set(passos[0], { autoAlpha: 1, yPercent: 0 });
+    if (current) current.textContent = pad(0);
+    if (bar) gsap.set(bar, { scaleX: 0 });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: pinEl,
+        start: 'top top',
+        end: () => '+=' + steps * 56 + '%',
+        pin: true,
+        scrub: 0.5,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const idx = Math.min(steps - 1, Math.floor(self.progress * steps));
+          if (current) current.textContent = pad(idx);
+          if (bar) gsap.set(bar, { scaleX: self.progress });
+        },
+      },
+    });
+
+    for (let i = 1; i < steps; i++) {
+      tl.to(passos[i - 1], { autoAlpha: 0, yPercent: -40, duration: 0.26, ease: 'power2.in' }, i)
+        .fromTo(
+          passos[i],
+          { autoAlpha: 0, yPercent: 40 },
+          { autoAlpha: 1, yPercent: 0, duration: 0.34, ease: 'power3.out' },
+          i + 0.28
+        );
+    }
+    /* respiro final para a última etapa assentar antes do unpin */
+    tl.to({}, { duration: 0.6 });
+
+    return () => {
+      gsap.set(passos, { clearProps: 'all' });
+    };
+  });
 }

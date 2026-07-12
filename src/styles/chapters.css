@@ -3577,12 +3577,15 @@ html:not(.motion) .hero-swipe {
 
   html.motion .passos {
     display: grid;
+    grid-template-columns: minmax(0, 1fr); /* trava a coluna à largura do container */
     margin-top: clamp(1.4rem, 4svh, 2.4rem);
     min-height: 44svh;
   }
 
   html.motion .passo {
     grid-area: 1 / 1;
+    min-width: 0; /* permite encolher abaixo do max-content (sem overflow) */
+    max-width: 100%;
     border-top: 0;
     padding-top: 0;
     opacity: 0;
@@ -3630,6 +3633,29 @@ html:not(.motion) .hero-swipe {
     background: var(--gold-thread);
     transform: scaleX(0);
     transform-origin: left;
+  }
+
+  /* Processo: títulos e descrições sempre dentro da tela (motion e não-motion) */
+  .passo-titulo {
+    font-size: clamp(1.85rem, 8vw, 2.5rem); /* Acompanhamento/Planejamento cabem em 360px */
+  }
+
+  .passo-texto {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: normal;
+    white-space: normal;
+    text-wrap: pretty;
+  }
+
+  /* --- LOCALIZAÇÃO: "Onde estamos" antes do mapa, sem overlay ------------- */
+  .mapa-shell {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .mapa-panel {
+    order: -1; /* painel de localização introduz o mapa (abaixo) */
   }
 
   /* --- 9 · DOUTOR: oculta a legenda repetida sob a foto ------------------- */

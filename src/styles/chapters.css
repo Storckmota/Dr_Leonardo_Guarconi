@@ -338,21 +338,30 @@ main > section {
   z-index: var(--z-menu);
 }
 
+/* A centralização é por margem automática, não por `justify-content: center`.
+   Num celular DEITADO (667×375) as cinco entradas mais o pé passam da altura
+   da tela; com `center` + `overflow: hidden` o excedente saía pelos DOIS lados
+   e "Tratamentos", "Como trabalhamos" e o botão de agendar ficavam
+   inalcançáveis — nem rolando. Com `margin-block: auto` o painel continua
+   centralizado quando sobra espaço e passa a rolar a partir do topo quando
+   falta. Onde o conteúdo cabe (todo o resto), nada muda. */
 .menu-panel {
   position: absolute;
   inset: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   background: var(--surface-dark);
   color: var(--ink-on-dark);
-  overflow: hidden;
+  overflow: hidden auto;
+  overscroll-behavior: contain;
 }
 
 .menu-in {
   align-content: center;
   row-gap: var(--sp-2);
   padding-block: 6.5rem var(--sp-2);
+  margin-block: auto;
 }
 
 .menu-mark {
@@ -1250,21 +1259,9 @@ body.menu-locked .btn-header {
   font-style: normal;
 }
 
-.processo-track {
-  flex: 1;
-  max-width: 16rem;
-  height: 1px;
-  background: var(--line-dark);
-  overflow: hidden;
-}
-
-.processo-track i {
-  display: block;
-  height: 100%;
-  background: var(--gold);
-  transform: scaleX(0);
-  transform-origin: left;
-}
+/* `.processo-track` (o filete dourado de progresso) foi REMOVIDO daqui e do
+   HTML. Ele e o contador mediam a mesma coisa; o contador é a leitura exata e
+   ficou sozinho, sem substituto — nem pontos, nem segmentos. */
 
 .processo-diagram {
   display: none;
@@ -1846,6 +1843,29 @@ body.menu-locked .btn-header {
 
 .mapa-contato:hover {
   color: var(--gold);
+}
+
+/* MOBILE — O MAPA VOLTA A SER UM MAPA
+   ---------------------------------------------------------------------------
+   O cartão continua o protagonista e continua sobreposto: o que muda é ONDE.
+   Centralizado numa camada de 100svh ele deixava duas sobras iguais, uma em
+   cima e outra embaixo, e nenhuma das duas era grande o bastante para ler como
+   mapa — a seção inteira virava um cartão escuro sobre um fundo cinza.
+
+   Agora ele encosta no ALTO da camada e o pé da seção guarda uma faixa
+   contínua de mapa. A soma (respiro de topo + faixa de pé) devolve 35–40% da
+   superfície da seção ao mapa em qualquer aparelho, contra 21% num 375×667.
+   Nenhuma informação saiu do cartão e o desenho dele é o mesmo.
+
+   A faixa é `svh` com piso e teto em `rem`: em telas curtas a seção passa a
+   ser um pouco mais alta que a dobra e o mapa termina de aparecer na rolagem —
+   é preferível a espremer o cartão até a ilegibilidade para caber tudo numa
+   tela só. */
+@media (max-width: 767.98px) {
+  .mapa-frame {
+    align-content: start;
+    padding-block: var(--sp-2) clamp(11rem, 38svh, 20rem);
+  }
 }
 
 @media (min-width: 768px) {

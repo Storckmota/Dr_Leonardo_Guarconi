@@ -1,6 +1,9 @@
 /* Processo: no desktop com motion, capítulo pinado com as seis etapas
-   conduzidas pelo scrub (crossfade + contador + linha). No mobile ou com
-   reduced-motion, a lista vertical padrão do CSS permanece. */
+   conduzidas pelo scrub (crossfade + contador). No mobile ou com
+   reduced-motion, a lista vertical padrão do CSS permanece.
+
+   O filete de progresso foi removido do HUD: ele repetia, em proporção, a
+   informação que o contador `01 / 06` já dá em número. */
 
 import { gsap, motionOK } from './context.js';
 
@@ -15,7 +18,6 @@ export function initProcess() {
     const dots = gsap.utils.toArray('[data-processo-dot]');
     const ring = document.querySelector('.processo-ring');
     const current = document.querySelector('[data-processo-current]');
-    const bar = document.querySelector('[data-processo-progress]');
     if (!pinEl || passos.length < 2) return;
 
     const pad = (n) => String(n + 1).padStart(2, '0');
@@ -49,7 +51,6 @@ export function initProcess() {
         onUpdate: (self) => {
           const idx = Math.min(steps - 1, Math.floor(self.progress * steps));
           if (current) current.textContent = pad(idx);
-          if (bar) gsap.set(bar, { scaleX: self.progress });
           dots.forEach((dot, i) => dot.classList.toggle('is-active', i === idx));
         },
       },
@@ -87,7 +88,6 @@ export function initProcess() {
     const pinEl = document.querySelector('[data-processo-pin]');
     const passos = gsap.utils.toArray('.passo');
     const current = document.querySelector('[data-processo-current]');
-    const bar = document.querySelector('[data-processo-progress]');
     if (!pinEl || passos.length < 2) return;
 
     const pad = (n) => String(n + 1).padStart(2, '0');
@@ -96,7 +96,6 @@ export function initProcess() {
     gsap.set(passos, { autoAlpha: 0, yPercent: 40 });
     gsap.set(passos[0], { autoAlpha: 1, yPercent: 0 });
     if (current) current.textContent = pad(0);
-    if (bar) gsap.set(bar, { scaleX: 0 });
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -110,7 +109,6 @@ export function initProcess() {
         onUpdate: (self) => {
           const idx = Math.min(steps - 1, Math.floor(self.progress * steps));
           if (current) current.textContent = pad(idx);
-          if (bar) gsap.set(bar, { scaleX: self.progress });
         },
       },
     });

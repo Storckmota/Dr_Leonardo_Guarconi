@@ -128,18 +128,25 @@
   position: relative;
 }
 
-/* MOBILE E TABLET — reorganização própria, não um desktop empilhado.
-   O filme é uma faixa grande no alto (56svh) e a copy vive abaixo, em
-   porcelana. Assim o H1 nunca disputa espaço com a mídia, os CTAs continuam
-   visíveis sem rolar, e o texto queimado no próprio filme fica INTEIRO dentro
-   da área de vídeo — nada do site passa por cima dele. */
+/* MOBILE — O FILME É A PRIMEIRA DOBRA INTEIRA.
+   Antes o filme era uma faixa que dividia a dobra com a copy: a mídia sobrava
+   com o que a coluna de texto não usava (~40% da tela num 390×844) e lia como
+   um banner no alto da página. Agora a linha 1 é UMA TELA e a copy começa na
+   dobra seguinte — no carregamento existem só a navegação e o filme.
+
+   POR QUE `svh` E NÃO `dvh` NEM `vh`
+   `dvh` acompanha as barras do Safari/Chrome: a caixa mudaria de altura no
+   meio da rolagem e o layout saltaria. `vh` é a viewport GRANDE — no primeiro
+   quadro, com as barras à mostra, o filme ficaria mais alto que a área
+   visível e a copy nasceria fora de lugar. `svh` é a viewport pequena: com as
+   barras visíveis (que é o estado do carregamento) ele coincide exatamente
+   com o que se vê, e não se mexe quando elas recolhem. */
 .hero-stage {
   position: relative;
   min-height: 100svh;
   display: grid;
-  /* O filme fica com TODA a altura que sobra depois da copy: em qualquer
-     aparelho ele é o maior possível, e o CTA nunca cai abaixo da dobra. */
-  grid-template-rows: minmax(12rem, 1fr) auto;
+  grid-template-rows: 100vh auto; /* fallback: navegadores sem `svh` */
+  grid-template-rows: 100svh auto;
   overflow: clip;
   isolation: isolate;
   background: var(--surface);
@@ -161,11 +168,31 @@
   overflow: clip;
 }
 
-/* Mobile: a tela é MAIS vertical que o arquivo, então o `cover` corta a
-   largura. Recuando o corte para a esquerda, a legenda queimada do filme
-   entra inteira em vez de aparecer decepada, e o rosto continua na janela. */
+/* ENQUADRAMENTO DA DOBRA VERTICAL — medido no arquivo, não escolhido no olho.
+   O mestre mobile é 720×1216 (0,592). Um aparelho atual é ~0,46, então a
+   janela é MAIS vertical que o arquivo: o `cover` escala pela altura (o quadro
+   entra inteiro de cima a baixo, `--mv-y` deixa de ter efeito) e corta ~22% da
+   LARGURA. Que 22% se perde é o que `--mv-x` decide.
+
+   O filme tem três legendas queimadas, e elas não ocupam a mesma faixa
+   horizontal do quadro:
+
+     ato 1  "Um novo conceito…"            x  0% → 50%
+     ato 2  "Com atendimentos humanizados…" x 35% → 97%
+     ato 3  "contamos com especialistas…"   x  3% → 68%
+
+   A união pede 94% da largura e a janela mostra 78%: NENHUM recorte guarda as
+   três inteiras. Com `0%` duas ficam intactas e só o ato 2 (o plano escuro em
+   contraluz, ~5s de 22s) perde a cauda; com 50% ou 100% quebram duas, e as que
+   quebram perdem a PRIMEIRA letra de cada linha, que é o corte mais visível.
+   Daí o zero — é a perda mínima, não um alinhamento à esquerda por gosto. O
+   assunto acompanha: nos três atos o Dr. Leonardo e o campo operatório vivem
+   na metade esquerda do quadro.
+
+   Em telas 16:9 antigas (375×667) a janela mostra 95% da largura e as três
+   legendas entram praticamente inteiras. */
 .hero-media .mv {
-  --mv-x: 14%;
+  --mv-x: 0%;
   --mv-y: 50%;
 }
 
@@ -196,12 +223,15 @@
   text-shadow: 0 1px 12px oklch(12% 0.01 60 / 0.7);
 }
 
+/* A copy abre a dobra SEGUINTE, então precisa do respiro de começo de
+   capítulo em cima — antes ela vinha logo abaixo da faixa de filme, dentro da
+   mesma tela, e 24px bastavam. O pé continua o mesmo. */
 .hero-layout {
   position: relative;
   grid-row: 2;
   z-index: var(--z-copy);
   align-content: center;
-  padding-block: var(--sp-1) var(--sp-2);
+  padding-block: var(--section-y) var(--sp-2);
 }
 
 /* A coluna de texto é o CONTAINER de medida do H1 (ver .hero-word). */
@@ -298,6 +328,12 @@
   color: var(--ink);
 }
 
+/* --- Tablet: a composição de faixa + copy na MESMA dobra continua igual ----
+   A dobra de filme inteiro é uma decisão de aparelho estreito. Numa tela de
+   768 de largura a coluna de texto usa menos da metade da altura, então filme
+   e copy convivem sem que nenhum dos dois vire faixa — a reorganização que já
+   existia aqui está preservada, valor por valor. */
+
 @media (min-width: 768px) {
   .hero-stage {
     grid-template-rows: minmax(20rem, 1fr) auto;
@@ -305,6 +341,10 @@
 
   .hero-copy {
     grid-column: 1 / 7;
+  }
+
+  .hero-layout {
+    padding-block: var(--sp-1) var(--sp-2);
   }
 
   .hero-foot {

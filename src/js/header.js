@@ -30,6 +30,12 @@ export function initHeader() {
     ...document.querySelectorAll('footer'),
   ];
   const hero = document.querySelector('.hero');
+  /* No mobile o filme é a PRIMEIRA DOBRA e a copy do hero vem na dobra
+     seguinte, dentro da mesma seção. Quem decide o estado do header é a
+     superfície sob a linha do topo, e essa superfície é a mídia — não a seção
+     inteira: passada a dobra do filme, o header já está sobre porcelana e
+     precisa da tinta escura e da faixa compacta, mesmo ainda dentro do hero. */
+  const heroMedia = document.querySelector('[data-hero-media]');
   /* Acima disto o hero é a composição 50/50: logomarca sobre a porcelana e o
      bloco da direita sobre o filme. Abaixo, o filme é a faixa do alto e o
      header inteiro fica sobre ele. */
@@ -51,7 +57,11 @@ export function initHeader() {
       }
     }
 
-    const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
+    /* No desktop a referência continua sendo a SEÇÃO: lá a mídia é absoluta
+       dentro do palco fixado e o fim dela não é o fim do capítulo. Abaixo de
+       1024 a referência é a dobra de filme. */
+    const filmEl = (!split.matches && heroMedia) || hero;
+    const heroBottom = filmEl ? filmEl.getBoundingClientRect().bottom : 0;
     const pastHero = heroBottom <= probe;
 
     /* 2 · sobre o hero o header tem estado próprio. `data-forced` (escrito por

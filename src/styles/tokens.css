@@ -1,102 +1,222 @@
 /* ============================================================================
-   TOKENS — Dr. Leonardo Guarçoni · paleta luminosa da marca pessoal
-   Extraída do logo.jpg real: cobre #b05418 e dourado #d8ac54
-   sobre branco quente.
-   Base: ~75% superfícies claras · 15% grafite quente · 7% greige · 3% ouro/cobre.
+   TOKENS — Dr. Leonardo Guarçoni
+   ----------------------------------------------------------------------------
+   Um sistema só: uma paleta, uma escala de espaço, uma escala tipográfica e
+   um grid. Nenhuma seção inventa cor, medida ou eixo próprio.
+
+   PALETA
+   Derivada do monograma (cobre #b05418 · dourado #d8ac54). Duas superfícies
+   claras, UMA superfície escura, tintas e dois acentos. Não existe marrom
+   saturado como fundo, não existe azul, não existe uma terceira identidade
+   para nenhum capítulo.
+
+   ESPAÇO
+   Cinco degraus (24 · 40–48 · 72–80 · 112–128 · 128–160). Seções editoriais
+   comuns respiram por padding em rem; `svh` fica reservado para o hero, os
+   filmes imersivos e os capítulos de tela cheia.
    ========================================================================== */
 
 :root {
-  /* --- Cor: superfícies claras (base do site) -------------------------------- */
-  --porcelain:    oklch(98.4% 0.003 96);
-  --ivory:        oklch(96.3% 0.006 88);
-  --greige:       oklch(91.6% 0.009 86);
-  --champagne:    #e9e1d7;
-  --stone:        #e5dcd1;
-  --mist:         var(--champagne);
+  /* --- Superfícies claras ---------------------------------------------------
+     surface   porcelana quente, base do site
+     surface-2 areia: o segundo tempo do capítulo claro
+     surface-3 areia funda: cartões e planos dentro do capítulo claro       */
+  --surface:        oklch(97.6% 0.005 84);   /* papel / off-white quente    */
+  --surface-2:      oklch(94.0% 0.011 82);   /* areia suave                 */
+  --surface-3:      oklch(90.2% 0.014 80);   /* areia funda, planos internos*/
+  --surface-white:  oklch(99.2% 0.003 90);   /* branco quente, painéis      */
 
-  /* --- Cor: neutros escuros (estrutura, ~15%) --------------------------------- */
-  --graphite:     oklch(24% 0.012 72);
-  --graphite-2:   oklch(18.5% 0.011 74);
-  --umber:        oklch(34% 0.044 54);
-  --rust:         oklch(42% 0.082 43);
+  /* --- Superfície escura (única) --------------------------------------------
+     Carvão quente com um fundo de marrom quase imperceptível (croma 0.014):
+     conversa com a pele âmbar da metragem sem virar "o capítulo marrom".
+     Precisão, Como trabalhamos, Clínica, mapa, CTA e footer usam ESTA cor.
+     `-2` é só o poço sob a mídia — nunca um segundo fundo de seção.        */
+  --surface-dark:   oklch(19.0% 0.013 62);
+  --surface-dark-2: oklch(14.2% 0.011 60);
 
-  /* --- Cor: texto --------------------------------------------------------------- */
-  --ink:          oklch(24.5% 0.012 76);
-  --ink-soft:     oklch(39% 0.014 76);
-  --milk:         oklch(96.8% 0.006 92);
-  --milk-soft:    oklch(85.5% 0.012 90);
+  /* Carvão quase preto e NEUTRO — só o footer. Ele fecha a página e precisa
+     ler como base, não como continuação do marrom da clínica. */
+  --surface-black:  oklch(12.5% 0.004 90);
 
-  /* --- Cor: acentos da logo ------------------------------------------------------- */
-  --copper-logo:  #b05418;
-  --gold-logo:    #d8ac54;
-  --copper:       var(--copper-logo);       /* cobre extraído do monograma     */
-  --copper-ink:   #8d4218;                  /* cobre para texto pequeno        */
-  --gold-thread:  var(--gold-logo);         /* fio dourado sobre escuro        */
-  --gold-soft:    #ead2a0;                  /* dourado claro sobre escuro      */
-  --wa-green:     oklch(66% 0.15 152);
+  /* --- Tintas ---------------------------------------------------------------- */
+  --ink:            oklch(24.0% 0.014 70);   /* preto quente               */
+  --ink-2:          oklch(43.0% 0.014 72);   /* corpo de texto secundário  */
+  /* Escurecido até passar AA (4.5:1) tanto sobre `--surface` quanto sobre
+     `--surface-2` — legendas e metadados vivem nas duas. */
+  --ink-3:          oklch(48.0% 0.014 74);   /* meta, legendas             */
+  --ink-on-dark:    oklch(93.5% 0.008 84);   /* off-white sobre o escuro   */
+  --ink-on-dark-2:  oklch(76.0% 0.012 82);
 
-  /* --- Linhas --------------------------------------------------------------------- */
-  --line:         color-mix(in oklab, var(--ink) 15%, transparent);
-  --line-strong:  color-mix(in oklab, var(--ink) 32%, transparent);
-  --line-dark:    color-mix(in oklab, var(--milk) 17%, transparent);
+  /* --- Acentos da marca ------------------------------------------------------ */
+  --copper:      #b05418;                    /* cobre do monograma          */
+  --copper-ink:  #8d4218;                    /* cobre legível em texto      */
+  --gold:        #d8ac54;                    /* dourado, acento controlado  */
+  --gold-soft:   #ead2a0;                    /* dourado claro sobre escuro  */
+  --wa:          oklch(56% 0.14 152);         /* só o ícone do WhatsApp      */
 
-  /* --- Tipografia ---------------------------------------------------------------- */
+  /* --- CTA PRIMÁRIO (token único) --------------------------------------------
+     O cobre do monograma É a cor da conversão. Um só valor para TODOS os
+     botões preenchidos que levam ao agendamento — navbar, hero, localização e
+     fechamento — em qualquer superfície, clara ou escura. O CTA não muda de
+     tinta conforme o capítulo: se mudasse, deixaria de significar "ação
+     principal" e viraria decoração.
+
+     Contraste medido (WCAG 2.1):
+       texto  #FDFCFA sobre --cta  → 5.1:1   AA para corpo e AA large
+       hover  #FDFCFA sobre --cta-hover → 6.8:1
+       ícone  --cta-wa sobre --cta  → 3.8:1  acima do mínimo de 3:1 (1.4.11)
+
+     Nada além da conversão usa estes tokens: links secundários, chips de
+     tratamento e "Como chegar" continuam em tinta neutra. */
+  --cta:         #b05418;                    /* = --copper, nomeado por função */
+  --cta-hover:   #93430f;
+  --cta-active:  #7c380b;
+  --cta-ink:     #fdfcfa;                    /* off-white quente sobre o cobre */
+  /* O ícone do WhatsApp continua verde — só sobe de luminosidade o bastante
+     para se destacar do cobre. */
+  --cta-wa:      oklch(88% 0.105 152);
+  --cta-ring:    color-mix(in oklab, var(--cta) 55%, white);
+
+  /* --- Linhas ---------------------------------------------------------------- */
+  --line:        color-mix(in oklab, var(--ink) 14%, transparent);
+  --line-2:      color-mix(in oklab, var(--ink) 28%, transparent);
+  --line-dark:   color-mix(in oklab, var(--ink-on-dark) 16%, transparent);
+  --line-gold:   color-mix(in oklab, var(--gold) 30%, transparent);
+
+  /* --- Tipografia ------------------------------------------------------------ */
   --serif: 'Literata Variable', 'Literata-fallback', Georgia, 'Times New Roman', serif;
   --sans:  'Hanken Grotesk Variable', 'Hanken-fallback', 'Segoe UI', Arial, sans-serif;
 
-  --fs-hero:     3.45rem;
-  --fs-display:  2.35rem;
-  --fs-credo:    2.25rem;
-  --fs-passo:    2.9rem;
-  --fs-h3:       1.25rem;
-  --fs-body-lg:  1.08rem;
+  /* Teto do H1. A medida REAL do hero é `cqw` sobre a coluna de texto (ver
+     media.css): o tipo passa a ser dimensionado pela coluna que o contém, e
+     não pela viewport — foi essa divergência que cortava "Odontologia". */
+  --fs-hero:     clamp(2.9rem, 1.55rem + 5.6vw, 6.6rem);
+  --fs-display:  clamp(2rem, 1.18rem + 3.4vw, 4.2rem);
+  --fs-statement: clamp(1.9rem, 1.15rem + 3.1vw, 3.7rem);
+  --fs-passo:    clamp(2.5rem, 1.35rem + 4.8vw, 5rem);
+  --fs-h3:       clamp(1.2rem, 1.08rem + 0.5vw, 1.45rem);
+  --fs-lead:     clamp(1.05rem, 1rem + 0.28vw, 1.2rem);
   --fs-body:     1rem;
   --fs-small:    0.875rem;
   --fs-micro:    0.78rem;
 
-  --lh-tight: 1.02;
-  --lh-snug:  1.16;
-  --lh-body:  1.65;
+  --lh-tight: 1.0;
+  --lh-snug:  1.12;
+  --lh-body:  1.62;
 
-  /* --- Espaço ----------------------------------------------------------------------- */
-  --section-y: clamp(5.5rem, 3.5rem + 8vw, 11rem);
-  --gutter: clamp(1.25rem, 0.6rem + 3vw, 3rem);
-  --container: 82rem;
+  /* --- Ritmo vertical --------------------------------------------------------
+     24 · 40–48 · 72–80 · 112–128 · 128–160. Nada fora desta escala.
+     `--sp-4` e `--sp-5` continuam sendo degraus da escala e são usados DENTRO
+     das composições (respiro entre blocos de uma mesma seção); o respiro
+     EXTERNO das seções passa a sair só dos três tokens de `--section-y`.   */
+  --sp-1: 1.5rem;
+  --sp-2: clamp(2.5rem, 2.1rem + 1.05vw, 3rem);
+  --sp-3: clamp(4.5rem, 3.85rem + 1.6vw, 5rem);
+  --sp-4: clamp(7rem, 5.6rem + 3.5vw, 8rem);
+  --sp-5: clamp(8rem, 5.5rem + 6.2vw, 10rem);
 
-  /* --- Forma ------------------------------------------------------------------------- */
-  --r-frame: 4px;
-  --r-panel: 16px;
+  /* --- RITMO DAS SEÇÕES · três níveis, e só três ------------------------------
+     O que o olho lê entre dois capítulos não é o `padding` de um deles: é a
+     SOMA do pé de um com o topo do outro. Antes desta rodada cada seção
+     escolhia o seu (0, 80, 128 ou 160 por lado) e as junções saíam a 160, 208,
+     240, 256 e 288px — cinco vãos diferentes para a mesma função.
+
+     Agora existe um valor por categoria, os dois lados são simétricos e o vão
+     entre duas seções editoriais é sempre `2 × --section-y`:
+
+       editorial   --section-y            72 → 80    junção  144 → 160
+       compacto    --section-y-compact    40 → 48    fecho do rodapé
+       imersivo    --section-y-immersive   0         hero, Filosofia, mapa
+
+     Os valores NASCEM da escala acima, não são novos: `--section-y` é o degrau
+     3 e `--section-y-compact` o degrau 2. A junção editorial (144–160) cai
+     exatamente sobre o degrau 5 — o vão entre dois capítulos é UMA unidade da
+     escala, repartida entre os dois vizinhos, e não duas margens somadas.
+
+     Este é o valor do MOBILE e do tablet. O desktop tem o seu, mais abaixo:
+     72–80px por lado funcionam num aparelho de 390px de largura e ficam
+     apertados numa tela de 1910. */
+  --section-y:           var(--sp-3);
+  --section-y-compact:   var(--sp-2);
+  --section-y-immersive: 0rem;
+
+  /* --- Grid ------------------------------------------------------------------
+     4 colunas no mobile, 8 no tablet, 12 no desktop amplo.
+     `--grid-max` limita o CONTAINER; `--grid-gutter` é o recuo externo e
+     `--grid-gap` o vão entre colunas.                                       */
+  --grid-cols: 4;
+  --grid-gutter: clamp(1rem, 0.55rem + 2.2vw, 1.5rem);   /*  16 → 24 */
+  --grid-gap: 1rem;                                       /*  16      */
+  --grid-max: 82.5rem;                                    /* 1320     */
+
+  /* Largura real da viewport (sem a barra de rolagem). Reescrita por
+     src/js/viewport.js; `100vw` é o valor de partida. */
+  --vw: 100vw;
+
+  /* RECUO EXTERNO EFETIVO — o eixo da página.
+     Uma única expressão para TODAS as seções, contidas ou de largura cheia:
+     acima de `--grid-max` ela absorve a sobra, abaixo dela é o gutter. Assim
+     a coluna 1 nasce no mesmo x na página inteira, e a mídia que precisa
+     sangrar até a borda usa `calc(var(--edge) * -1)` — sem número mágico.
+
+     O gutter NÃO é somado à sobra: acima do container ele já está contido
+     nela. Somar os dois empurrava o conteúdo mais 76px para dentro em telas
+     largas — era metade do vazio improdutivo à esquerda do hero. */
+  --edge: max(var(--grid-gutter), calc((var(--vw) - var(--grid-max)) / 2));
+
+  /* --- Forma ------------------------------------------------------------------ */
+  --r-sm: 4px;
+  --r-md: 12px;
   --r-pill: 999px;
 
-  /* --- Motion ------------------------------------------------------------------------- */
+  /* --- Motion ------------------------------------------------------------------ */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --dur-fast: 180ms;
   --dur-med: 420ms;
 
-  /* --- Camadas ------------------------------------------------------------------------- */
+  /* --- Camadas ------------------------------------------------------------------ */
+  --z-media: 0;
+  --z-copy: 2;
   --z-header: 100;
   --z-menu: 200;
   --z-preloader: 300;
+  --z-debug: 400;
 }
 
 @media (min-width: 768px) {
   :root {
-    --fs-hero: 4.9rem;
-    --fs-display: 3.45rem;
-    --fs-credo: 3.1rem;
-    --fs-passo: 4rem;
-    --fs-h3: 1.38rem;
-    --fs-body-lg: 1.14rem;
+    --grid-cols: 8;
+    --grid-gutter: clamp(1.5rem, 3.2vw, 2.5rem);          /*  24 → 40 */
+    --grid-gap: 1.5rem;                                    /*  24      */
+  }
+}
+
+/* --- RITMO EDITORIAL NO DESKTOP ----------------------------------------------
+   Só a categoria editorial cresce, e só a partir de 1024px. `--section-y-compact`
+   e `--section-y-immersive` não mudam: o rodapé continua fechando compacto e as
+   seções imersivas continuam em zero.
+
+   Por que aqui e não numa expressão única: um `clamp()` com piso de 7,5rem
+   levaria os 120px para o celular também — o piso de um clamp não sabe a
+   diferença entre uma tela estreita e uma tela larga. A troca por breakpoint
+   mantém o mobile exatamente onde estava.
+
+     1024 → 1500px    120px por lado   (piso: 8vw ainda não alcançou 7,5rem)
+     1910px           152,8px
+     2000px em diante 160px            (teto de 10rem, o degrau 5 da escala)
+
+   O vão entre duas seções editoriais vizinhas vai de 160 para 240–320px. É o
+   dobro do respiro, não o triplo: a página cresce cerca de 10%, não 40%. */
+@media (min-width: 1024px) {
+  :root {
+    --section-y: clamp(7.5rem, 8vw, 10rem);
   }
 }
 
 @media (min-width: 1200px) {
   :root {
-    --fs-hero: 6.65rem;
-    --fs-display: 4.65rem;
-    --fs-credo: 3.85rem;
-    --fs-passo: 5.15rem;
-    --fs-h3: 1.48rem;
-    --fs-body-lg: 1.18rem;
+    --grid-cols: 12;
+    --grid-gutter: clamp(2.5rem, 4vw, 5rem);              /*  40 → 80 */
+    --grid-gap: clamp(1.25rem, 1.6vw, 2rem);              /*  20 → 32 */
   }
 }

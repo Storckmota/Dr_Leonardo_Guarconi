@@ -1,15 +1,30 @@
 /* Tratamentos.
-   Desktop/tablet (>=768px): palco de placas com contador, linha de progresso
-   e troca automática pausável (comportamento aprovado, inalterado).
+   Desktop/tablet (>=768px): palco de placas comandado pela lista.
    Mobile (<=767.98px): sem palco — a lista vira um accordion vertical
    (um item aberto por vez, todos fechados no início).
    Ambos os modos ficam isolados por gsap.matchMedia() com cleanup automático.
-   Sem motion: troca/abertura instantânea; conteúdo sempre acessível. */
+   Sem motion: troca/abertura instantânea; conteúdo sempre acessível.
+
+   SEM HUD E SEM ROTAÇÃO AUTOMÁTICA.
+   ---------------------------------------------------------------------------
+   A rodada anterior tirou o HUD (contador `01 / 09`, filete de progresso e
+   botão de pausa) e manteve o autoplay, apoiado no fato de que tocar na lista
+   o interrompia. Era a pior das combinações: o palco continuava trocando
+   sozinho a cada 5,5s e não havia mais nenhuma peça na tela dizendo isso nem
+   permitindo pará-lo antes do primeiro toque.
+
+   Agora nada muda sozinho. O card 01 fica ativo ao entrar na seção e só sai de
+   lá por clique, toque ou teclado na lista — que é a navegação declarada desta
+   seção. Saíram junto: a constante `AUTO_SECONDS`, o timer, os tweens de
+   progresso, os estados `autoStopped`/`inView`, o `ScrollTrigger` que ligava e
+   desligava o ciclo e o listener de `visibilitychange` que existia só para
+   pausá-lo em aba oculta.
+
+   O que permanece: `aria-expanded` em cada botão, navegação por setas/Home/End,
+   a troca instantânea sem motion e as animações de entrada (revelação, não
+   troca de estado). */
 
 import { gsap, ScrollTrigger, motionOK } from './context.js';
-
-const AUTO_SECONDS = 5.5;
-const pad = (n) => String(n + 1).padStart(2, '0');
 
 export function initTreatments() {
   const root = document.querySelector('[data-tx]');
@@ -20,31 +35,23 @@ export function initTreatments() {
   const bodies = gsap.utils.toArray('[data-tx-body]');
   const plates = gsap.utils.toArray('[data-tx-plate]');
   const stage = document.querySelector('[data-tx-stage]');
-  const counter = document.querySelector('[data-tx-current]');
-  const progress = document.querySelector('[data-tx-progress]');
-  const pauseBtn = document.querySelector('[data-tx-pause]');
 
   const mm = gsap.matchMedia();
 
   /* ======================================================================
-     DESKTOP / TABLET — palco + lista + autoplay (aprovado)
+     DESKTOP / TABLET — palco comandado pela lista
      ====================================================================== */
   mm.add('(min-width: 768px)', () => {
     const ac = new AbortController();
     const { signal } = ac;
 
     let active = 0;
-    let autoTimer = null;
-    let progressTween = null;
-    let autoStopped = !motionOK;
-    let inView = false;
 
     /* estado inicial explícito (pode vir do modo mobile ao redimensionar) */
     items.forEach((el, k) => el.classList.toggle('is-active', k === 0));
     buttons.forEach((b, k) => b.setAttribute('aria-expanded', String(k === 0)));
     bodies.forEach((b, k) => { b.hidden = k !== 0; });
     plates.forEach((p, k) => (k === 0 ? p.setAttribute('data-active', '') : p.removeAttribute('data-active')));
-    if (counter) counter.textContent = pad(0);
 
     function setBody(i, show) {
       const body = bodies[i];
@@ -105,11 +112,10 @@ export function initTreatments() {
       }
     }
 
-    function select(i, { user = false } = {}) {
-      if (i === active) {
-        if (user) stopAuto();
-        return;
-      }
+    /* Só é chamada por clique, toque ou teclado. Não existe mais nenhum
+       caminho automático até aqui. */
+    function select(i) {
+      if (i === active) return;
       const prev = active;
       active = i;
       items.forEach((el, k) => el.classList.toggle('is-active', k === i));
@@ -117,73 +123,10 @@ export function initTreatments() {
       setBody(prev, false);
       setBody(i, true);
       swapPlate(prev, i);
-      if (counter) counter.textContent = pad(i);
-      if (user) stopAuto();
-      else scheduleAuto();
     }
-
-    function clearAuto() {
-      if (autoTimer) { autoTimer.kill(); autoTimer = null; }
-      if (progressTween) { progressTween.kill(); progressTween = null; }
-    }
-
-    function scheduleAuto() {
-      clearAuto();
-      if (autoStopped || !inView || document.hidden) {
-        if (progress) gsap.set(progress, { scaleX: 1 });
-        return;
-      }
-      if (progress) {
-        progressTween = gsap.fromTo(progress, { scaleX: 0 }, { scaleX: 1, duration: AUTO_SECONDS, ease: 'none' });
-      }
-      autoTimer = gsap.delayedCall(AUTO_SECONDS, () => select((active + 1) % items.length));
-    }
-
-    function stopAuto() {
-      autoStopped = true;
-      clearAuto();
-      if (progress) gsap.set(progress, { scaleX: 1 });
-      if (pauseBtn) {
-        pauseBtn.setAttribute('aria-pressed', 'true');
-        pauseBtn.setAttribute('aria-label', 'Retomar troca automática');
-      }
-    }
-
-    function resumeAuto() {
-      autoStopped = false;
-      if (pauseBtn) {
-        pauseBtn.setAttribute('aria-pressed', 'false');
-        pauseBtn.setAttribute('aria-label', 'Pausar troca automática');
-      }
-      scheduleAuto();
-    }
-
-    if (pauseBtn) {
-      pauseBtn.addEventListener('click', () => (autoStopped ? resumeAuto() : stopAuto()), { signal });
-      if (!motionOK) {
-        pauseBtn.setAttribute('aria-pressed', 'true');
-        pauseBtn.setAttribute('aria-label', 'Retomar troca automática');
-      }
-    }
-
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) clearAuto();
-      else scheduleAuto();
-    }, { signal });
-
-    ScrollTrigger.create({
-      trigger: root,
-      start: 'top 85%',
-      end: 'bottom 10%',
-      onToggle: (self) => {
-        inView = self.isActive;
-        if (inView) scheduleAuto();
-        else clearAuto();
-      },
-    });
 
     buttons.forEach((btn, i) => {
-      btn.addEventListener('click', () => select(i, { user: true }), { signal });
+      btn.addEventListener('click', () => select(i), { signal });
       btn.addEventListener('keydown', (e) => {
         let t = null;
         if (e.key === 'ArrowDown') t = (i + 1) % buttons.length;
@@ -193,7 +136,7 @@ export function initTreatments() {
         if (t !== null) {
           e.preventDefault();
           buttons[t].focus();
-          select(t, { user: true });
+          select(t);
         }
       }, { signal });
     });
@@ -221,10 +164,7 @@ export function initTreatments() {
       });
     }
 
-    return () => {
-      ac.abort();
-      clearAuto();
-    };
+    return () => ac.abort();
   });
 
   /* ======================================================================

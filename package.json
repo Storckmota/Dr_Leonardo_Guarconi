@@ -8,10 +8,10 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "images": "node scripts/optimize-images.mjs"
+    "images": "node scripts/optimize-images.mjs",
+    "video": "node scripts/build-video-assets.mjs"
   },
   "devDependencies": {
-    "playwright": "^1.61.1",
     "sharp": "^0.34.2",
     "vite": "^7.0.0"
   },

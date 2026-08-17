@@ -8,15 +8,16 @@ dist/
 *.log
 *.pid
 
-# QA outputs (screenshots / reports gerados localmente)
-qa-*/
-test-results/
-playwright-report/
-coverage/
+# Local video sources & intermediate renders
+assets-src/video/*.MOV
+assets-src/video/*.mov
+assets-src/video/edit/
 
-# Local tooling & agents
-.agents/
+# Local tooling & agents (definições de skill, não código da aplicação)
 .claude/settings.local.json
+.claude/skills/
+.agents/
+skills-lock.json
 
 # Environment & secrets
 .env

@@ -1,28 +1,44 @@
 /* ============================================================================
-   CAPÍTULOS — header, menu, hero, missão, tratamentos, processo, doutor,
-   filosofia, mapa, CTA final e footer. Mobile-first.
+   CAPÍTULOS — Dr. Leonardo Guarçoni
+   ----------------------------------------------------------------------------
+   Uma camada só. As cinco camadas de correção sobrepostas que existiam aqui
+   (cada rodada reescrevendo a anterior com seletores mais específicos e
+   `!important`) foram substituídas por este arquivo: cada seletor aparece
+   uma vez, na cascata natural, mobile-first.
+
+   REGRAS DO SISTEMA
+   1. Toda seção declara o grid global (`.grid`). Nada é centralizado no olho.
+   2. Superfícies vêm dos tokens. Nenhum capítulo inventa uma cor de fundo.
+   3. Ritmo vertical pela escala --sp-*. `svh` só no hero, nos filmes e nos
+      capítulos de tela cheia (ver media.css).
+   4. Ritmo de superfícies — a troca marca capítulo, não decora:
+        papel   hero · missão · tratamentos
+        areia   painel da missão · precisão
+        carvão  como trabalhamos
+        papel   o doutor · filosofia
+        carvão  a clínica
+        papel   onde estamos
+        areia   CTA final
+        preto   footer (neutro e compacto)
    ========================================================================== */
 
-.header-in,
-.missao-in,
-.tx-in,
-.processo-in,
-.doutor-in,
-.filosofia-in,
-.final-in,
-.footer-in {
-  width: 100%;
-  max-width: var(--container);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-}
-
 main > section {
-  scroll-margin-top: 4.5rem;
+  scroll-margin-top: 5rem;
+  position: relative;
+  /* Cada seção é um contexto de empilhamento fechado: nada de uma mídia de um
+     capítulo pintar por cima do fundo do capítulo seguinte. */
+  isolation: isolate;
 }
 
 /* ==========================================================================
-   CAP. 02 · HEADER
+   HEADER
+   ==========================================================================
+   Sobreposto ao hero, transparente no primeiro estado, alinhado ao grid.
+   Sem faixa branca, sem blur pesado, sem "glassmorphism".
+
+   data-on="light"  seções claras → tinta escura
+   data-on="dark"   seções escuras → tinta clara
+   data-on="film"   filme em tela cheia → tinta clara + véu de topo em gradiente
    ========================================================================== */
 
 .header {
@@ -31,44 +47,102 @@ main > section {
   top: 0;
   z-index: var(--z-header);
   color: var(--ink);
-  transition: background-color var(--dur-med) ease, color var(--dur-med) ease,
-    box-shadow var(--dur-med) ease;
+  transition: color var(--dur-med) ease, transform var(--dur-med) var(--ease-out),
+    background-color var(--dur-med) ease, box-shadow var(--dur-med) ease;
 }
 
-.header[data-on='dark'] {
-  color: var(--milk);
+/* O véu do estado de filme: um gradiente longo, nunca um retângulo opaco. */
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 190%;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-med) ease;
+  background: linear-gradient(
+    180deg,
+    oklch(12% 0.01 60 / 0.62) 0%,
+    oklch(12% 0.01 60 / 0.34) 46%,
+    oklch(12% 0.01 60 / 0) 100%
+  );
 }
 
-.header.is-scrolled {
-  background: color-mix(in oklab, var(--porcelain) 92%, transparent);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+.header[data-on='dark'],
+.header[data-on='film'] {
+  color: var(--ink-on-dark);
+}
+
+/* Estado do hero: a logomarca fica sobre a porcelana (tinta escura) e o bloco
+   da direita inteiro sobre o filme (tinta clara + CTA quente). Duas tintas
+   porque são duas superfícies — e nenhuma faixa em cima de nenhuma delas. */
+.header[data-on='split'] {
+  color: var(--ink);
+}
+
+.header[data-on='split'] .header-right {
+  color: var(--surface);
+}
+
+/* Véu curto SOBRE O FILME, mascarado para não tocar a porcelana. Não é um
+   retângulo nem uma faixa: é a mesma rampa do estado de filme, revelada só do
+   lado da mídia. Sem ele a navegação mede 4.3:1 sobre a parede clara da cena. */
+.header[data-on='split']::before {
+  opacity: 1;
+  background: linear-gradient(
+    180deg,
+    oklch(12% 0.01 60 / 0.44) 0%,
+    oklch(12% 0.01 60 / 0.18) 55%,
+    oklch(12% 0.01 60 / 0) 100%
+  );
+  -webkit-mask-image: linear-gradient(90deg, transparent 46%, #000 62%);
+  mask-image: linear-gradient(90deg, transparent 46%, #000 62%);
+}
+
+.header[data-on='split'] .nav-link {
+  text-shadow: 0 1px 14px oklch(12% 0.01 60 / 0.55);
+}
+
+.header[data-on='film']::before {
+  opacity: 1;
+}
+
+/* Estado compacto: só depois do hero, e só sobre superfície clara — porcelana
+   quente sólida com um fio, em vez de uma placa translúcida sobre o vídeo. */
+.header.is-compact[data-on='light'] {
+  background: var(--surface);
   box-shadow: 0 1px 0 var(--line);
 }
 
-.header[data-on='dark'].is-scrolled {
-  background: color-mix(in oklab, var(--graphite-2) 88%, transparent);
+.header.is-compact[data-on='dark'] {
+  background: var(--surface-dark);
   box-shadow: 0 1px 0 var(--line-dark);
 }
 
+/* Esconde ao descer, reaparece ao subir — depois que o hero acabou. */
+.header.is-hidden {
+  transform: translateY(-104%);
+}
+
 .header-in {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  min-height: 4.25rem;
+  min-height: 4.5rem;
+  row-gap: 0;
 }
 
 .brand {
+  grid-column: 1 / 3;
   display: flex;
   align-items: center;
   gap: 0.7rem;
   padding-block: 0.5rem;
+  min-width: 0;
 }
 
 .brand-mark {
   width: auto;
-  height: 42px;
+  height: 40px;
   flex: none;
 }
 
@@ -76,25 +150,37 @@ main > section {
   display: flex;
   flex-direction: column;
   line-height: 1.05;
+  min-width: 0;
 }
 
 .brand-name {
   font-family: var(--serif);
-  font-size: 1.06rem;
+  font-size: 1.02rem;
   font-weight: 540;
+  white-space: nowrap;
 }
 
 .brand-role {
-  font-size: 0.64rem;
+  font-size: 0.62rem;
   font-weight: 650;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   opacity: 0.72;
   margin-top: 0.26rem;
+  white-space: nowrap;
 }
 
 .nav {
   display: none;
+}
+
+.header-right {
+  grid-column: 3 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(1.25rem, 2.2vw, 2.5rem);
+  min-width: 0;
 }
 
 .header-actions {
@@ -103,19 +189,15 @@ main > section {
   gap: 0.6rem;
 }
 
+/* O CTA do header é o MESMO botão do resto da página, só menor. Ele não
+   acompanha o tema do capítulo: antes alternava entre cobre (sobre o hero),
+   branco (sobre o escuro) e carvão (sobre o claro) — três aparências para o
+   mesmo ato. O cobre tem contraste suficiente sobre as duas superfícies e
+   sobre o filme, então uma tinta só resolve os três estados. */
 .btn-header {
   min-height: 42px;
   padding: 0.55rem 1.15rem;
   font-size: 0.88rem;
-}
-
-.header[data-on='dark'] .btn-header {
-  background: var(--porcelain);
-  color: var(--ink);
-}
-
-.header[data-on='dark'] .btn-header .ico-wa {
-  color: oklch(50% 0.14 152);
 }
 
 .menu-toggle {
@@ -176,6 +258,76 @@ main > section {
   }
 }
 
+@media (min-width: 768px) {
+  .brand {
+    grid-column: 1 / 4;
+  }
+
+  .header-right {
+    grid-column: 4 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  .header-in {
+    min-height: 4.75rem;
+  }
+
+  .brand-mark {
+    height: 44px;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 2.2vw, 2.5rem);
+  }
+
+  .nav-link {
+    position: relative;
+    font-size: 0.92rem;
+    font-weight: 550;
+    padding: 0.55rem 0.1rem;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0.62rem;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform var(--dur-med) var(--ease-out);
+  }
+
+  .nav-link:hover::after,
+  .nav-link:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .menu-toggle {
+    display: none;
+  }
+}
+
+@media (min-width: 1200px) {
+  .brand {
+    grid-column: 1 / 4;
+  }
+
+  .header-right {
+    grid-column: 4 / -1;
+  }
+}
+
 /* ==========================================================================
    MENU OVERLAY
    ========================================================================== */
@@ -191,12 +343,16 @@ main > section {
   inset: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 2rem;
-  padding: 6.5rem var(--gutter) 2.25rem;
-  background: var(--graphite-2);
-  color: var(--milk);
+  justify-content: center;
+  background: var(--surface-dark);
+  color: var(--ink-on-dark);
   overflow: hidden;
+}
+
+.menu-in {
+  align-content: center;
+  row-gap: var(--sp-2);
+  padding-block: 6.5rem var(--sp-2);
 }
 
 .menu-mark {
@@ -205,12 +361,13 @@ main > section {
   top: 4%;
   width: min(52vw, 420px);
   height: auto;
-  opacity: 0.07;
+  opacity: 0.06;
   pointer-events: none;
 }
 
 .menu-nav {
   position: relative;
+  grid-column: 1 / -1;
 }
 
 .menu-link {
@@ -222,12 +379,11 @@ main > section {
   font-family: var(--serif);
   font-size: clamp(1.75rem, 6.6vw, 2.9rem);
   font-weight: 450;
-  letter-spacing: 0;
   transition: color var(--dur-fast) ease;
 }
 
 .menu-link:hover {
-  color: var(--gold-thread);
+  color: var(--gold);
 }
 
 .menu-word {
@@ -239,13 +395,15 @@ main > section {
   font-size: 0.8rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
-  color: var(--gold-thread);
+  color: var(--gold);
 }
 
 .menu-foot {
+  grid-column: 1 / -1;
   display: flex;
   flex-direction: column;
   gap: 1.4rem;
+  align-items: flex-start;
   position: relative;
 }
 
@@ -257,7 +415,7 @@ main > section {
 .menu-contact {
   font-size: var(--fs-small);
   font-weight: 550;
-  color: var(--milk);
+  color: var(--ink-on-dark);
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-color: var(--line-dark);
@@ -268,12 +426,12 @@ main > section {
 }
 
 .menu-contact:hover {
-  color: var(--gold-thread);
+  color: var(--gold);
 }
 
 .menu-address {
   font-size: var(--fs-small);
-  color: var(--milk-soft);
+  color: var(--ink-on-dark-2);
 }
 
 body.menu-locked {
@@ -283,263 +441,77 @@ body.menu-locked {
 body.menu-locked .header {
   z-index: calc(var(--z-menu) + 1);
   background: transparent;
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
   box-shadow: none;
-  color: var(--milk);
+  color: var(--ink-on-dark);
+  transform: none;
+}
+
+body.menu-locked .header::before {
+  opacity: 0;
 }
 
 body.menu-locked .btn-header {
   visibility: hidden;
 }
 
-/* ==========================================================================
-   CAP. 03 · HERO
-   ========================================================================== */
-
-.hero {
-  position: relative;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  background: var(--porcelain);
-  color: var(--ink);
-  overflow: hidden;
-}
-
-.hero-in {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: var(--container);
-  margin-inline: auto;
-  padding: 5.75rem var(--gutter) 1.5rem;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.hero-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.75rem;
-  font-size: var(--fs-micro);
-  font-weight: 600;
-  letter-spacing: 0.13em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
-.hero-meta strong {
-  color: var(--ink);
-  font-weight: 650;
-}
-
-.hero-meta-sep {
-  width: 1.5rem;
-  height: 1px;
-  background: var(--copper);
-  opacity: 0.7;
-}
-
-.hero-title {
-  margin-top: clamp(1.2rem, 4svh, 2.6rem);
-  line-height: var(--lh-tight);
-  /* máscara das palavras na entrada */
-  overflow: hidden;
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
-}
-
-.hero-kicker {
-  display: block;
-  font-size: var(--fs-micro);
-  font-weight: 650;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--copper-ink);
-  margin-bottom: clamp(0.8rem, 2svh, 1.4rem);
-}
-
-.hero-word {
-  display: block;
-  font-family: var(--serif);
-  font-size: var(--fs-hero);
-  font-weight: 420;
-  letter-spacing: 0;
-}
-
-.hero-word--it {
-  font-style: italic;
-  font-weight: 390;
-  color: var(--copper-ink);
-  margin-left: 0.06em;
-  /* halo claro: legibilidade no trecho que atravessa o retrato */
-  text-shadow: 0 0 26px oklch(98% 0.005 92 / 0.85), 0 0 3px oklch(98% 0.005 92 / 0.6);
-}
-
-/* Painel de mídia */
-
-.hero-panel {
-  position: relative;
-  z-index: 1;
-  order: 2;
-  margin-top: clamp(1.4rem, 3.5svh, 2.5rem);
-  background: var(--greige);
-  overflow: hidden;
-}
-
-.hero-media {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  height: min(52svh, 470px);
-}
-
-.hero-media img {
-  width: auto;
-  height: 94%;
-  object-fit: cover;
-  object-position: center top;
-}
-
-.hero-panel-mark {
-  position: absolute;
-  left: -6%;
-  bottom: -10%;
-  width: 46%;
-  height: auto;
-  opacity: 0.12;
-  pointer-events: none;
-}
-
-.hero-foot {
-  order: 3;
-  margin-top: clamp(1.5rem, 3.5svh, 2.75rem);
-  display: grid;
-  gap: 1.4rem;
-}
-
-.hero-statement {
-  font-size: var(--fs-body-lg);
-  color: var(--ink-soft);
-  max-width: 34em;
-}
-
-.hero-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1.1rem;
-}
-
-.hero-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.hero-tag {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  padding: 0.5rem 1.05rem;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--r-pill);
-  font-size: 0.84rem;
-  font-weight: 550;
-  color: var(--ink-soft);
-  transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease;
-}
-
-.hero-tag:hover {
-  border-color: var(--copper);
-  color: var(--ink);
-}
-
-/* Hero desktop: painel à direita, tipografia atravessando */
-
-@media (min-width: 1024px) {
-  .hero-panel {
-    position: absolute;
-    inset: 0 0 0 auto;
-    width: 44vw;
-    order: 0;
-    margin: 0;
+@media (min-width: 768px) {
+  .menu-nav {
+    grid-column: 1 / 6;
   }
 
-  .hero-media {
-    position: absolute;
-    inset: auto 0 0 0;
-    height: min(86svh, 820px);
-    justify-content: center;
-  }
-
-  .hero-media img {
-    height: 100%;
-    max-width: none;
-  }
-
-  .hero-panel-mark {
-    left: auto;
-    right: -14%;
-    top: auto;
-    bottom: -8%;
-    width: 62%;
-    opacity: 0.07;
-  }
-
-  .hero-in {
-    padding-top: 7.25rem;
-    justify-content: space-between;
-  }
-
-  .hero-title {
-    max-width: none;
-  }
-
-  .hero-word--it {
-    margin-left: clamp(4rem, 16vw, 18rem);
-  }
-
-  .hero-foot {
-    max-width: min(30rem, calc(52vw - var(--gutter)));
-    padding-bottom: 4.5rem;
-  }
-
-  .hero-actions {
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem 1.4rem;
+  .menu-foot {
+    grid-column: 6 / -1;
+    justify-content: flex-end;
   }
 }
 
-@media (min-width: 1440px) {
-  .hero-panel {
-    width: 46vw;
+@media (min-width: 1200px) {
+  .menu-nav {
+    grid-column: 2 / 8;
+  }
+
+  .menu-foot {
+    grid-column: 9 / 12;
   }
 }
 
 /* ==========================================================================
-   CAP. 04 · MISSÃO + GALERIA
+   CAP. 04 · MISSÃO
+   ==========================================================================
+   Ato 1: label, declaração de 8 colunas e uma faixa editorial de três blocos
+   (dois parágrafos de 4 colunas + CTA) no mesmo eixo. Nada de dois parágrafos
+   soltos sob um título enorme, nada de vão morto entre título e apoio.
    ========================================================================== */
 
+/* EDITORIAL · topo e base simétricos no token da categoria.
+   Antes: topo `--section-y` e base 0, com a tríade carregando um
+   `padding-bottom: var(--sp-3)` próprio. Dois respiros diferentes para a mesma
+   fronteira — e o de baixo somava 80px ao topo de Tratamentos, fechando a
+   junção em 208px. O pé volta para a seção; a tríade só guarda a distância
+   INTERNA até o parágrafo (`margin-top`), que é composição aprovada. */
 .missao {
-  padding-top: var(--section-y);
+  background: var(--surface);
+  color: var(--ink);
+  padding-block: var(--section-y);
+}
+
+.missao-in {
+  row-gap: 0;
+}
+
+.missao-label,
+.missao-title,
+.missao-lead {
+  grid-column: 1 / -1;
 }
 
 .missao-title {
-  margin-top: 1.6rem;
+  margin-top: var(--sp-1);
   font-family: var(--serif);
-  font-size: var(--fs-display);
-  font-weight: 450;
-  line-height: var(--lh-snug);
-  letter-spacing: 0;
-  max-width: 21em;
+  font-size: var(--fs-statement);
+  font-weight: 440;
+  line-height: 1.14;
+  text-wrap: pretty;
 }
 
 .missao-title em,
@@ -549,73 +521,212 @@ body.menu-locked .btn-header {
   color: var(--copper-ink);
 }
 
-.missao-cols {
-  position: relative;
-  margin-top: clamp(2.5rem, 6vw, 4.5rem);
-  display: grid;
-  gap: 1.6rem;
+.missao-lead {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--ink-2);
 }
 
-
-.missao-col {
-  position: relative;
-  z-index: 1;
-  font-size: var(--fs-body-lg);
-  color: var(--ink-soft);
-  max-width: 30em;
-}
-
-.missao-cta {
-  margin-top: clamp(2rem, 4.5vw, 3.25rem);
-  color: var(--ink);
-}
-
-.galeria {
-  margin-top: clamp(3.5rem, 8vw, 6.5rem);
-  display: flex;
-  gap: clamp(0.9rem, 2vw, 1.75rem);
-  padding-inline: var(--gutter);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-}
-
-.galeria::-webkit-scrollbar {
-  display: none;
-}
-
-@media (min-width: 880px) {
-  .missao-cols {
-    grid-template-columns: repeat(2, minmax(0, 26rem));
-    gap: clamp(2rem, 5vw, 4.5rem);
+@media (min-width: 768px) {
+  .missao-label {
+    grid-column: 1 / 6;
   }
 
-  .missao-col--b {
-    margin-top: 3.5rem;
+  .missao-title {
+    grid-column: 1 / 7;
+  }
+
+  /* 2–3 linhas no desktop: a medida é o que garante isso, não o corte */
+  .missao-lead {
+    grid-column: 1 / 6;
+  }
+}
+
+@media (min-width: 1200px) {
+  .missao-title {
+    grid-column: 1 / 9;
+    margin-top: var(--sp-2);
+  }
+
+  .missao-lead {
+    grid-column: 1 / 7;
+    margin-top: var(--sp-2);
+  }
+}
+
+/* --- Ato 2 · painel Saúde · Função · Estética -----------------------------
+   Restaurado do histórico do projeto (commit a5fe60a). Estrutura, curvas,
+   elipse, tipografia e legenda são as originais; mudaram apenas os tokens de
+   cor (a paleta antiga não existe mais), a largura e o encaixe no grid.    */
+
+/* Só o respiro INTERNO, entre o parágrafo e o painel. O pé da seção é da
+   seção (ver `.missao`). */
+.galeria {
+  margin-top: var(--sp-3);
+}
+
+/* CARVÃO — o tratamento do card 08 ("Placas para bruxismo e ATM").
+   A Missão é o painel escuro do capítulo claro. A alternância com Tratamentos
+   continua existindo; o que mudou foi o lado de cada um:
+
+     Missão       carvão   (--plate-graphite, card 08)
+     Tratamentos  marfim   (--plate-stone,    rampa clara de a5fe60a)
+
+   O token é cópia literal da declaração do card 08 — nenhum valor aproximado.
+   Estrutura, curvas, elipse, proporções e conteúdo do painel são os mesmos; o
+   que mudou foi a base e, por consequência, a tinta do tipo e dos fios, que
+   sobem para creme e dourado. */
+.galeria-system {
+  grid-column: 1 / -1;
+  position: relative;
+  min-height: clamp(19rem, 36vw, 30rem);
+  overflow: hidden;
+  border: 1px solid var(--line-gold);
+  border-radius: clamp(10px, 1.1vw, 18px);
+  /* o realce de topo inverte junto com a superfície: era um fio branco sobre
+     areia, agora é um fio de luz discreto sobre carvão */
+  box-shadow: inset 0 1px 0 color-mix(in oklab, var(--ink-on-dark) 12%, transparent);
+  background: var(--plate-graphite);
+  color: var(--ink-on-dark);
+}
+
+/* a elipse de cobre que atravessa o pé do painel */
+.galeria-system::before {
+  content: '';
+  position: absolute;
+  width: min(70vw, 36rem);
+  aspect-ratio: 1.72;
+  left: -8%;
+  bottom: -18%;
+  /* o cobre a 27% sumia no carvão; o dourado mantém o MESMO desenho visível */
+  border: 1px solid color-mix(in oklab, var(--gold) 30%, transparent);
+  border-radius: 50%;
+  transform: rotate(-14deg);
+}
+
+/* o fio interno que emoldura a composição por dentro */
+.galeria-system::after {
+  content: '';
+  position: absolute;
+  inset: 12% 10%;
+  border: 1px solid color-mix(in oklab, var(--gold) 24%, transparent);
+  border-radius: clamp(10px, 1vw, 16px);
+  pointer-events: none;
+}
+
+.galeria-curve {
+  position: absolute;
+  inset: 9% 5%;
+  width: 90%;
+  height: 82%;
+}
+
+/* As duas curvas continuam sendo duas, com a mesma espessura e o mesmo par de
+   tintas quente/dourada — só sobem de luminosidade o bastante para existirem
+   sobre o carvão. O desenho não mudou. */
+.galeria-curve path {
+  fill: none;
+  stroke: color-mix(in oklab, var(--gold) 38%, transparent);
+  stroke-width: 1.1;
+  vector-effect: non-scaling-stroke;
+}
+
+.galeria-curve path + path {
+  stroke: color-mix(in oklab, var(--gold-soft) 46%, transparent);
+}
+
+.galeria-axis {
+  position: absolute;
+  font-family: var(--serif);
+  font-size: clamp(2.35rem, 7.5vw, 6rem);
+  line-height: 0.92;
+  color: var(--ink-on-dark);
+  /* a sombra também inverte: era um realce branco sobre areia, agora é uma
+     sombra funda que assenta o tipo claro sobre o carvão */
+  text-shadow: 0 1px 14px oklch(12% 0.01 60 / 0.55);
+}
+
+.galeria-axis--a {
+  left: clamp(1.2rem, 6vw, 5rem);
+  top: clamp(1.5rem, 8vw, 5.2rem);
+}
+
+.galeria-axis--b {
+  left: 50%;
+  top: 50%;
+  /* o cobre legível existe para tipo escuro sobre superfície clara; no carvão
+     o mesmo papel de acento cabe ao dourado claro */
+  color: var(--gold-soft);
+  font-style: italic;
+  transform: translate(-50%, -50%);
+}
+
+.galeria-axis--c {
+  right: clamp(1.2rem, 5vw, 4.6rem);
+  bottom: clamp(1.8rem, 7vw, 4.8rem);
+}
+
+.galeria-caption {
+  position: absolute;
+  left: clamp(1.25rem, 4vw, 3rem);
+  bottom: clamp(1.1rem, 3vw, 2.2rem);
+  max-width: 18rem;
+  font-size: var(--fs-small);
+  font-weight: 650;
+  color: var(--ink-on-dark-2);
+}
+
+@media (max-width: 767.98px) {
+  .galeria-system {
+    min-height: 22rem;
+    border-radius: 14px;
+  }
+
+  .galeria-system::after {
+    inset: 1rem;
+    border-radius: 12px;
+  }
+
+  .galeria-axis--a { top: 2rem; }
+  .galeria-axis--b { left: 46%; }
+  .galeria-axis--c { right: 1.2rem; bottom: 4.8rem; }
+
+  .galeria-caption {
+    right: 1.2rem;
+    max-width: 14rem;
   }
 }
 
 /* ==========================================================================
    CAP. 05 · TRATAMENTOS
+   ==========================================================================
+   Estrutura, interação e conteúdo preservados. Mudam o encaixe no grid (7/5),
+   a proporção, as cores (mesma paleta clara do capítulo) e o espaçamento.
    ========================================================================== */
 
 .tx {
+  background: var(--surface);
+  color: var(--ink);
   padding-block: var(--section-y);
 }
 
+.tx-in {
+  row-gap: 0;
+}
+
 .tx-head {
+  grid-column: 1 / -1;
   display: grid;
-  gap: 1.3rem;
-  margin-bottom: clamp(2.25rem, 5vw, 4rem);
+  gap: var(--sp-1);
+  margin-bottom: var(--sp-2);
 }
 
 .tx-title {
   font-family: var(--serif);
   font-size: var(--fs-display);
-  font-weight: 450;
+  font-weight: 445;
   line-height: var(--lh-snug);
-  letter-spacing: 0;
-  max-width: 17em;
 }
 
 .tx-title em,
@@ -626,176 +737,275 @@ body.menu-locked .btn-header {
 }
 
 .tx-lead {
-  font-size: var(--fs-body-lg);
-  color: var(--ink-soft);
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--ink-2);
   max-width: 34em;
 }
 
-/* Palco */
+/* --- Palco ---------------------------------------------------------------- */
 
 .tx-stage {
-  position: sticky;
-  top: 4.35rem;
-  z-index: 5;
-  height: min(40svh, 380px);
-  border-radius: var(--r-frame);
+  grid-column: 1 / -1;
+  position: relative;
+  height: 21rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
   overflow: hidden;
-  background: var(--greige);
+  isolation: isolate;
+  background: var(--surface-3);
 }
+
+/* ROLLBACK — as placas voltam à versão do commit a5fe60a: mesmas proporções,
+   mesma estrutura (rail + duas elipses + trama de linhas), mesmos tamanhos de
+   tipo e mesmos gradientes. A rodada anterior as havia achatado em retângulos
+   planos, e isso foi uma regressão. Só os TOKENS de cor mudaram, porque a
+   paleta antiga não existe mais; as relações tonais são as mesmas. */
 
 .plate {
   position: absolute;
   inset: 0;
   opacity: 0;
-  color: var(--milk);
+  color: var(--ink);
+  overflow: hidden;
 }
 
 .plate[data-active] {
   opacity: 1;
 }
 
-.plate--graphite { background: var(--graphite); }
-.plate--rust { background: var(--rust); }
-
-.plate--bone,
-.plate--greige {
-  color: var(--ink);
+.plate::before {
+  content: '';
+  position: absolute;
+  inset: 1rem;
+  border: 1px solid color-mix(in oklab, currentColor 14%, transparent);
+  border-radius: 12px;
+  pointer-events: none;
 }
-.plate--bone { background: var(--porcelain); }
-.plate--greige { background: var(--greige); }
+
+/* trama fina de fundo, como no original */
+.plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, color-mix(in oklab, currentColor 5%, transparent) 1px, transparent 1px),
+    linear-gradient(0deg, color-mix(in oklab, currentColor 4%, transparent) 1px, transparent 1px);
+  background-size: 4.8rem 4.8rem;
+  opacity: 0.28;
+  pointer-events: none;
+}
+
+/* UMA COR SÓ PARA O PALCO — e ela voltou a ser CLARA
+   ---------------------------------------------------------------------------
+   A rodada anterior unificou os nove cards no tratamento do card 07 (vinho
+   sobre carvão). A unificação estava certa; a escolha do tom, não. Nove placas
+   de cobre escuro em sequência, entre a Missão (painel carvão) e a Precisão
+   (filme escuro), empilhavam três superfícies pesadas seguidas e a seção
+   deixava de ser o respiro que ela é na leitura da página.
+
+   O tratamento claro NÃO foi inventado: é o `.plate--stone` que existia no
+   commit a5fe60a, na rampa de seis quase-brancos (marfim → terracota) que
+   antecedeu a unificação. A declaração de lá era
+
+     linear-gradient(135deg, var(--stone),
+       color-mix(in oklab, var(--copper-logo) 7%, var(--porcelain)))
+
+   e a paleta daquela época não existe mais. A tradução abaixo é token a token,
+   sem aproximação: `--stone` → `--surface-3` (areia funda), `--copper-logo` →
+   `--copper`, `--porcelain` → `--surface`. Mesma função, mesmo ângulo, mesma
+   porcentagem. Marfim quente levemente acinzentado, com o cobre entrando só
+   como temperatura — nem branco puro, nem cinza frio, nem bege amarelado.
+
+   Contra `--surface` (a porcelana da própria seção, 97,6% de luminosidade) a
+   placa fica em ~90–93%: separa do fundo por variação tonal, sem sombra
+   pesada, sem gradiente escuro e sem brilho metálico.
+
+   `--plate-graphite` fica onde estava: quem o usa é o painel da Missão
+   (`.galeria-system`), que não muda nesta rodada. A alternância entre os dois
+   capítulos passa a ser Missão em carvão · Tratamentos em marfim — a mesma
+   oposição de antes, com os papéis trocados.
+
+   Geometria, tipografia, conteúdo, grid, lista lateral, estado ativo, hover,
+   foco e transições não mudaram: só o token de cor. Como todo texto da placa
+   herda de `currentColor` e `.plate` já declara `color: var(--ink)`, trocar a
+   base leva número, título, nota, rótulo e fio para a tinta certa sozinha. */
+
+:root {
+  --plate-stone:
+    linear-gradient(135deg, var(--surface-3), color-mix(in oklab, var(--copper) 7%, var(--surface)));
+
+  --plate-graphite:
+    radial-gradient(circle at 75% 20%, color-mix(in oklab, var(--gold) 15%, transparent), transparent 16rem),
+    linear-gradient(135deg, color-mix(in oklab, var(--surface-dark) 82%, var(--ink-on-dark)), var(--surface-dark));
+}
+
+/* Sem `color:` próprio — a placa clara usa a tinta base de `.plate`
+   (`var(--ink)`), que é exatamente o que o card claro do histórico fazia. */
+.plate--stone {
+  background: var(--plate-stone);
+}
+
+.plate-rail {
+  position: absolute;
+  inset: 1rem;
+  z-index: 2;
+  border: 1px solid color-mix(in oklab, currentColor 15%, transparent);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+/* As duas elipses que davam movimento à placa. Voltam ao cobre a 34% — o valor
+   do commit a5fe60a, quando a superfície era clara. O par dourado 42% / cobre
+   32% tinha sido calibrado contra o vinho escuro; sobre marfim o dourado
+   desaparece. Cobre a 34% é a linha de baixa opacidade que a superfície clara
+   pede. */
+.plate-rail::before,
+.plate-rail::after {
+  content: '';
+  position: absolute;
+  border: 1px solid color-mix(in oklab, var(--copper) 34%, transparent);
+  border-radius: 50%;
+}
+
+.plate-rail::before {
+  width: 68%;
+  height: 46%;
+  right: -12%;
+  top: 13%;
+  transform: rotate(-12deg);
+}
+
+.plate-rail::after {
+  width: 46%;
+  height: 28%;
+  left: -8%;
+  bottom: 12%;
+  transform: rotate(11deg);
+}
 
 .plate-num {
   position: absolute;
-  top: 0.9rem;
-  left: 1.2rem;
+  z-index: 3;
+  top: clamp(1.25rem, 2.8vw, 2.4rem);
+  left: clamp(1.35rem, 3vw, 2.6rem);
   font-family: var(--serif);
-  font-size: clamp(3.4rem, 9vw, 6.5rem);
+  font-size: clamp(3.4rem, 9vw, 6.1rem);
   font-weight: 300;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  opacity: 0.34;
-}
-
-.plate--bone .plate-num,
-.plate--greige .plate-num {
-  color: var(--copper-ink);
-  opacity: 0.55;
+  /* 42% → 55%: o algarismo é uma marca-d'água, mas continua sendo texto de
+     corpo grande — 55% o coloca acima de 3:1 em todos os nove estados. */
+  color: color-mix(in oklab, currentColor 64%, transparent);
 }
 
 .plate-word {
   position: absolute;
-  right: -0.06em;
-  bottom: 2.2rem;
+  z-index: 1;
+  top: clamp(4.6rem, 13vw, 9.5rem);
+  left: clamp(1.35rem, 3vw, 2.6rem);
+  right: clamp(1.35rem, 5vw, 3.5rem);
   font-family: var(--serif);
   font-style: italic;
   font-weight: 320;
-  font-size: clamp(2.7rem, 8.5vw, 6.9rem);
-  line-height: 0.9;
-  letter-spacing: 0;
-  opacity: 0.16;
-  white-space: nowrap;
-}
-
-.plate-mark {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  translate: -50% -50%;
-  width: clamp(120px, 30%, 210px);
-  height: auto;
-  opacity: 0.14;
-}
-
-.plate--bone .plate-mark,
-.plate--greige .plate-mark {
-  opacity: 0.3;
+  font-size: clamp(1.55rem, 4.3vw, 3.3rem);
+  line-height: 1;
+  opacity: 0.13;
+  overflow-wrap: break-word;
 }
 
 .plate-name {
   position: absolute;
-  left: 1.2rem;
-  bottom: 1rem;
-  font-size: var(--fs-micro);
-  font-weight: 650;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  z-index: 3;
+  left: clamp(1.35rem, 3vw, 2.6rem);
+  right: clamp(1.35rem, 9vw, 7rem);
+  bottom: clamp(2rem, 4.6vw, 4rem);
+  max-width: 12ch;
+  font-family: var(--serif);
+  font-size: clamp(2rem, 4.3vw, 4.6rem);
+  font-weight: 430;
+  line-height: 1.02;
+  opacity: 0.96;
+}
+
+.plate-note {
+  position: absolute;
+  z-index: 3;
+  top: clamp(1.6rem, 3.6vw, 2.8rem);
+  right: clamp(1.35rem, 3vw, 2.6rem);
+  max-width: 13rem;
+  font-size: clamp(0.8rem, 0.7rem + 0.35vw, 0.96rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: right;
+  /* 0,72 → 0,85: a 0,72 esta nota caía a 3,5:1 na placa 06. */
   opacity: 0.85;
 }
 
-/* HUD do palco */
+/* Opacidade subiu de 0,56 para 0,80: a 0,56 esta linha media 2,3:1 na placa
+   mais clara — abaixo de qualquer mínimo. Só a tinta mudou; posição, corpo e
+   entreletra são os mesmos. */
+/* VOLTA AO CANTO — o desvio de 3,5rem morreu junto com o HUD.
+   O rótulo era empurrado para cima (`bottom: … + 3.5rem`) por um motivo só:
+   a pílula opaca do HUD morava exatamente neste canto e o cobria quase
+   inteiro. Sem a pílula não há o que desviar, e o desvio deixava um vazio
+   entre o rótulo e a borda de baixo. Ele volta a assentar no canto inferior
+   direito, no MESMO recuo dos outros elementos da placa.
 
-.tx-hud {
+   `line-height: 1` entra junto: a caixa da linha deixa de carregar o meio-vão
+   do corpo e o rótulo passa a folgar sob `.plate-name` (cuja base é
+   `clamp(2rem, 4.6vw, 4rem)`) em todas as larguras em que o palco existe
+   — medido: 4,3px a 1024 e 14,4px a 1910. */
+.plate-field {
   position: absolute;
-  right: 0.8rem;
-  bottom: 0.75rem;
   z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  color: var(--ink);
-  background: color-mix(in oklab, var(--porcelain) 88%, transparent);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
-  border: 1px solid var(--line);
-  border-radius: var(--r-pill);
-  padding: 0.45rem 0.7rem 0.45rem 0.95rem;
+  right: clamp(1.35rem, 3vw, 2.6rem);
+  bottom: clamp(1.35rem, 3vw, 2.35rem);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
 }
 
-.tx-counter {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 0.3rem;
-  font-size: var(--fs-micro);
-  font-weight: 650;
-  letter-spacing: 0.1em;
-  font-variant-numeric: tabular-nums;
-}
-
-.tx-counter i {
-  opacity: 0.5;
-  font-style: normal;
-}
-
-.tx-progress {
-  width: 3.4rem;
-  height: 1px;
-  background: color-mix(in oklab, currentColor 30%, transparent);
-  overflow: hidden;
-}
-
-.tx-progress i {
-  display: block;
-  height: 100%;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left;
-}
-
-.tx-pause {
+.plate-thread {
+  position: absolute;
+  z-index: 2;
+  left: clamp(1.35rem, 3vw, 2.6rem);
+  right: clamp(1.35rem, 3vw, 2.6rem);
+  top: 50%;
   display: grid;
-  place-items: center;
-  width: 34px;
-  height: 34px;
-  border: 1px solid color-mix(in oklab, currentColor 35%, transparent);
-  border-radius: 50%;
+  gap: 0.55rem;
+  opacity: 0.24;
 }
 
-.tx-pause .ico-play {
-  display: none;
-}
-
-.tx-pause[aria-pressed='true'] .ico-play {
+.plate-thread i {
   display: block;
+  height: 1px;
+  background: currentColor;
 }
 
-.tx-pause[aria-pressed='true'] .ico-pause {
-  display: none;
-}
+.plate-thread i:nth-child(2) { width: 76%; }
+.plate-thread i:nth-child(3) { width: 52%; }
 
-/* Lista */
+/* SEM HUD NO PALCO.
+   `.tx-hud`, `.tx-counter`, `.tx-progress`, `.tx-pause` e os dois ícones
+   (`.ico-pause` / `.ico-play`) saíram inteiros — markup, CSS e JS. Nenhum
+   contador, ícone, selo, ponto ou controle ocupou o lugar: o palco é a placa,
+   e o estado ativo se lê na lista ao lado.
+
+   A troca automática continua existindo e continua parando ao primeiro toque
+   em qualquer item da lista (era o que o botão fazia, e a lista já fazia
+   também). Sem `prefers-reduced-motion` ela nem começa. */
+
+/* --- Lista ---------------------------------------------------------------- */
+
+.tx-panel {
+  grid-column: 1 / -1;
+}
 
 .tx-list {
-  margin-top: 1.75rem;
   border-bottom: 1px solid var(--line);
 }
 
@@ -811,25 +1021,22 @@ body.menu-locked .btn-header {
   min-height: 56px;
   padding: 1.05rem 0.2rem;
   text-align: left;
-  transition: color var(--dur-fast) ease;
 }
 
 .tx-num {
   font-size: 0.78rem;
   font-weight: 650;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.05em;
   color: var(--copper-ink);
   min-width: 1.9em;
 }
 
 .tx-word {
   font-family: var(--serif);
-  font-size: clamp(1.35rem, 1rem + 1.9vw, 2.35rem);
+  font-size: clamp(1.35rem, 1rem + 1.6vw, 2.1rem);
   font-weight: 450;
-  letter-spacing: 0;
   line-height: 1.16;
-  color: color-mix(in oklab, var(--ink) 62%, transparent);
+  color: color-mix(in oklab, var(--ink) 64%, transparent);
   transition: color var(--dur-fast) ease;
 }
 
@@ -856,7 +1063,7 @@ body.menu-locked .btn-header {
 }
 
 .tx-desc {
-  color: var(--ink-soft);
+  color: var(--ink-2);
   max-width: 46ch;
   padding-left: calc(1.9em + 1rem);
 }
@@ -866,2681 +1073,17 @@ body.menu-locked .btn-header {
   color: var(--ink);
 }
 
-@media (min-width: 1080px) {
-  .tx-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 11fr) minmax(0, 9fr);
-    gap: clamp(2.5rem, 4.5vw, 5rem);
-    align-items: start;
-  }
-
-  .tx-stage {
-    top: 6.5rem;
-    height: calc(100svh - 9rem);
-    max-height: 46rem;
-  }
-
-  .plate-word {
-    bottom: 3rem;
-  }
-
-  .tx-hud {
-    right: 1.4rem;
-    bottom: 1.3rem;
-  }
-
-  .tx-list {
-    margin-top: 0;
-  }
-
-  .tx-name {
-    padding: 1.15rem 0.2rem;
-  }
-
-  .tx-desc {
-    padding-left: calc(1.9em + 1.1rem);
-  }
-}
-
-/* ==========================================================================
-   CAP. 06 · PROCESSO
-   ========================================================================== */
-
-.processo {
-  background: var(--graphite);
-  color: var(--milk);
-}
-
-.processo-pin {
-  position: relative;
-  overflow: hidden;
-  padding-block: var(--section-y);
-}
-
-.processo-head {
-  display: grid;
-  gap: 1.3rem;
-}
-
-.processo-title {
-  font-family: var(--serif);
-  font-size: var(--fs-display);
-  font-weight: 440;
-  line-height: var(--lh-snug);
-  letter-spacing: 0;
-}
-
-.processo-title em,
-.processo-title .it {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--gold-thread);
-}
-
-.passos {
-  margin-top: clamp(2.5rem, 6vw, 4rem);
-  display: grid;
-  gap: 2.4rem;
-}
-
-.passo {
-  border-top: 1px solid var(--line-dark);
-  padding-top: 1.4rem;
-  max-width: 44rem;
-}
-
-.passo-num {
-  font-family: var(--serif);
-  font-size: 1.1rem;
-  font-style: italic;
-  color: var(--gold-thread);
-}
-
-.passo-titulo {
-  font-family: var(--serif);
-  font-size: var(--fs-passo);
-  font-weight: 400;
-  line-height: 1.02;
-  letter-spacing: 0;
-  margin-top: 0.5rem;
-}
-
-.passo-texto {
-  margin-top: 0.9rem;
-  font-size: var(--fs-body-lg);
-  color: var(--milk-soft);
-  max-width: 34em;
-}
-
-.processo-hud {
-  display: none;
-}
-
-.processo-mark {
-  position: absolute;
-  right: -14%;
-  bottom: -12%;
-  width: min(58vw, 560px);
-  height: auto;
-  opacity: 0.05;
-  pointer-events: none;
-}
-
-/* Desktop com motion: etapas empilhadas conduzidas pelo pin */
-
-@media (min-width: 1024px) {
-  html.motion .processo-pin {
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-block: 6rem 5rem;
-  }
-
-  html.motion .passos {
-    display: grid;
-    margin-top: clamp(2rem, 5svh, 3.5rem);
-    min-height: 36svh;
-  }
-
-  html.motion .passo {
-    grid-area: 1 / 1;
-    border-top: 0;
-    padding-top: 0;
-    opacity: 0;
-    visibility: hidden;
-  }
-
-  html.motion .passo .passo-num::after {
-    content: ' / 06';
-    opacity: 0.6;
-  }
-
-  html.motion .processo-hud {
-    display: flex;
-    align-items: center;
-    gap: 1.1rem;
-    margin-top: clamp(2rem, 5svh, 3rem);
-  }
-
-  .processo-counter {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.3rem;
-    font-size: var(--fs-micro);
-    font-weight: 650;
-    letter-spacing: 0.1em;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .processo-counter i {
-    opacity: 0.5;
-    font-style: normal;
-  }
-
-  .processo-track {
-    width: min(26rem, 30vw);
-    height: 1px;
-    background: var(--line-dark);
-    overflow: hidden;
-  }
-
-  .processo-track i {
-    display: block;
-    height: 100%;
-    background: var(--gold-thread);
-    transform: scaleX(0);
-    transform-origin: left;
-  }
-}
-
-/* ==========================================================================
-   CAP. 07 · O DOUTOR
-   ========================================================================== */
-
-.doutor {
-  position: relative;
-  background: var(--ivory);
-  color: var(--ink);
-  padding-block: var(--section-y);
-  overflow: hidden;
-}
-
-
-.doutor-in {
-  position: relative;
-  display: grid;
-  gap: clamp(2.5rem, 6vw, 4rem);
-}
-
-.doutor-frame {
-  border-radius: var(--r-frame);
-  overflow: hidden;
-  border: 1px solid var(--line);
-  max-width: 26rem;
-}
-
-.doutor-frame img {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-}
-
-.doutor-caption {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  margin-top: 1.1rem;
-  font-size: var(--fs-small);
-  color: var(--ink-soft);
-}
-
-.doutor-caption::before {
-  content: '';
-  width: 1.6rem;
-  height: 1px;
-  background: var(--copper);
-  flex: none;
-}
-
-.doutor-title {
-  margin-top: 1.5rem;
-  font-family: var(--serif);
-  font-size: clamp(2.1rem, 1.2rem + 4.4vw, 4rem);
-  font-weight: 440;
-  line-height: 1.08;
-  letter-spacing: 0;
-  max-width: 13em;
-}
-
-.doutor-title em,
-.doutor-title .it {
-  font-style: italic;
-  font-weight: 400;
-  color: var(--copper-ink);
-}
-
-.doutor-bio {
-  margin-top: 1.75rem;
-  display: grid;
-  gap: 1.1rem;
-  font-size: var(--fs-body-lg);
-  color: var(--ink-soft);
-  max-width: 36em;
-}
-
-.marcos {
-  margin-top: clamp(2rem, 5vw, 3rem);
-  display: grid;
-}
-
-.marco {
-  display: flex;
-  align-items: baseline;
-  gap: clamp(1.25rem, 3vw, 2.5rem);
-  border-top: 1px solid var(--line);
-  padding: 1.2rem 0;
-}
-
-.marco-ano {
-  font-family: var(--serif);
-  font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3rem);
-  font-weight: 340;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0;
-  color: var(--copper-ink);
-  line-height: 1;
-  min-width: 3.6em;
-}
-
-.marco-titulo {
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-
-.marco-inst {
-  font-size: var(--fs-small);
-  color: var(--ink-soft);
-  margin-top: 0.25rem;
-}
-
-@media (min-width: 1024px) {
-  .doutor-in {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
-    gap: clamp(3rem, 6vw, 6rem);
-  }
-
-  .doutor-media {
-    position: sticky;
-    top: 7rem;
-    align-self: start;
-  }
-
-  .doutor-title {
-    margin-top: 1.6rem;
-  }
-}
-
-/* ==========================================================================
-   CAP. 08 · FILOSOFIA
-   ========================================================================== */
-
-.filosofia {
-  padding-block: calc(var(--section-y) * 1.1);
-  overflow: hidden;
-}
-
-.filosofia-in {
-  display: grid;
-  gap: clamp(4rem, 12vw, 8.5rem);
-}
-
-/* ==========================================================================
-   CAP. 09 · MAPA
-   ========================================================================== */
-
-.mapa {
-  padding-top: clamp(2rem, 6vw, 5rem);
-}
-
-.mapa-shell {
-  position: relative;
-}
-
-.mapa-embed {
-  position: relative;
-  height: min(58svh, 520px);
-  background: var(--greige);
-  overflow: hidden;
-}
-
-.mapa-embed iframe {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  filter: saturate(0.82) contrast(1.02);
-}
-
-.mapa-panel {
-  position: relative;
-  background: var(--graphite-2);
-  color: var(--milk);
-  padding: clamp(1.9rem, 5vw, 3rem);
-  display: grid;
-  gap: 1rem;
-  justify-items: start;
-}
-
-.mapa-title {
-  font-family: var(--serif);
-  font-size: clamp(1.7rem, 1.2rem + 2.2vw, 2.6rem);
-  font-weight: 450;
-  letter-spacing: 0;
-  line-height: 1.12;
-}
-
-.mapa-endereco {
-  color: var(--milk-soft);
-  line-height: 1.55;
-}
-
-.mapa-disponibilidade {
-  font-size: var(--fs-small);
-  color: var(--milk-soft);
-}
-
-.mapa-acoes {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.9rem 1.5rem;
-  margin-top: 0.4rem;
-}
-
-.mapa-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  min-height: 44px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--milk);
-  text-decoration: underline;
-  text-underline-offset: 5px;
-  text-decoration-color: var(--line-dark);
-}
-
-.mapa-link:hover {
-  color: var(--gold-thread);
-}
-
-.mapa-contatos {
-  display: grid;
-  gap: 0.35rem;
-  margin-top: 0.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--line-dark);
-  width: 100%;
-}
-
-.mapa-contato {
-  font-size: var(--fs-small);
-  font-weight: 550;
-  color: var(--milk-soft);
-  min-height: 30px;
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-}
-
-.mapa-contato:hover {
-  color: var(--gold-thread);
-}
-
-.mapa-panel :focus-visible,
-.processo :focus-visible,
-.menu :focus-visible,
-.final :focus-visible,
-.footer :focus-visible {
-  outline-color: var(--gold-thread);
-}
-
-@media (min-width: 1024px) {
-  .mapa {
-    padding-block: clamp(2rem, 6vw, 5rem) var(--section-y);
-  }
-
-  .mapa-shell {
-    max-width: none;
-  }
-
-  .mapa-embed {
-    height: min(78svh, 680px);
-  }
-
-  .mapa-panel {
-    position: absolute;
-    left: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
-    top: 50%;
-    /* translate (e não transform): o GSAP anima transform sem perder isto */
-    translate: 0 -50%;
-    width: min(420px, 36vw);
-    border-radius: var(--r-panel);
-    box-shadow: 0 32px 80px -32px rgb(0 0 0 / 0.45);
-  }
-}
-
-/* ==========================================================================
-   CAP. 10 · CTA FINAL
-   ========================================================================== */
-
-.final {
-  background: var(--graphite-2);
-  color: var(--milk);
-  display: flex;
-  align-items: center;
-  min-height: min(88svh, 56rem);
-  padding-block: var(--section-y);
-}
-
-.final-in {
-  display: grid;
-  justify-items: center;
-  text-align: center;
-  gap: clamp(1.75rem, 4vw, 2.5rem);
-}
-
-.final-mark {
-  width: clamp(74px, 12vw, 110px);
-  height: auto;
-}
-
-.final-title {
-  font-family: var(--serif);
-  font-size: var(--fs-display);
-  font-weight: 430;
-  line-height: var(--lh-snug);
-  letter-spacing: 0;
-  max-width: 15em;
-}
-
-.final-title em,
-.final-title .it {
-  font-style: italic;
-  font-weight: 390;
-  color: var(--gold-soft);
-}
-
-.final-actions {
-  display: grid;
-  justify-items: center;
-  gap: 1rem;
-}
-
-.final-note {
-  font-size: var(--fs-small);
-  color: var(--milk-soft);
-  font-variant-numeric: tabular-nums;
-}
-
-/* ==========================================================================
-   FOOTER
-   ========================================================================== */
-
-.footer {
-  background: var(--graphite-2);
-  color: var(--milk-soft);
-  border-top: 1px solid var(--line-dark);
-  padding-block: 3.5rem 2.5rem;
-}
-
-.footer-in {
-  display: grid;
-  gap: 2.5rem;
-}
-
-.footer-logo {
-  width: clamp(150px, 22vw, 200px);
-  height: auto;
-}
-
-.footer-cols {
-  display: grid;
-  gap: 2rem;
-}
-
-.footer-h {
-  font-size: var(--fs-micro);
-  font-weight: 650;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--gold-thread);
-  margin-bottom: 0.9rem;
-}
-
-.footer-col {
-  display: grid;
-  gap: 0.45rem;
-  align-content: start;
-  justify-items: start;
-}
-
-.footer-link {
-  min-height: 30px;
-  display: inline-flex;
-  align-items: center;
-  font-size: var(--fs-small);
-  font-weight: 550;
-  color: var(--milk);
-}
-
-.footer-link:hover {
-  color: var(--gold-thread);
-}
-
-.footer-address {
-  font-size: var(--fs-small);
-  line-height: 1.6;
-}
-
-.footer-legal {
-  border-top: 1px solid var(--line-dark);
-  padding-top: 1.6rem;
-  display: grid;
-  gap: 0.7rem;
-  font-size: 0.82rem;
-  line-height: 1.6;
-  max-width: 56em;
-}
-
-.footer-copy {
-  color: color-mix(in oklab, var(--milk-soft) 75%, transparent);
-}
-
-@media (min-width: 768px) {
-  .footer-cols {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 2.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .footer-in {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr);
-    gap: 3rem 4rem;
-  }
-
-  .footer-legal {
-    grid-column: 1 / -1;
-  }
-
-  .nav {
-    display: flex;
-    align-items: center;
-    gap: clamp(1.5rem, 2.5vw, 2.75rem);
-  }
-
-  .nav-link {
-    position: relative;
-    font-size: 0.92rem;
-    font-weight: 550;
-    padding: 0.55rem 0.1rem;
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0.62rem;
-    width: 100%;
-    height: 1px;
-    background: currentColor;
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform var(--dur-med) var(--ease-out);
-  }
-
-  .nav-link:hover::after,
-  .nav-link:focus-visible::after {
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-
-  .menu-toggle {
-    display: none;
-  }
-
-  .header-in {
-    min-height: 4.75rem;
-  }
-
-  .brand-mark {
-    height: 46px;
-  }
-}
-
-/* ==========================================================================
-   DIRECAO CODEX 2026 · retrato, linha cirurgica e porcelana fria
-   ========================================================================== */
-
-body * {
-  letter-spacing: 0 !important;
-}
-
-main > section {
-  background: var(--porcelain);
-}
-
-.missao,
-.tx,
-.filosofia {
-  background: var(--porcelain);
-}
-
-.doutor {
-  background: var(--ivory);
-}
-
-.chapter-label {
-  gap: 0.9rem;
-  font-size: 0.9rem;
-  font-weight: 650;
-  text-transform: none;
-  color: var(--copper-ink);
-}
-
-.chapter-label::before {
-  width: 3.2rem;
-  background: color-mix(in oklab, currentColor 58%, transparent);
-}
-
-.header {
-  color: var(--ink);
-}
-
-.header.is-scrolled {
-  background: color-mix(in oklab, var(--porcelain) 88%, transparent);
-  box-shadow: 0 1px 0 color-mix(in oklab, var(--ink) 12%, transparent);
-}
-
-.header[data-on='dark'].is-scrolled {
-  background: color-mix(in oklab, var(--graphite-2) 82%, transparent);
-}
-
-.brand-mark {
-  filter: drop-shadow(0 12px 24px rgb(77 54 35 / 0.1));
-}
-
-/* Hero -------------------------------------------------------------------- */
-
-.hero {
-  min-height: 100svh;
-  background:
-    linear-gradient(90deg, var(--porcelain) 0 50%, var(--mist) 50% 100%);
-  isolation: isolate;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: auto 0 0;
-  height: 18svh;
-  background: linear-gradient(0deg, color-mix(in oklab, var(--porcelain) 96%, transparent), transparent);
-  z-index: 2;
-  pointer-events: none;
-}
-
-.hero-linework {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.hero-linework i {
-  position: absolute;
-  border: 1px solid color-mix(in oklab, var(--copper) 34%, transparent);
-  border-radius: 50%;
-  transform: rotate(-12deg);
-}
-
-.hero-linework i:first-child {
-  width: 36rem;
-  height: 20rem;
-  left: -8rem;
-  top: 18svh;
-}
-
-.hero-linework i:last-child {
-  width: 28rem;
-  height: 16rem;
-  right: 6vw;
-  bottom: 8svh;
-  opacity: 0.42;
-}
-
-.hero-in {
-  z-index: 3;
-  padding-top: 5.9rem;
-  padding-bottom: 34svh;
-}
-
-.hero-meta {
-  max-width: 18rem;
-  font-size: 0.84rem;
-  text-transform: none;
-  color: var(--ink-soft);
-}
-
-.hero-title {
-  margin-top: 1.35rem;
-  max-width: 11ch;
-  overflow: visible;
-  padding-bottom: 0;
-  margin-bottom: 0;
-}
-
-.hero-kicker {
-  margin-bottom: 1rem;
-  font-size: 0.86rem;
-  text-transform: none;
-  color: var(--copper-ink);
-}
-
-.hero-word {
-  font-size: var(--fs-hero);
-  letter-spacing: 0;
-  line-height: 0.98;
-}
-
-.hero-word--it {
-  color: var(--rust);
-  text-shadow: 0 0 22px oklch(98% 0.003 96 / 0.9);
-}
-
-.hero-panel {
-  position: absolute;
-  inset: auto var(--gutter) 0;
-  z-index: 2;
-  height: 31svh;
-  margin: 0;
-  background: var(--mist);
-  border-radius: 0;
-  border-top: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
-}
-
-.hero-media {
-  height: 100%;
-  justify-content: flex-end;
-}
-
-.hero-media img {
-  height: 115%;
-  max-width: none;
-  object-position: center top;
-  filter: saturate(0.94) contrast(1.02);
-}
-
-.hero-panel-mark {
-  left: 1rem;
-  bottom: 1rem;
-  width: 6rem;
-  opacity: 0.08;
-}
-
-.hero-panel-caption {
-  position: absolute;
-  right: 1rem;
-  bottom: 0.85rem;
-  z-index: 2;
-  color: var(--ink-soft);
-  font-size: 0.82rem;
-  font-weight: 650;
-}
-
-.hero-foot {
-  margin-top: 1.45rem;
-  gap: 1rem;
-}
-
-.hero-statement {
-  max-width: 27rem;
-  color: var(--ink);
-}
-
-.hero-tags {
-  display: none;
-}
-
-@media (min-width: 768px) {
-  .hero-panel {
-    height: 38svh;
-  }
-
-  .hero-in {
-    padding-bottom: 40svh;
-  }
-}
-
-@media (min-width: 1024px) {
-  .hero {
-    background:
-      linear-gradient(90deg, var(--porcelain) 0 50%, var(--mist) 50% 100%);
-  }
-
-  .hero::before {
-    display: none;
-  }
-
-  .hero-panel {
-    inset: 0 0 0 auto;
-    width: 50vw;
-    height: auto;
-    border-top: 0;
-    border-left: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
-  }
-
-  .hero-media {
-    position: absolute;
-    inset: auto 0 0;
-    height: min(92svh, 860px);
-    justify-content: center;
-  }
-
-  .hero-media img {
-    height: 100%;
-  }
-
-  .hero-panel-mark {
-    right: -8%;
-    left: auto;
-    bottom: 4%;
-    width: 20rem;
-    opacity: 0.055;
-  }
-
-  .hero-panel-caption {
-    right: 2.2rem;
-    bottom: 2rem;
-    color: color-mix(in oklab, var(--ink) 72%, transparent);
-  }
-
-  .hero-in {
-    padding-top: 7.4rem;
-    padding-bottom: 2.4rem;
-  }
-
-  .hero-title {
-    max-width: none;
-    margin-top: 2rem;
-  }
-
-  .hero-word {
-    width: max-content;
-  }
-
-  .hero-word--it {
-    margin-left: 19vw;
-    color: var(--rust);
-  }
-
-  .hero-foot {
-    max-width: 31rem;
-    padding-bottom: 5rem;
-  }
-
-  .hero-tags {
-    display: flex;
-  }
-}
-
-/* Missao + galeria -------------------------------------------------------- */
-
-.missao {
-  padding-block: var(--section-y) 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.missao::after {
-  content: '';
-  position: absolute;
-  left: max(var(--gutter), calc((100vw - var(--container)) / 2 + var(--gutter)));
-  right: var(--gutter);
-  bottom: 0;
-  height: 1px;
-  background: color-mix(in oklab, var(--ink) 12%, transparent);
-}
-
-.missao-title,
-.tx-title,
-.processo-title,
-.doutor-title,
-.filosofia-title,
-.credo-line,
-.final-title {
-  letter-spacing: 0;
-}
-
-.missao-title {
-  max-width: 16em;
-}
-
-.missao-cols {
-  margin-top: 3rem;
-  align-items: start;
-}
-
-.galeria {
-  margin-top: clamp(3rem, 6rem, 6rem);
-  padding-bottom: clamp(4rem, 6rem, 6rem);
-}
-
-.galeria-frame {
-  background: var(--ivory);
-  box-shadow: 0 28px 70px -44px rgb(46 37 29 / 0.35);
-}
-
-.galeria-frame--line {
-  min-height: 17rem;
-  padding: 1.4rem;
-  display: grid;
-  align-content: space-between;
-  background:
-    linear-gradient(135deg, var(--porcelain), var(--mist));
-  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
-  color: var(--ink);
-}
-
-.galeria-frame--line span {
-  font-family: var(--serif);
-  font-size: 2rem;
-  line-height: 1;
-}
-
-.galeria-frame--line span:nth-child(2) {
-  justify-self: center;
-  color: var(--rust);
-  font-style: italic;
-}
-
-.galeria-frame--line span:nth-child(3) {
-  justify-self: end;
-}
-
-.galeria-frame--line i {
-  position: absolute;
-  inset: 20% 12%;
-  border: 1px solid color-mix(in oklab, var(--copper) 35%, transparent);
-  border-radius: 50%;
-  transform: rotate(-16deg);
-}
-
-@media (min-width: 880px) {
-  .galeria {
-    grid-template-columns: 1.25fr 0.78fr 1fr;
-  }
-
-  .galeria-frame--line {
-    aspect-ratio: 4 / 4.4;
-  }
-}
-
-/* Tratamentos ------------------------------------------------------------- */
-
-.tx {
-  padding-block: clamp(4.5rem, 7rem, 7rem) var(--section-y);
-  background: var(--porcelain);
-}
-
-.tx-head {
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.tx-title {
-  max-width: 13.5em;
-}
-
-.tx-grid {
-  position: relative;
-}
-
-.tx-stage {
-  top: 5rem;
-  background: var(--ivory);
-  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
-  box-shadow: 0 36px 90px -58px rgb(46 37 29 / 0.42);
-}
-
-.plate {
-  color: var(--ink);
-  overflow: hidden;
-  background: var(--ivory);
-}
-
-.plate--mist {
-  background: var(--mist);
-}
-
-.plate--copper {
-  background: color-mix(in oklab, var(--rust) 15%, var(--porcelain));
-}
-
-.plate--pearl,
-.plate--ivory {
-  background: var(--porcelain);
-}
-
-.plate-rail {
-  position: absolute;
-  inset: 1.2rem;
-  z-index: 2;
-  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
-  pointer-events: none;
-}
-
-.plate-rail::before,
-.plate-rail::after {
-  content: '';
-  position: absolute;
-  border: 1px solid color-mix(in oklab, var(--copper) 34%, transparent);
-  border-radius: 50%;
-}
-
-.plate-rail::before {
-  width: 68%;
-  height: 46%;
-  right: -12%;
-  top: 13%;
-  transform: rotate(-12deg);
-}
-
-.plate-rail::after {
-  width: 46%;
-  height: 28%;
-  left: -8%;
-  bottom: 12%;
-  transform: rotate(11deg);
-}
-
-.plate-photo {
-  position: absolute;
-  right: -4%;
-  bottom: 0;
-  z-index: 1;
-  width: min(58%, 26rem);
-  height: 86%;
-  object-fit: cover;
-  object-position: center top;
-  opacity: 0.84;
-  filter: grayscale(0.18) saturate(0.86) contrast(1.04);
-  mix-blend-mode: multiply;
-}
-
-.plate-num {
-  z-index: 3;
-  top: 1.4rem;
-  left: 1.55rem;
-  font-size: 4.6rem;
-  opacity: 0.18;
-  color: var(--rust);
-}
-
-.plate-word {
-  z-index: 3;
-  left: 1.5rem;
-  right: auto;
-  bottom: 4.4rem;
-  max-width: 9ch;
-  font-size: 3.6rem;
-  opacity: 0.26;
-  color: var(--rust);
-}
-
-.plate-name {
-  z-index: 3;
-  left: 1.55rem;
-  bottom: 1.45rem;
-  max-width: 18rem;
-  font-size: 0.9rem;
-  text-transform: none;
-  color: var(--ink);
-}
-
-.plate-note {
-  position: absolute;
-  z-index: 3;
-  right: 1.55rem;
-  top: 1.55rem;
-  font-size: 0.82rem;
-  font-weight: 650;
-  color: var(--ink-soft);
-}
-
-.plate-mark {
-  left: 42%;
-  top: 42%;
-  width: 10rem;
-  opacity: 0.06;
-}
-
-.tx-hud {
-  color: var(--ink);
-  background: color-mix(in oklab, var(--porcelain) 92%, transparent);
-}
-
-.tx-word {
-  font-size: 1.58rem;
-  letter-spacing: 0;
-}
-
-@media (min-width: 768px) {
-  .tx-word {
-    font-size: 2rem;
-  }
-}
-
-@media (min-width: 1080px) {
-  .tx-grid {
-    grid-template-columns: minmax(0, 1.08fr) minmax(28rem, 0.92fr);
-  }
-
-  .tx-stage {
-    height: calc(100svh - 8.5rem);
-    max-height: 48rem;
-  }
-
-  .plate-num {
-    font-size: 6.1rem;
-  }
-
-  .plate-word {
-    font-size: 6.2rem;
-  }
-}
-
-/* Processo --------------------------------------------------------------- */
-
-.processo {
-  background:
-    radial-gradient(circle at 86% 22%, oklch(34% 0.04 54 / 0.28), transparent 27rem),
-    var(--graphite-2);
-  color: var(--milk);
-}
-
-.processo-pin {
-  overflow: hidden;
-}
-
-.processo-in {
-  position: relative;
-}
-
-.processo-title {
-  max-width: 12em;
-}
-
-.processo-diagram {
-  display: none;
-}
-
-.processo-mark {
-  display: none;
-}
-
-.processo-dot {
-  position: absolute;
-  display: grid;
-  gap: 0.25rem;
-  color: color-mix(in oklab, var(--milk) 52%, transparent);
-  transform: translate(-50%, -50%);
-  transition: color var(--dur-med) ease, opacity var(--dur-med) ease;
-}
-
-.processo-dot i {
-  font-style: normal;
-  font-size: 0.76rem;
-  font-weight: 700;
-  color: var(--gold-thread);
-}
-
-.processo-dot b {
-  font-size: 0.86rem;
-  font-weight: 650;
-}
-
-.processo-dot.is-active {
-  color: var(--milk);
-}
-
-.processo-dot:nth-child(1) { left: 50%; top: 4%; }
-.processo-dot:nth-child(2) { left: 84%; top: 25%; }
-.processo-dot:nth-child(3) { left: 82%; top: 70%; }
-.processo-dot:nth-child(4) { left: 50%; top: 96%; }
-.processo-dot:nth-child(5) { left: 16%; top: 70%; }
-.processo-dot:nth-child(6) { left: 16%; top: 25%; }
-
-.processo-ring-mark {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(42%, 13rem);
-  opacity: 0.08;
-  transform: translate(-50%, -50%);
-}
-
-@media (min-width: 1024px) {
-  html.motion .processo-in {
-    display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(22rem, 0.92fr);
-    align-items: center;
-    gap: clamp(3rem, 6rem, 6rem);
-  }
-
-  html.motion .processo-head,
-  html.motion .passos,
-  html.motion .processo-hud {
-    grid-column: 1;
-  }
-
-  html.motion .processo-diagram {
-    grid-column: 2;
-    grid-row: 1 / span 3;
-    display: grid;
-    place-items: center;
-    min-height: 32rem;
-  }
-
-  .processo-ring {
-    position: relative;
-    width: min(37vw, 32rem);
-    aspect-ratio: 1;
-    border: 1px solid color-mix(in oklab, var(--gold-thread) 28%, transparent);
-    border-radius: 50%;
-  }
-
-  .processo-ring::before,
-  .processo-ring::after {
-    content: '';
-    position: absolute;
-    inset: 12%;
-    border: 1px solid color-mix(in oklab, var(--milk) 12%, transparent);
-    border-radius: 50%;
-  }
-
-  .processo-ring::after {
-    inset: 28%;
-    border-color: color-mix(in oklab, var(--rust) 34%, transparent);
-    transform: rotate(-18deg) scaleX(1.35);
-  }
-}
-
-/* Doutor ------------------------------------------------------------------ */
-
-.doutor {
-  background: linear-gradient(90deg, var(--ivory), var(--porcelain));
-}
-
-.doutor::before {
-  content: 'Leonardo';
-  position: absolute;
-  left: -0.08em;
-  bottom: -0.23em;
-  font-family: var(--serif);
-  font-size: 8rem;
-  line-height: 1;
-  color: color-mix(in oklab, var(--ink) 5%, transparent);
-  pointer-events: none;
-}
-
-.doutor-frame {
-  max-width: none;
-  aspect-ratio: 4 / 5.15;
-  border: 0;
-  background: var(--greige);
-  box-shadow: 0 34px 90px -54px rgb(46 37 29 / 0.38);
-}
-
-.doutor-frame img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.doutor-title {
-  font-size: var(--fs-display);
-  max-width: 11.2em;
-}
-
-.doutor-bio {
-  color: var(--ink);
-}
-
-.marco-ano {
-  font-size: 2.6rem;
-  letter-spacing: 0;
-}
-
-@media (min-width: 1024px) {
-  .doutor::before {
-    font-size: 13rem;
-  }
-
-  .doutor-in {
-    grid-template-columns: minmax(24rem, 0.86fr) minmax(0, 1.14fr);
-    align-items: start;
-  }
-
-  .doutor-copy {
-    padding-top: 1.4rem;
-  }
-}
-
-/* Filosofia --------------------------------------------------------------- */
-
-.filosofia {
-  position: relative;
-  padding-block: var(--section-y);
-  background: var(--porcelain);
-}
-
-.filosofia::before {
-  content: '';
-  position: absolute;
-  inset: 8% auto 8% 50%;
-  width: 1px;
-  background: color-mix(in oklab, var(--ink) 10%, transparent);
-}
-
-.filosofia-in {
-  gap: 2.5rem;
-}
-
-.filosofia-title {
-  font-family: var(--serif);
-  font-size: var(--fs-display);
-  line-height: var(--lh-snug);
-  max-width: 13em;
-}
-
-.credo-line {
-  font-size: var(--fs-credo);
-}
-
-.filosofia-macro {
-  width: min(82vw, 30rem);
-  justify-self: stretch;
-  margin: 0;
-  background: var(--mist);
-  box-shadow: 0 32px 80px -54px rgb(46 37 29 / 0.42);
-}
-
-.filosofia-macro img {
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  object-fit: cover;
-  filter: saturate(0.84) contrast(1.04);
-}
-
-@media (min-width: 1024px) {
-  .filosofia-in {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    align-items: center;
-    gap: 3rem 2rem;
-  }
-
-  .filosofia-in > .chapter-label {
-    grid-column: 1 / 4;
-  }
-
-  .filosofia-title {
-    grid-column: 1 / 8;
-  }
-
-  .credo--a {
-    grid-column: 1 / 5;
-  }
-
-  .filosofia-macro {
-    grid-column: 7 / 13;
-    grid-row: 2 / span 2;
-    width: 100%;
-  }
-
-  .credo--b {
-    grid-column: 5 / 10;
-    justify-self: stretch;
-    text-align: left;
-  }
-
-  .credo--b .credo-sub {
-    margin-left: 0;
-  }
-
-  .credo--c {
-    grid-column: 2 / 7;
-    justify-self: stretch;
-    text-align: left;
-  }
-
-  .credo--c .credo-sub {
-    margin-inline: 0;
-  }
-}
-
-/* Mapa + CTA -------------------------------------------------------------- */
-
-.mapa {
-  background: var(--porcelain);
-}
-
-.mapa-panel {
-  border-radius: 0;
-  background: var(--graphite);
-}
-
-.final {
-  min-height: min(82svh, 52rem);
-  background:
-    radial-gradient(circle at 20% 20%, oklch(43% 0.07 43 / 0.28), transparent 24rem),
-    var(--graphite-2);
-}
-
-.final-mark {
-  opacity: 0.82;
-}
-
-.footer-logo {
-  opacity: 0.9;
-}
-
-@media (max-width: 767px) {
-  .tx-stage {
-    height: 21rem;
-  }
-
-  .plate-photo {
-    width: 62%;
-    height: 82%;
-  }
-
-  .plate-word {
-    font-size: 3rem;
-  }
-
-  .plate-note {
-    display: none;
-  }
-
-  .processo-diagram {
-    display: none;
-  }
-
-  .filosofia::before {
-    display: none;
-  }
-
-  .marco {
-    display: grid;
-    gap: 0.65rem;
-  }
-
-  .marco-ano {
-    min-width: 0;
-  }
-}
-
-/* ==========================================================================
-   REFINAMENTO CODEX 2026 · motion, conteúdo e direção cromática
-   ========================================================================== */
-
-[data-split] {
-  text-wrap: normal;
-}
-
-.split-line {
-  will-change: transform, opacity;
-}
-
-/* Hero: champanhe quente no plano direito, sem azul-cinza. */
-
-.hero {
-  background:
-    linear-gradient(90deg, #f8f6f2 0 50%, var(--champagne) 50% 100%);
-}
-
-.hero-panel {
-  background:
-    radial-gradient(circle at 68% 30%, color-mix(in oklab, var(--gold-logo) 18%, transparent), transparent 22rem),
-    linear-gradient(145deg, var(--champagne), var(--stone));
-}
-
-.hero::before {
-  background: linear-gradient(0deg, color-mix(in oklab, var(--porcelain) 98%, transparent), transparent);
-}
-
-.hero-linework i {
-  border-color: color-mix(in oklab, var(--copper-logo) 38%, transparent);
-}
-
-.hero-linework i:first-child {
-  border-color: color-mix(in oklab, var(--copper-logo) 48%, transparent);
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--gold-logo) 14%, transparent);
-}
-
-.hero-linework i:last-child {
-  border-color: color-mix(in oklab, var(--gold-logo) 36%, transparent);
-}
-
-.hero-swipe {
-  position: absolute;
-  inset: 0;
-  z-index: 4;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0;
-}
-
-.hero-swipe-fill {
-  fill: var(--porcelain);
-}
-
-.hero-swipe-edge {
-  fill: none;
-  stroke: color-mix(in oklab, var(--gold-logo) 70%, var(--copper-logo));
-  stroke-width: 0.28;
-  vector-effect: non-scaling-stroke;
-}
-
-html:not(.motion) .hero-swipe {
-  display: none;
-}
-
-@media (min-width: 1024px) {
-  .hero {
-    background:
-      linear-gradient(90deg, #f8f6f2 0 50%, var(--champagne) 50% 100%);
-  }
-
-  .hero-media {
-    height: min(94svh, 880px);
-  }
-
-  .hero-media img {
-    object-position: center top;
-    filter: saturate(1.02) contrast(1.02);
-  }
-}
-
-/* Missão e galeria: escala menor, campo gráfico sem retratos repetidos. */
-
-.missao {
-  padding-block: clamp(4.25rem, 7.5vw, 7.5rem) 0;
-}
-
-.missao-title {
-  max-width: 14.5em;
-  font-size: clamp(1.95rem, 1.12rem + 3.35vw, 3.65rem);
-  line-height: 1.14;
-}
-
-.missao-cols {
-  margin-top: clamp(2rem, 4.6vw, 3.5rem);
-}
-
-.missao-col {
-  max-width: 28em;
-}
-
-.galeria {
-  display: block;
-  max-width: var(--container);
-  margin-inline: auto;
-  padding-inline: var(--gutter);
-  overflow: visible;
-}
-
-.galeria-system {
-  position: relative;
-  min-height: clamp(19rem, 36vw, 32rem);
-  overflow: hidden;
-  border-block: 1px solid color-mix(in oklab, var(--ink) 13%, transparent);
-  background:
-    radial-gradient(circle at 80% 20%, color-mix(in oklab, var(--gold-logo) 18%, transparent), transparent 19rem),
-    linear-gradient(120deg, var(--porcelain), var(--champagne));
-}
-
-.galeria-system::before {
-  content: '';
-  position: absolute;
-  width: min(70vw, 36rem);
-  aspect-ratio: 1.72;
-  left: -8%;
-  bottom: -18%;
-  border: 1px solid color-mix(in oklab, var(--copper-logo) 27%, transparent);
-  border-radius: 50%;
-  transform: rotate(-14deg);
-}
-
-.galeria-curve {
-  position: absolute;
-  inset: 9% 5%;
-  width: 90%;
-  height: 82%;
-}
-
-.galeria-curve path {
-  fill: none;
-  stroke: color-mix(in oklab, var(--copper-logo) 34%, transparent);
-  stroke-width: 1.1;
-  vector-effect: non-scaling-stroke;
-}
-
-.galeria-curve path + path {
-  stroke: color-mix(in oklab, var(--gold-logo) 42%, transparent);
-}
-
-.galeria-axis {
-  position: absolute;
-  font-family: var(--serif);
-  font-size: clamp(2.35rem, 7.5vw, 6.4rem);
-  line-height: 0.92;
-  color: var(--ink);
-}
-
-.galeria-axis--a {
-  left: clamp(1.2rem, 6vw, 5rem);
-  top: clamp(1.5rem, 8vw, 5.2rem);
-}
-
-.galeria-axis--b {
-  left: 50%;
-  top: 50%;
-  color: var(--copper-ink);
-  font-style: italic;
-  transform: translate(-50%, -50%);
-}
-
-.galeria-axis--c {
-  right: clamp(1.2rem, 5vw, 4.6rem);
-  bottom: clamp(1.8rem, 7vw, 4.8rem);
-}
-
-.galeria-caption {
-  position: absolute;
-  left: clamp(1.25rem, 4vw, 3rem);
-  bottom: clamp(1.1rem, 3vw, 2.2rem);
-  max-width: 18rem;
-  font-size: var(--fs-small);
-  font-weight: 650;
-  color: var(--ink-soft);
-}
-
-/* Tratamentos: palco sem retratos, com cartões tipográficos por área. */
-
-.tx-stage {
-  background: var(--champagne);
-}
-
-.plate--stone,
-.plate--mist {
-  background:
-    radial-gradient(circle at 78% 18%, color-mix(in oklab, var(--gold-logo) 20%, transparent), transparent 15rem),
-    var(--stone);
-}
-
-.plate--pearl {
-  background:
-    radial-gradient(circle at 18% 18%, color-mix(in oklab, var(--copper-logo) 9%, transparent), transparent 15rem),
-    var(--porcelain);
-}
-
-.plate--ivory {
-  background:
-    linear-gradient(135deg, var(--ivory), color-mix(in oklab, var(--gold-logo) 10%, var(--porcelain)));
-}
-
-.plate-photo,
-.plate-mark {
-  display: none;
-}
-
-.plate-rail {
-  border-color: color-mix(in oklab, var(--ink) 14%, transparent);
-}
-
-.plate-rail::before {
-  border-color: color-mix(in oklab, var(--gold-logo) 42%, transparent);
-}
-
-.plate-rail::after {
-  border-color: color-mix(in oklab, var(--copper-logo) 32%, transparent);
-}
-
-.plate-num {
-  color: var(--gold-logo);
-  opacity: 0.34;
-}
-
-.plate-word {
-  max-width: 7.5ch;
-  color: var(--copper-ink);
-  opacity: 0.18;
-}
-
-.plate-note {
-  color: color-mix(in oklab, var(--ink) 58%, transparent);
-}
-
-/* Processo: pontos calculados por JS na mesma órbita externa. */
-
-.processo-ring .processo-dot {
-  left: var(--orbit-x, 50%) !important;
-  top: var(--orbit-y, 50%) !important;
-  width: 0;
-  height: 0;
-  max-width: none;
-  white-space: nowrap;
-  transform: none;
-}
-
-.processo-dot i {
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border: 1px solid color-mix(in oklab, var(--gold-logo) 42%, transparent);
-  border-radius: 50%;
-  color: var(--gold-thread);
-  background: color-mix(in oklab, var(--graphite-2) 82%, transparent);
-  transform: translate(-50%, -50%);
-}
-
-.processo-dot b {
-  position: absolute;
-  top: 1.35rem;
-  left: 50%;
-  text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
-  transform: translateX(-50%);
-}
-
-.processo-dot[data-orbit-align='right'] b {
-  left: 1.35rem;
-  top: -0.6rem;
-  text-align: left;
-  transform: none;
-}
-
-.processo-dot[data-orbit-align='left'] b {
-  right: 1.35rem;
-  left: auto;
-  top: -0.6rem;
-  text-align: right;
-  transform: none;
-}
-
-.processo-dot.is-active i {
-  color: var(--graphite-2);
-  background: var(--gold-thread);
-  box-shadow: 0 0 28px color-mix(in oklab, var(--gold-logo) 34%, transparent);
-}
-
-/* O doutor: sem nome fantasma; marco atual factual, sem gimmick de ano. */
-
-.doutor::before {
-  content: none !important;
-}
-
-.marco {
-  align-items: center;
-}
-
-.marco-ano {
-  min-width: 4.6em;
-}
-
-.marco:last-child .marco-ano {
-  min-width: min(42vw, 12.5rem);
-  font-family: var(--sans);
-  font-size: clamp(1.05rem, 0.86rem + 0.8vw, 1.42rem);
-  font-weight: 650;
-  line-height: 1.18;
-  color: var(--copper-ink);
-}
-
-/* Filosofia: nova composição conectada por curva, sem linha vertical e sem foto. */
-
-.filosofia::before {
-  display: none !important;
-}
-
-.filosofia {
-  background:
-    radial-gradient(circle at 88% 22%, color-mix(in oklab, var(--gold-logo) 10%, transparent), transparent 22rem),
-    var(--porcelain);
-}
-
-.filosofia-in {
-  gap: clamp(2rem, 5vw, 4rem);
-}
-
-.filosofia-title {
-  max-width: 12.5em;
-  font-family: var(--serif);
-  font-size: clamp(2.3rem, 1.2rem + 4vw, 5rem);
-  line-height: 1.05;
-}
-
-.filosofia-stage {
-  position: relative;
-  min-height: clamp(34rem, 58vw, 44rem);
-  /* item de grid: precisa poder encolher abaixo da largura intrínseca do
-     track flex do slider, senão o palco estica e o card sai da tela no mobile */
-  min-width: 0;
-}
-
-.filosofia-curve {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.filosofia-curve-path {
-  fill: none;
-  stroke: color-mix(in oklab, var(--copper-logo) 34%, transparent);
-  stroke-width: 1.25;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
-
-@media (min-width: 1024px) {
-  .filosofia-in {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    align-items: start;
-  }
-
-  .filosofia-in > .chapter-label {
-    grid-column: 1 / 4;
-  }
-
-  .filosofia-title {
-    grid-column: 1 / 9;
-  }
-
-  .filosofia-stage {
-    grid-column: 1 / -1;
-  }
-
-}
-
-/* Mapa: híbrido com presença do baseline e ajustes técnicos atuais. */
-
-.mapa {
-  padding-top: clamp(3rem, 7vw, 6rem);
-  background: var(--porcelain);
-}
-
-.mapa-embed {
-  height: min(64svh, 560px);
-  background: var(--champagne);
-}
-
-.mapa-embed::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background:
-    linear-gradient(28deg, transparent 0 46%, color-mix(in oklab, var(--copper-logo) 16%, transparent) 46% 46.35%, transparent 46.35%),
-    linear-gradient(148deg, transparent 0 38%, color-mix(in oklab, var(--ink) 10%, transparent) 38% 38.28%, transparent 38.28%),
-    linear-gradient(92deg, transparent 0 62%, color-mix(in oklab, var(--gold-logo) 18%, transparent) 62% 62.32%, transparent 62.32%),
-    radial-gradient(circle at 67% 42%, color-mix(in oklab, var(--copper-logo) 28%, transparent) 0 0.42rem, transparent 0.45rem),
-    var(--champagne);
-  opacity: 0.95;
-}
-
-.mapa-embed iframe {
-  z-index: 1;
-  filter: saturate(0.88) contrast(1.03) brightness(0.98);
-}
-
-.mapa-panel {
-  border-radius: var(--r-panel);
-  background:
-    radial-gradient(circle at 92% 14%, color-mix(in oklab, var(--gold-logo) 14%, transparent), transparent 12rem),
-    var(--graphite-2);
-  box-shadow: 0 28px 80px -38px rgb(0 0 0 / 0.48);
-}
-
-@media (min-width: 1024px) {
-  .mapa-embed {
-    height: min(80svh, 710px);
-  }
-
-  .mapa-panel {
-    width: min(440px, 36vw);
-  }
-}
-
-/* CTA e footer: acento de encerramento controlado. */
-
-.final-title em,
-.final-title .it {
-  color: var(--gold-soft);
-}
-
-.final-mark {
-  width: clamp(68px, 10vw, 96px);
-}
-
-@media (max-width: 767px) {
-  .hero {
-    background:
-      linear-gradient(180deg, #f8f6f2 0 52%, var(--champagne) 52% 100%);
-  }
-
-  .hero-linework i:first-child {
-    width: 24rem;
-    height: 13rem;
-    left: -8rem;
-    top: 20svh;
-  }
-
-  .hero-linework i:last-child {
-    width: 18rem;
-    height: 10rem;
-    right: -7rem;
-    bottom: 22svh;
-  }
-
-  .missao-title {
-    font-size: clamp(1.9rem, 8.1vw, 2.55rem);
-  }
-
-  .galeria-system {
-    min-height: 22rem;
-  }
-
-  .galeria-axis--a {
-    top: 2rem;
-  }
-
-  .galeria-axis--b {
-    left: 46%;
-  }
-
-  .galeria-axis--c {
-    right: 1.2rem;
-    bottom: 4.8rem;
-  }
-
-  .galeria-caption {
-    right: 1.2rem;
-    max-width: 14rem;
-  }
-
-  .plate-name {
-    max-width: 14rem;
-  }
-
-  .filosofia-stage {
-    min-height: auto;
-  }
-
-  .filosofia-curve {
-    opacity: 0.46;
-    inset: 6% -28% 0;
-    width: 156%;
-  }
-
-  .mapa {
-    padding-top: 4rem;
-  }
-
-  .mapa-panel {
-    border-radius: 0;
-  }
-}
-
-/* ==========================================================================
-   FINAL PASS 2026 · ajustes realistas de motion, interação e responsividade
-   ========================================================================== */
-
-.hero-in {
-  padding-top: clamp(5.05rem, 8svh, 6.4rem);
-}
-
-.hero-title {
-  margin-top: clamp(0.6rem, 1.8svh, 1.2rem);
-}
-
-.hero-foot {
-  padding-bottom: clamp(2.2rem, 5svh, 3.8rem);
-}
-
-.hero-actions {
-  gap: 0.85rem 1rem;
-}
-
-.hero-tag {
-  min-height: 38px;
-}
-
-@media (min-width: 1024px) and (max-height: 820px) {
-  .hero-in {
-    padding-top: 5rem;
-  }
-
-  .hero-word {
-    font-size: clamp(4.65rem, 7vw, 5.95rem);
-  }
-
-  .hero-kicker {
-    margin-bottom: 0.7rem;
-  }
-
-  .hero-foot {
-    max-width: min(31rem, calc(52vw - var(--gutter)));
-    padding-bottom: 2rem;
-  }
-
-  .hero-statement {
-    font-size: 0.98rem;
-    line-height: 1.52;
-  }
-
-  .hero-media {
-    height: min(92svh, 760px);
-  }
-}
-
-.mission-break {
-  display: none;
-}
-
-.missao-title {
-  max-width: 16.2em;
-  font-size: clamp(2.05rem, 1.2rem + 3vw, 3.45rem);
-  line-height: 1.13;
-}
-
-.missao-cta {
-  min-height: 52px;
-  padding-inline: 1.25rem;
-  color: var(--milk);
-  background:
-    linear-gradient(135deg, color-mix(in oklab, var(--graphite) 92%, var(--copper-logo)), var(--graphite-2));
-  border-color: color-mix(in oklab, var(--gold-logo) 36%, transparent);
-  box-shadow: 0 18px 44px -30px rgb(33 30 26 / 0.65);
-}
-
-.missao-cta:hover,
-.missao-cta:focus-visible {
-  color: var(--milk);
-  border-color: var(--gold-logo);
-  transform: translateY(-1px);
-}
-
-.galeria-system {
-  border-radius: clamp(10px, 1.1vw, 18px);
-  border: 1px solid color-mix(in oklab, var(--ink) 13%, transparent);
-  border-block: 1px solid color-mix(in oklab, var(--ink) 13%, transparent);
-  box-shadow: inset 0 1px 0 color-mix(in oklab, white 54%, transparent);
-}
-
-.galeria-system::after {
-  content: '';
-  position: absolute;
-  inset: 12% 10%;
-  border: 1px solid color-mix(in oklab, var(--gold-logo) 18%, transparent);
-  border-radius: clamp(10px, 1vw, 16px);
-  pointer-events: none;
-}
-
-.galeria-axis {
-  text-shadow: 0 1px 0 color-mix(in oklab, white 50%, transparent);
-}
-
-/* Tratamentos: cartões tipográficos, sem símbolos abstratos. */
-
-.tx-stage {
-  background: var(--greige);
-  border-radius: clamp(10px, 1vw, 16px);
-  box-shadow: 0 28px 70px -52px rgb(33 30 26 / 0.48);
-}
-
-.plate {
-  color: var(--ink);
-  overflow: hidden;
-}
-
-.plate::before {
-  content: '';
-  position: absolute;
-  inset: 1rem;
-  border: 1px solid color-mix(in oklab, currentColor 14%, transparent);
-  border-radius: 12px;
-  pointer-events: none;
-}
-
-.plate::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(90deg, color-mix(in oklab, currentColor 5%, transparent) 1px, transparent 1px),
-    linear-gradient(0deg, color-mix(in oklab, currentColor 4%, transparent) 1px, transparent 1px);
-  background-size: 4.8rem 4.8rem;
-  opacity: 0.28;
-  pointer-events: none;
-}
-
-.plate--porcelain {
-  background: linear-gradient(135deg, var(--porcelain), color-mix(in oklab, var(--champagne) 38%, var(--porcelain)));
-}
-
-.plate--champagne {
-  background: linear-gradient(135deg, var(--champagne), color-mix(in oklab, var(--gold-logo) 10%, var(--porcelain)));
-}
-
-.plate--greige {
-  background: linear-gradient(135deg, var(--greige), color-mix(in oklab, var(--porcelain) 50%, var(--stone)));
-}
-
-.plate--stone {
-  background: linear-gradient(135deg, var(--stone), color-mix(in oklab, var(--copper-logo) 7%, var(--porcelain)));
-}
-
-.plate--taupe {
-  background: linear-gradient(135deg, #d9d0c5, #efe9e1);
-}
-
-.plate--ivory {
-  background: linear-gradient(135deg, var(--ivory), color-mix(in oklab, var(--gold-logo) 9%, var(--porcelain)));
-}
-
-.plate--copper {
-  color: var(--milk);
-  background:
-    radial-gradient(circle at 78% 18%, color-mix(in oklab, var(--gold-logo) 24%, transparent), transparent 15rem),
-    linear-gradient(135deg, #8e4b2b, #5d3525);
-}
-
-.plate--graphite {
-  color: var(--milk);
-  background:
-    radial-gradient(circle at 75% 20%, color-mix(in oklab, var(--gold-logo) 15%, transparent), transparent 16rem),
-    linear-gradient(135deg, var(--graphite), var(--graphite-2));
-}
-
-.plate--gold {
-  background: linear-gradient(135deg, #ead7aa, #f4efe4);
-}
-
-.plate-rail {
-  inset: 1rem;
-  border-radius: 12px;
-  border-color: color-mix(in oklab, currentColor 15%, transparent);
-}
-
-.plate-num {
-  top: clamp(1.25rem, 2.8vw, 2.4rem);
-  left: clamp(1.35rem, 3vw, 2.6rem);
-  color: color-mix(in oklab, currentColor 42%, transparent);
-  opacity: 1;
-}
-
-.plate-word {
-  top: clamp(4.6rem, 13vw, 9.5rem);
-  left: clamp(1.35rem, 3vw, 2.6rem);
-  right: clamp(1.35rem, 5vw, 3.5rem);
-  bottom: auto;
-  max-width: none;
-  color: currentColor;
-  opacity: 0.13;
-  font-size: clamp(1.55rem, 4.3vw, 3.3rem);
-  line-height: 1;
-  white-space: normal;
-  overflow-wrap: break-word;
-}
-
-.plate-name {
-  left: clamp(1.35rem, 3vw, 2.6rem);
-  right: clamp(1.35rem, 9vw, 7rem);
-  bottom: clamp(2rem, 4.6vw, 4rem);
-  max-width: 12ch;
-  font-family: var(--serif);
-  font-size: clamp(2rem, 4.3vw, 4.6rem);
-  font-weight: 430;
-  line-height: 1.02;
-  letter-spacing: 0;
-  text-transform: none;
-  opacity: 0.96;
-}
-
-.plate-note {
-  position: absolute;
-  z-index: 3;
-  top: clamp(1.6rem, 3.6vw, 2.8rem);
-  right: clamp(1.35rem, 3vw, 2.6rem);
-  max-width: 13rem;
-  font-size: clamp(0.8rem, 0.7rem + 0.35vw, 0.96rem);
-  font-weight: 700;
-  line-height: 1.25;
-  text-align: right;
-  color: currentColor;
-  opacity: 0.72;
-}
-
-.plate-field {
-  position: absolute;
-  z-index: 3;
-  right: clamp(1.35rem, 3vw, 2.6rem);
-  bottom: clamp(1.35rem, 3vw, 2.35rem);
-  font-size: 0.76rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: currentColor;
-  opacity: 0.56;
-}
-
-.plate-thread {
-  position: absolute;
-  z-index: 2;
-  left: clamp(1.35rem, 3vw, 2.6rem);
-  right: clamp(1.35rem, 3vw, 2.6rem);
-  top: 50%;
-  display: grid;
-  gap: 0.55rem;
-  opacity: 0.24;
-}
-
-.plate-thread i {
-  display: block;
-  height: 1px;
-  background: currentColor;
-  transform-origin: left;
-}
-
-.plate-thread i:nth-child(2) {
-  width: 76%;
-}
-
-.plate-thread i:nth-child(3) {
-  width: 52%;
-}
-
-.marco:last-child .marco-ano {
-  min-width: 4.6em;
-  font-family: var(--serif);
-  font-size: clamp(2.15rem, 1.7rem + 1.8vw, 3.2rem);
-  font-weight: 340;
-  line-height: 1;
-  color: var(--copper-ink);
-}
-
-/* Filosofia: slider acessível, com fallback em fluxo normal sem JS. */
-
-.filosofia-stage {
-  min-height: 0;
-}
-
-.filosofia-curve {
-  inset: -6% -4% auto;
-  height: min(82%, 34rem);
-  opacity: 0.52;
-}
-
-.filosofia-slider {
-  position: relative;
-  z-index: 1;
-  margin-top: clamp(1.5rem, 4vw, 3rem);
-  max-width: 100%;
-  min-width: 0;
-}
-
-.filosofia-slider-viewport {
-  width: 100%;
-  max-width: 100%;
-}
-
-.filosofia-cards {
-  display: grid;
-  gap: 1rem;
-}
-
-.filosofia-card {
-  position: relative;
-  min-height: clamp(18rem, 35vw, 25rem);
-  padding: clamp(1.2rem, 3vw, 2.2rem);
-  border: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
-  border-radius: clamp(12px, 1.1vw, 18px);
-  overflow: hidden;
-  background:
-    radial-gradient(circle at 82% 18%, color-mix(in oklab, var(--gold-logo) 12%, transparent), transparent 13rem),
-    linear-gradient(135deg, var(--ivory), var(--champagne));
-  box-shadow: 0 22px 70px -52px rgb(33 30 26 / 0.4);
-}
-
-.filosofia-card:nth-child(2) {
-  background:
-    radial-gradient(circle at 80% 20%, color-mix(in oklab, var(--copper-logo) 10%, transparent), transparent 13rem),
-    linear-gradient(135deg, var(--stone), var(--porcelain));
-}
-
-.filosofia-card:nth-child(3) {
-  background:
-    radial-gradient(circle at 78% 18%, color-mix(in oklab, var(--gold-logo) 15%, transparent), transparent 13rem),
-    linear-gradient(135deg, #ead7aa, #f5efe4);
-}
-
-.filosofia-card::after {
-  content: '';
-  position: absolute;
-  inset: 1rem;
-  border: 1px solid color-mix(in oklab, var(--ink) 10%, transparent);
-  border-radius: 12px;
-  pointer-events: none;
-}
-
-.filosofia-card-num {
-  display: inline-block;
-  margin-bottom: clamp(2.5rem, 7vw, 5.5rem);
-  font-family: var(--serif);
-  font-size: clamp(2.4rem, 7vw, 5.4rem);
-  line-height: 1;
-  color: var(--copper-ink);
-  opacity: 0.52;
-  font-variant-numeric: tabular-nums;
-}
-
-.filosofia-card-title {
-  max-width: 9.4em;
-  font-family: var(--serif);
-  font-size: clamp(1.85rem, 1.15rem + 2.6vw, 3.8rem);
-  font-weight: 430;
-  line-height: 1.04;
-  letter-spacing: 0;
-}
-
-.filosofia-card-title em {
-  color: var(--copper-ink);
-  font-style: italic;
-  font-weight: 410;
-}
-
-.filosofia-card-copy {
-  max-width: 31em;
-  margin-top: 1.2rem;
-  color: var(--ink-soft);
-}
-
-.filosofia-controls {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: clamp(1rem, 2.4vw, 1.55rem);
-}
-
-.filosofia-nav {
-  display: grid;
-  place-items: center;
-  width: 46px;
-  height: 46px;
-  border: 1px solid color-mix(in oklab, var(--ink) 23%, transparent);
-  border-radius: 50%;
-  color: var(--ink);
-  background: color-mix(in oklab, var(--porcelain) 72%, transparent);
-  transition:
-    color var(--dur-fast) ease,
-    border-color var(--dur-fast) ease,
-    background var(--dur-fast) ease;
-}
-
-.filosofia-nav:hover,
-.filosofia-nav:focus-visible {
-  color: var(--milk);
-  border-color: var(--copper-logo);
-  background: var(--graphite);
-}
-
-.filosofia-dots {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.filosofia-dot {
-  width: 44px;
-  height: 44px;
-  position: relative;
-}
-
-.filosofia-dot::before {
-  content: '';
-  position: absolute;
-  inset: 18px 5px;
-  border-radius: 999px;
-  background: color-mix(in oklab, var(--ink) 24%, transparent);
-  transition:
-    inset var(--dur-fast) ease,
-    background var(--dur-fast) ease;
-}
-
-.filosofia-dot.is-active::before {
-  inset-inline: 0;
-  background: var(--gold-logo);
-}
-
-.filosofia-slider.is-ready .filosofia-slider-viewport {
-  overflow: hidden;
-  cursor: grab;
-  touch-action: pan-y;
-}
-
-.filosofia-slider.is-dragging .filosofia-slider-viewport {
-  cursor: grabbing;
-}
-
-.filosofia-slider.is-ready .filosofia-cards {
-  display: flex;
-  align-items: stretch;
-  gap: 0;
-  will-change: transform;
-}
-
-.filosofia-slider.is-ready .filosofia-card {
-  flex: 0 0 min(74vw, 34rem);
-  margin-inline: clamp(0.45rem, 1vw, 0.9rem);
-  will-change: transform, opacity;
-}
-
-.mapa {
-  padding-block: clamp(3rem, 7vw, 6rem) 0;
-}
-
-.mapa-shell {
-  margin-bottom: 0;
-}
-
-.final {
-  margin-top: 0;
-}
-
-@media (min-width: 880px) {
-  .mission-break {
-    display: block;
-  }
-}
-
-@media (min-width: 1024px) {
-  .filosofia-slider {
-    width: min(100%, 78rem);
-    margin-left: auto;
-  }
-
-  .filosofia-slider.is-ready .filosofia-card {
-    flex-basis: min(42vw, 36rem);
-  }
-}
-
-@media (max-width: 767px) {
-  .hero-in {
-    padding-top: 5.4rem;
-    padding-bottom: 27svh;
-  }
-
-  .hero-title {
-    margin-top: 0.6rem;
-  }
-
-  .hero-foot {
-    padding-bottom: 1.5rem;
-  }
-
-  .hero-statement {
-    max-width: 28rem;
-    font-size: 0.98rem;
-    line-height: 1.52;
-  }
-
-  .hero-actions {
-    align-items: flex-start;
-  }
-
-  .hero-tags {
-    gap: 0.45rem;
-  }
-
-  .hero-tag {
-    min-height: 36px;
-    padding-inline: 0.72rem;
-  }
-
-  .missao-title {
-    max-width: 12.2em;
-    font-size: clamp(1.86rem, 7.6vw, 2.5rem);
-  }
-
-  .galeria-system {
-    border-radius: 14px;
-  }
-
-  .galeria-system::after {
-    inset: 1rem;
-    border-radius: 12px;
-  }
-
-  .tx-stage {
-    height: 22.5rem;
-  }
-
-  .plate::before,
-  .plate-rail {
-    inset: 0.85rem;
-    border-radius: 10px;
-  }
-
-  .plate-word {
-    top: 5.7rem;
-    right: 1.15rem;
-    bottom: auto;
-    font-size: clamp(1.3rem, 6vw, 2.05rem);
-    max-width: none;
-  }
-
-  .plate-name {
-    right: 1.15rem;
-    max-width: 10.5ch;
-    font-size: clamp(1.85rem, 8.8vw, 2.65rem);
-  }
-
-  .plate-note {
-    display: block;
-    max-width: 10rem;
-    font-size: 0.78rem;
-  }
-
-  .plate-field {
-    left: 1.2rem;
-    right: auto;
-    bottom: 1.2rem;
-    max-width: 13rem;
-  }
-
-  .filosofia-curve {
-    inset: 2rem -36% auto;
-    width: 168%;
-    opacity: 0.32;
-  }
-
-  .filosofia-card {
-    min-height: 21rem;
-  }
-
-  .filosofia-slider.is-ready .filosofia-card {
-    /* menor que o viewport para deixar o próximo card espiar na borda */
-    flex-basis: min(78vw, 22rem);
-    margin-inline: 0.5rem;
-  }
-
-  .filosofia-controls {
-    justify-content: center;
-  }
-
-  .mapa {
-    padding-block: 4rem 0;
-  }
-}
-
-/* ==========================================================================
-   RODADA MOBILE FINAL (<= 767.98px) — sem alterar >= 768px
-   Superfície única na hero · tratamentos em accordion · processo em
-   slides verticais · legenda repetida do doutor oculta.
-   ========================================================================== */
+/* Mobile: sem palco. A lista vira acordeão (comportamento preservado). */
 @media (max-width: 767.98px) {
-  /* --- 6 · HERO: uma única superfície clara ------------------------------- */
-  .hero {
-    background: var(--porcelain);
-  }
-
-  .hero::before {
-    display: none; /* remove o esmaecido inferior que criava faixa */
-  }
-
-  .hero-panel {
-    background: transparent; /* sem painel/bloco bege */
-    border-top: 0; /* sem linha horizontal atravessando */
-  }
-
-  /* --- 7 · TRATAMENTOS: sem palco; lista vira accordion ------------------- */
   .tx-stage {
-    display: none; /* oculta o grande card editorial e seus controles */
-  }
-
-  .tx-list {
-    margin-top: 0;
+    display: none;
   }
 
   .tx-name {
     position: relative;
-    padding-right: 2.4rem; /* espaço para o indicador de abrir/fechar */
+    padding-right: 2.4rem;
   }
 
-  /* Indicador discreto (chevron) — puramente CSS, só no mobile */
   .tx-name::after {
     content: '';
     position: absolute;
@@ -3561,30 +1104,265 @@ html:not(.motion) .hero-swipe {
     transform: rotate(-135deg);
   }
 
-  /* Fallback sem JavaScript: descrições permanecem visíveis */
   html:not(.js) .tx-body[hidden] {
     display: block;
   }
+}
 
-  /* --- 8 · PROCESSO: slides verticais (apenas com motion) ----------------- */
+@media (min-width: 768px) {
+  .tx-head {
+    grid-column: 1 / 7;
+  }
+
+  /* altura e sticky do original: o palco acompanha a leitura da lista */
+  .tx-stage {
+    grid-column: 1 / 5;
+    position: sticky;
+    top: 6.5rem;
+    height: calc(100svh - 9rem);
+    max-height: 46rem;
+    align-self: start;
+  }
+
+  .tx-panel {
+    grid-column: 5 / -1;
+  }
+}
+
+@media (min-width: 1200px) {
+  /* mesmo eixo editorial da Missão (coluna 1): o capítulo claro inteiro nasce
+     na mesma vertical — palco em 7 colunas, lista em 5 */
+  .tx-head {
+    grid-column: 1 / 7;
+    margin-bottom: var(--sp-3);
+  }
+
+  .tx-stage {
+    grid-column: 1 / 8;
+    height: calc(100svh - 8.5rem);
+    max-height: 48rem;
+  }
+
+  .tx-panel {
+    grid-column: 8 / 13;
+  }
+}
+
+/* ==========================================================================
+   CAP. 07 · COMO TRABALHAMOS
+   ==========================================================================
+   Segundo tempo do capítulo escuro. Mesma superfície de Precisão, mesmos tons
+   de texto, mesma linha dourada. A passagem não é uma troca de site.
+   ========================================================================== */
+
+.processo {
+  background: var(--surface-dark);
+  color: var(--ink-on-dark);
+}
+
+.processo-pin {
+  position: relative;
+  overflow: hidden;
+  padding-block: var(--section-y);
+}
+
+.processo-in {
+  row-gap: 0;
+}
+
+.processo-head,
+.passos,
+.processo-hud,
+.processo-diagram {
+  grid-column: 1 / -1;
+}
+
+.processo-head {
+  display: grid;
+  gap: var(--sp-1);
+}
+
+.processo-title {
+  font-family: var(--serif);
+  font-size: var(--fs-display);
+  font-weight: 440;
+  line-height: var(--lh-snug);
+}
+
+.processo-title em,
+.processo-title .it {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold);
+}
+
+.passos {
+  margin-top: var(--sp-2);
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.passo {
+  border-top: 1px solid var(--line-dark);
+  padding-top: 1.4rem;
+  min-width: 0;
+}
+
+.passo-num {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  font-style: italic;
+  color: var(--gold);
+}
+
+.passo-titulo {
+  font-family: var(--serif);
+  font-size: var(--fs-passo);
+  font-weight: 400;
+  line-height: 1.02;
+  margin-top: 0.5rem;
+}
+
+.passo-texto {
+  margin-top: 0.9rem;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--ink-on-dark-2);
+  max-width: 34em;
+  overflow-wrap: break-word;
+}
+
+.processo-hud {
+  display: none;
+}
+
+.processo-counter {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  font-size: var(--fs-micro);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.processo-counter i {
+  opacity: 0.5;
+  font-style: normal;
+}
+
+.processo-track {
+  flex: 1;
+  max-width: 16rem;
+  height: 1px;
+  background: var(--line-dark);
+  overflow: hidden;
+}
+
+.processo-track i {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+.processo-diagram {
+  display: none;
+}
+
+.processo-dot {
+  position: absolute;
+  display: grid;
+  left: var(--orbit-x, 50%);
+  top: var(--orbit-y, 50%);
+  width: 0;
+  height: 0;
+  white-space: nowrap;
+  color: color-mix(in oklab, var(--ink-on-dark) 52%, transparent);
+  transition: color var(--dur-med) ease;
+}
+
+.processo-dot i {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  font-style: normal;
+  font-size: 0.76rem;
+  font-weight: 700;
+  border: 1px solid var(--line-gold);
+  border-radius: 50%;
+  color: var(--gold);
+  background: var(--surface-dark);
+  transform: translate(-50%, -50%);
+}
+
+.processo-dot b {
+  position: absolute;
+  top: 1.35rem;
+  left: 50%;
+  font-size: 0.86rem;
+  font-weight: 650;
+  transform: translateX(-50%);
+}
+
+.processo-dot[data-orbit-align='right'] b {
+  left: 1.35rem;
+  top: -0.6rem;
+  text-align: left;
+  transform: none;
+}
+
+.processo-dot[data-orbit-align='left'] b {
+  right: 1.35rem;
+  left: auto;
+  top: -0.6rem;
+  text-align: right;
+  transform: none;
+}
+
+.processo-dot.is-active {
+  color: var(--ink-on-dark);
+}
+
+.processo-dot.is-active i {
+  color: var(--surface-dark);
+  background: var(--gold);
+  box-shadow: 0 0 28px color-mix(in oklab, var(--gold) 34%, transparent);
+}
+
+.processo-ring-mark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(42%, 13rem);
+  opacity: 0.07;
+  transform: translate(-50%, -50%);
+}
+
+/* Etapas conduzidas pelo pin (mobile e desktop): mesmo lugar, troca no scroll */
+@media (max-width: 1023.98px) {
   html.motion .processo-pin {
     min-height: 100svh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding-block: 5rem 4rem;
+    /* era `var(--sp-3) var(--sp-2)` — 72 no topo, 40 na base. Numa seção
+       centralizada por flex a assimetria não tinha função nenhuma. */
+    padding-block: var(--section-y);
   }
 
   html.motion .passos {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr); /* trava a coluna à largura do container */
-    margin-top: clamp(1.4rem, 4svh, 2.4rem);
+    grid-template-columns: minmax(0, 1fr);
+    margin-top: var(--sp-1);
     min-height: 44svh;
   }
 
   html.motion .passo {
     grid-area: 1 / 1;
-    min-width: 0; /* permite encolher abaixo do max-content (sem overflow) */
     max-width: 100%;
     border-top: 0;
     padding-top: 0;
@@ -3601,65 +1379,695 @@ html:not(.motion) .hero-swipe {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-top: clamp(1.4rem, 4svh, 2.4rem);
+    margin-top: var(--sp-1);
   }
 
-  html.motion .processo-counter {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.3rem;
-    font-size: var(--fs-micro);
-    font-weight: 650;
-    letter-spacing: 0.1em;
-    font-variant-numeric: tabular-nums;
-  }
-
-  html.motion .processo-counter i {
-    opacity: 0.5;
-    font-style: normal;
-  }
-
-  html.motion .processo-track {
-    flex: 1;
-    max-width: 16rem;
-    height: 1px;
-    background: var(--line-dark);
-    overflow: hidden;
-  }
-
-  html.motion .processo-track i {
-    display: block;
-    height: 100%;
-    background: var(--gold-thread);
-    transform: scaleX(0);
-    transform-origin: left;
-  }
-
-  /* Processo: títulos e descrições sempre dentro da tela (motion e não-motion) */
   .passo-titulo {
-    font-size: clamp(1.85rem, 8vw, 2.5rem); /* Acompanhamento/Planejamento cabem em 360px */
+    font-size: clamp(1.85rem, 8vw, 2.5rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .processo-head {
+    grid-column: 1 / 7;
   }
 
-  .passo-texto {
-    max-width: 100%;
-    overflow-wrap: break-word;
-    word-break: normal;
-    white-space: normal;
-    text-wrap: pretty;
+  .passos,
+  .processo-hud {
+    grid-column: 1 / 7;
   }
+}
 
-  /* --- LOCALIZAÇÃO: "Onde estamos" antes do mapa, sem overlay ------------- */
-  .mapa-shell {
+@media (min-width: 1024px) {
+  html.motion .processo-pin {
+    min-height: 100svh;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    /* Mesma razão da Precisão: com o pin ligado isto é moldura de uma tela de
+       100svh, não ritmo entre capítulos. O `--section-y` de desktop somaria
+       306px de padding dentro de 942px de altura e espremeria as etapas. */
+    padding-block: var(--sp-3);
   }
 
+  html.motion .processo-in {
+    align-items: center;
+  }
+
+  html.motion .passos {
+    margin-top: var(--sp-2);
+    min-height: 34svh;
+  }
+
+  html.motion .passo {
+    grid-area: 1 / 1;
+    border-top: 0;
+    padding-top: 0;
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  html.motion .passo .passo-num::after {
+    content: ' / 06';
+    opacity: 0.6;
+  }
+
+  html.motion .processo-hud {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin-top: var(--sp-2);
+  }
+
+  .processo-ring {
+    position: relative;
+    width: min(34vw, 30rem);
+    aspect-ratio: 1;
+    border: 1px solid var(--line-gold);
+    border-radius: 50%;
+  }
+
+  .processo-ring::before,
+  .processo-ring::after {
+    content: '';
+    position: absolute;
+    inset: 12%;
+    border: 1px solid color-mix(in oklab, var(--ink-on-dark) 10%, transparent);
+    border-radius: 50%;
+  }
+
+  .processo-ring::after {
+    inset: 28%;
+    border-color: color-mix(in oklab, var(--copper) 40%, transparent);
+    transform: rotate(-18deg) scaleX(1.35);
+  }
+}
+
+@media (min-width: 1200px) {
+  .processo-head,
+  .passos,
+  .processo-hud {
+    grid-column: 1 / 7;
+  }
+
+  /* O diagrama só entra quando há 12 colunas: abaixo disso ele se sobreporia
+     ao contador e às etapas em vez de conviver com eles. */
+  html.motion .processo-diagram {
+    grid-column: 8 / 13;
+    grid-row: 1 / span 3;
+    display: grid;
+    place-items: center;
+  }
+}
+
+/* ==========================================================================
+   CAP. 08 · O DOUTOR
+   ==========================================================================
+   Volta ao capítulo claro. Retrato em 5 colunas, copy em 6, linha do tempo
+   ocupando a largura útil: a apresentação enche a área em vez de flutuar.
+   ========================================================================== */
+
+.doutor {
+  background: var(--surface);
+  color: var(--ink);
+  padding-block: var(--section-y);
+}
+
+.doutor-in {
+  row-gap: var(--sp-2);
+  align-items: start;
+}
+
+.doutor-media,
+.doutor-copy,
+.marcos {
+  grid-column: 1 / -1;
+}
+
+.doutor-frame {
+  overflow: hidden;
+  border-radius: var(--r-sm);
+  background: var(--surface-2);
+  aspect-ratio: 4 / 5;
+}
+
+.doutor-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Ancorado acima do centro: se em alguma largura o container ficar mais
+     largo que 4/5, a sobra é cortada do PÉ, nunca do topo da cabeça. */
+  object-position: 50% 18%;
+}
+
+.doutor-caption {
+  display: none;
+}
+
+.doutor-title {
+  margin-top: var(--sp-1);
+  font-family: var(--serif);
+  font-size: var(--fs-display);
+  font-weight: 440;
+  line-height: 1.08;
+}
+
+.doutor-title em,
+.doutor-title .it {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--copper-ink);
+}
+
+.doutor-bio {
+  margin-top: var(--sp-1);
+  display: grid;
+  gap: 1.1rem;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--ink-2);
+}
+
+.marcos {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+.marco {
+  display: grid;
+  gap: 0.65rem;
+  border-bottom: 1px solid var(--line);
+  padding: var(--sp-1) 0;
+}
+
+.marco-ano {
+  font-family: var(--serif);
+  font-size: clamp(1.9rem, 1.2rem + 2.2vw, 2.9rem);
+  font-weight: 340;
+  font-variant-numeric: tabular-nums;
+  color: var(--copper-ink);
+  line-height: 1;
+}
+
+.marco-titulo {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.marco-inst {
+  font-size: var(--fs-small);
+  color: var(--ink-2);
+  margin-top: 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .doutor-media {
+    grid-column: 1 / 4;
+  }
+
+  .doutor-copy {
+    grid-column: 4 / -1;
+  }
+
+  .marcos {
+    grid-column: 1 / -1;
+    margin-top: var(--sp-2);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--grid-gap);
+    border-top: 0;
+  }
+
+  .marco {
+    border-top: 1px solid var(--line);
+    border-bottom: 0;
+    align-content: start;
+  }
+}
+
+@media (min-width: 1200px) {
+  /* O retrato atravessa as duas linhas. Sem isto, a linha 1 herdava a altura
+     do retrato e a linha do tempo só começava abaixo dele — era daí que vinha
+     o grande vazio sob a biografia. */
+  .doutor-media {
+    grid-column: 1 / 6;
+    grid-row: 1 / 3;
+  }
+
+  .doutor-copy {
+    grid-column: 7 / 13;
+    grid-row: 1;
+  }
+
+  .doutor-title {
+    margin-top: var(--sp-1);
+  }
+
+  .marcos {
+    grid-column: 7 / 13;
+    grid-row: 2;
+    margin-top: var(--sp-2);
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .marco {
+    grid-template-columns: 6rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: var(--sp-1);
+  }
+}
+
+/* ==========================================================================
+   CAP. 09 · FILOSOFIA
+   ==========================================================================
+   TRÊS PEÇAS E SÓ TRÊS: título, parágrafo e filme.
+
+   O painel dos três princípios ("Escuta antes da técnica", "Planejamento
+   individual", "Naturalidade como critério") e a legenda "Escuta · leitura do
+   rosto · plano individual" saíram daqui. Não era um problema de desenho: era
+   REPETIÇÃO. "Como trabalhamos" já enuncia o método em seis etapas, e o
+   parágrafo que ficou acima já diz que a avaliação começa pela escuta. Três
+   campos numerados repetindo isso alongavam o capítulo sem acrescentar
+   informação.
+
+   A remoção foi estrutural — markup, regras e âncoras de reveal foram junto,
+   sem sobrar altura, margem ou filete órfão. O que resta é o `padding-block`
+   normal da seção: depois do filme a Filosofia fecha no mesmo respiro com que
+   abriu, e a passagem para o carvão da Clínica é direta.
+   ========================================================================== */
+
+/* IMERSIVO — e este bloco existia como resto.
+   A superfície, a altura e a composição da Filosofia são decididas em
+   media.css (capítulo audiovisual, `--surface-dark-2`, 100svh). O que sobrava
+   aqui era um `padding-block: var(--section-y)` que media.css não sobrescrevia:
+   224 a 256px de respiro DENTRO de uma seção de tela cheia, comendo altura do
+   próprio filme no empilhado e somando à junção com o capítulo anterior. Sai. */
+.filosofia {
+  padding-block: var(--section-y-immersive);
+  overflow: clip;
+}
+
+.filosofia-title {
+  font-family: var(--serif);
+  font-weight: 430;
+  line-height: 1.06;
+}
+
+/* ==========================================================================
+   CAP. 11 · ONDE ESTAMOS
+   ==========================================================================
+   ROLLBACK — volta à composição do commit a5fe60a: superfície CLARA, o mapa
+   ocupando a faixa inteira e o painel escuro flutuando sobre ele, ancorado ao
+   primeiro eixo do container. A ruptura depois do carvão da clínica é
+   explícita. No mobile o painel introduz o mapa, empilhado, sem sobreposição.
+   ========================================================================== */
+
+/* O mapa é uma CAMADA, não um bloco dentro da seção: ele ocupa a largura e a
+   altura inteiras do capítulo, e o cartão flutua sobre ele. A seção tem altura
+   mínima de tela para que essa camada tenha o que preencher. */
+.mapa {
+  position: relative;
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 100svh;
+  display: flex;
+  /* IMERSIVO: a altura é da camada do mapa, não de padding. O respiro
+     editorial da seção vive em `.mapa-frame`, que insere o cartão flutuante. */
+  padding-block: var(--section-y-immersive);
+}
+
+.mapa-shell {
+  position: relative;
+  flex: 1;
+  display: flex;
+  min-height: 100svh;
+}
+
+.mapa-embed {
+  position: absolute;
+  inset: 0;
+  /* fundo enquanto o iframe carrega — nunca fica bege vazio */
+  background: var(--surface-2);
+  overflow: hidden;
+}
+
+.mapa-iframe {
+  position: relative; /* acima do fallback */
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  filter: saturate(0.88) contrast(1.03) brightness(0.98);
+}
+
+/* FALLBACK — fica ATRÁS do iframe. Se o embed carregar, ninguém o vê; se for
+   bloqueado (extensão, rede corporativa, política de terceiros) ou falhar na
+   rede, é ele que ocupa a camada, com o link real para o Google Maps. */
+.mapa-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 0.4rem;
+  padding: var(--sp-2);
+  text-align: center;
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+
+.mapa-fallback-h {
+  font-family: var(--serif);
+  font-size: 1.3rem;
+  color: var(--ink);
+}
+
+.mapa-fallback-p {
+  font-size: var(--fs-small);
+}
+
+.mapa-fallback-link {
+  margin-top: 0.6rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 600;
+  color: var(--copper-ink);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+/* O cartão sobe para o eixo do container global e fica SOBRE o mapa. */
+.mapa-frame {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  align-content: center;
+  /* O mapa é IMERSIVO: não recebe o ritmo editorial. Este padding é o recuo do
+     cartão flutuante dentro da camada de 100svh, e continua no degrau 3. */
+  padding-block: var(--sp-3);
+  pointer-events: none; /* o mapa continua arrastável em volta do cartão */
+}
+
+.mapa-panel {
+  position: relative;
+  pointer-events: auto;
+  grid-column: 1 / -1;
+  background: var(--surface-dark);
+  color: var(--ink-on-dark);
+  padding: clamp(1.9rem, 5vw, 3rem);
+  border-radius: var(--r-md);
+  box-shadow: 0 28px 80px -38px rgb(0 0 0 / 0.48);
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+
+.mapa-title {
+  font-family: var(--serif);
+  font-size: clamp(1.7rem, 1.2rem + 2vw, 2.6rem);
+  font-weight: 450;
+  line-height: 1.12;
+}
+
+.mapa-endereco {
+  color: var(--ink-on-dark-2);
+  line-height: 1.55;
+}
+
+.mapa-disponibilidade {
+  font-size: var(--fs-small);
+  color: var(--ink-on-dark-2);
+}
+
+.mapa-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem 1.5rem;
+  margin-top: 0.4rem;
+}
+
+.mapa-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--ink-on-dark);
+  text-decoration: underline;
+  text-underline-offset: 5px;
+  text-decoration-color: var(--line-dark);
+}
+
+.mapa-link:hover {
+  color: var(--gold);
+}
+
+.mapa-contatos {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line-dark);
+  width: 100%;
+}
+
+.mapa-contato {
+  font-size: var(--fs-small);
+  font-weight: 550;
+  color: var(--ink-on-dark-2);
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+}
+
+.mapa-contato:hover {
+  color: var(--gold);
+}
+
+@media (min-width: 768px) {
+  /* O cartão para de atravessar a seção e volta a ser um painel ancorado no
+     primeiro eixo do container global, com o mapa respirando à direita. */
   .mapa-panel {
-    order: -1; /* painel de localização introduz o mapa (abaixo) */
+    grid-column: 1 / 5;
+  }
+}
+
+@media (min-width: 1200px) {
+  .mapa-panel {
+    grid-column: 1 / 5;
+    max-width: 27rem;
+  }
+}
+
+/* ==========================================================================
+   CAP. 12 · CTA FINAL
+   ==========================================================================
+   Fecha o capítulo claro de "Onde estamos" com um respiro curto, em areia —
+   não é mais um capítulo escuro de altura própria.
+   ========================================================================== */
+
+/* PRESENÇA VERTICAL — só a altura mudou
+   Título, botão, cores, marca e alinhamento são os mesmos; nenhum parágrafo,
+   telefone ou endereço foi acrescentado (isso é do mapa e do footer, logo
+   acima e logo abaixo). O que faltava era ESCALA: com `padding-block` sozinho
+   o fechamento passava como uma faixa entre duas peças densas em vez de uma
+   pausa antes do footer.
+
+   No MOBILE a altura vem de padding generoso, não de `svh`: forçar viewport
+   num aparelho baixo empurraria o botão para longe do polegar sem ganho
+   nenhum. A `min-height` de tela só entra no desktop.
+
+   O padding volta ao token editorial (era `--sp-5`, o último 160 solto da
+   página). A presença vertical no desktop continua vindo da `min-height: 62svh`
+   abaixo, que é altura declarada como altura; no mobile o fechamento passa a
+   respirar como qualquer outra seção — 72px por lado. Nenhuma altura nova foi
+   inventada para compensar: a coerência do ritmo é o que esta rodada pede. */
+.final {
+  background: var(--surface-2);
+  color: var(--ink);
+  padding-block: var(--section-y);
+  border-top: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+}
+
+.final-in {
+  width: 100%;
+  row-gap: var(--sp-1);
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+}
+
+.final-mark,
+.final-title,
+.final-actions {
+  grid-column: 1 / -1;
+}
+
+.final-mark {
+  width: clamp(60px, 8vw, 82px);
+  height: auto;
+  opacity: 0.9;
+}
+
+.final-title {
+  font-family: var(--serif);
+  font-size: var(--fs-display);
+  font-weight: 430;
+  line-height: var(--lh-snug);
+}
+
+.final-title em,
+.final-title .it {
+  font-style: italic;
+  font-weight: 390;
+  color: var(--copper-ink);
+}
+
+/* A linha de telefone/cidade saiu — era repetição do mapa e do footer, os dois
+   logo abaixo. Sem ela o bloco é só o botão, então o `margin-top` sobe de um
+   degrau (o antigo respiro entre botão e linha vira respiro acima do botão) e
+   o `gap` desaparece: não sobra vazio embaixo. */
+.final-actions {
+  display: grid;
+  justify-items: center;
+  margin-top: var(--sp-2);
+}
+
+@media (min-width: 1024px) {
+  .final {
+    min-height: 62svh;
+  }
+}
+
+@media (min-width: 1200px) {
+  .final-title {
+    grid-column: 3 / 11;
+  }
+}
+
+/* ==========================================================================
+   FOOTER
+   ==========================================================================
+   Compacto e em carvão quase preto NEUTRO — não é a continuação do marrom da
+   clínica nem outro capítulo de altura de tela. Vem depois de duas superfícies
+   claras, então a mudança de superfície já é a separação.
+   ========================================================================== */
+
+/* COMPACTO — a única seção da página nesta categoria, e com motivo: o rodapé
+   não é um capítulo, é o fecho. Ele vem depois de duas superfícies claras, a
+   troca de superfície já é a separação, e a junção com o CTA final (80 + 48 =
+   128) fica deliberadamente menor que a editorial (160). O valor é o mesmo de
+   antes — o que mudou é ter nome. */
+.footer {
+  background: var(--surface-black);
+  color: var(--ink-on-dark-2);
+  padding-block: var(--section-y-compact);
+}
+
+.footer-in {
+  row-gap: var(--sp-2);
+  align-items: start;
+}
+
+.footer-brand,
+.footer-col,
+.footer-legal {
+  grid-column: 1 / -1;
+}
+
+.footer-logo {
+  width: clamp(128px, 16vw, 164px);
+  height: auto;
+  opacity: 0.92;
+}
+
+/* Título de coluna em dourado claro: o dourado cheio some sobre quase-preto. */
+.footer-h {
+  font-size: var(--fs-micro);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  margin-bottom: 0.75rem;
+}
+
+.footer-col {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  justify-items: start;
+}
+
+.footer-link {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--fs-small);
+  font-weight: 550;
+  color: var(--ink-on-dark);
+}
+
+.footer-link:hover {
+  color: var(--gold-soft);
+}
+
+.footer-address {
+  font-size: var(--fs-small);
+  line-height: 1.6;
+  color: var(--ink-on-dark-2);
+}
+
+.footer-legal {
+  border-top: 1px solid var(--line-dark);
+  padding-top: var(--sp-1);
+  display: grid;
+  gap: 0.55rem;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  max-width: 60em;
+  color: color-mix(in oklab, var(--ink-on-dark-2) 82%, transparent);
+}
+
+.footer-copy {
+  color: color-mix(in oklab, var(--ink-on-dark-2) 66%, transparent);
+}
+
+@media (min-width: 768px) {
+  .footer-in {
+    row-gap: var(--sp-2);
   }
 
-  /* --- 9 · DOUTOR: oculta a legenda repetida sob a foto ------------------- */
-  .doutor-caption {
-    display: none; /* nome completo já aparece como heading principal */
+  .footer-brand {
+    grid-column: 1 / 3;
   }
+
+  .footer-col--nav { grid-column: 3 / 5; }
+  .footer-col--contact { grid-column: 5 / 7; }
+  .footer-col--address { grid-column: 7 / -1; }
+}
+
+@media (min-width: 1200px) {
+  .footer-brand {
+    grid-column: 1 / 4;
+  }
+
+  .footer-col--nav { grid-column: 5 / 7; }
+  .footer-col--contact { grid-column: 7 / 10; }
+  .footer-col--address { grid-column: 10 / 13; }
+}
+
+/* --- Foco sobre superfícies escuras ---------------------------------------- */
+
+.processo :focus-visible,
+.menu :focus-visible,
+.footer :focus-visible,
+.mapa-panel :focus-visible,
+.clinic :focus-visible {
+  outline-color: var(--gold);
 }

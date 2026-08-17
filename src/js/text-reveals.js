@@ -15,11 +15,14 @@ const PRIMARY_SELECTOR = [
   '.final-title',
 ].join(', ');
 
+/* `.filosofia-title` saiu daqui: agora ele vive dentro da composição de mídia
+   de altura cheia, baixo na seção. Um reveal por scrub (que só fecha quando a
+   base do título cruza 58% da viewport) o deixaria semi-revelado durante todo
+   o capítulo. Ele passa a usar o reveal binário por IntersectionObserver. */
 const SCRUB_SELECTOR = [
   '.missao-title',
   '.tx-title',
   '.processo-title',
-  '.filosofia-title',
   '.final-title',
 ].join(', ');
 

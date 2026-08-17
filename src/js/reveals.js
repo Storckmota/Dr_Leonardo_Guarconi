@@ -53,21 +53,24 @@ export function initReveals() {
     });
   }
 
-  /* Curva da filosofia: conexão gráfica de baixa intensidade atrás do slider. */
-  const philosophyPath = document.querySelector('[data-filosofia-path]');
-  if (philosophyPath) {
-    const length = philosophyPath.getTotalLength();
-    gsap.set(philosophyPath, {
-      strokeDasharray: length,
-      strokeDashoffset: length,
+  /* Curvas do painel da missão: desenham-se conforme a seção entra. */
+  const missionPaths = gsap.utils.toArray('.galeria-curve path');
+  if (missionPaths.length) {
+    missionPaths.forEach((p) => {
+      const length = p.getTotalLength();
+      gsap.set(p, { strokeDasharray: length, strokeDashoffset: length });
     });
     ScrollTrigger.create({
-      trigger: '[data-filosofia-stage]',
-      start: 'top 78%',
-      end: 'bottom 48%',
+      trigger: '.galeria-system',
+      start: 'top 82%',
+      end: 'bottom 60%',
       scrub: 0.45,
       onUpdate: (self) => {
-        gsap.set(philosophyPath, { strokeDashoffset: length * (1 - self.progress) });
+        missionPaths.forEach((p, i) => {
+          const length = p.getTotalLength();
+          const t = gsap.utils.clamp(0, 1, self.progress * 1.15 - i * 0.12);
+          gsap.set(p, { strokeDashoffset: length * (1 - t) });
+        });
       },
     });
   }

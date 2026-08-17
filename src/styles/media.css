@@ -1,0 +1,1239 @@
+/* ============================================================================
+   CAPÍTULOS AUDIOVISUAIS — Dr. Leonardo Guarçoni
+   ----------------------------------------------------------------------------
+   Os quatro filmes NÃO usam o mesmo componente estrutural. Cada um tem uma
+   gramática compositiva própria, e todas elas se apoiam no mesmo grid, na
+   mesma paleta e no mesmo ritmo vertical.
+
+     hero      filme na metade direita → cresce até 100vw × 100svh e PERMANECE
+     precisão  painel ALTO (retrato) que ganha largura de 5 para 7 colunas
+     filosofia filme largo CENTRALIZADO (8 col), abaixo do título editorial
+     clínica   filme à direita (7 col, parede de altura cheia), copy em 5
+
+   `.mv` resolve só preenchimento e enquadramento. Composição, escala e
+   posição são de cada capítulo. Nenhuma moldura, nenhum vão interno, nenhum
+   segundo retângulo dentro da área de vídeo.
+
+   NADA AQUI REEDITA OS FILMES: cortes, duração, velocidade, cor, loops,
+   posters, variantes desktop/mobile, MP4/WebM, carregamento progressivo,
+   autoplay, pausa por viewport e reduced motion continuam como estavam.
+   ========================================================================== */
+
+.mv {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: clip;
+  /* Fecha o contexto de pintura: nenhuma linha do vídeo escapa da caixa nem
+     é composta sobre o fundo do capítulo seguinte. */
+  isolation: isolate;
+  contain: paint;
+  /* só aparece no intervalo entre o layout e o poster; nunca é "moldura" */
+  background: var(--surface-dark-2);
+}
+
+/* ---------------------------------------------------------------------------
+   O `--mv-gutter` FOI REMOVIDO — e por quê
+
+   Hero e Clínica têm a legenda ESCRITA NO ARQUIVO ("Um novo conceito em
+   odontologia integrada.", "Apresenta Guarçoni & Associados."), encostada em
+   x=0 do quadro. Nos dois capítulos o filme é a faixa da DIREITA, então essa
+   borda coincide com a linha que separa texto e vídeo. Para dar ar à legenda,
+   o vídeo era inserido 40–56px para dentro (`margin-inline-start` + largura
+   reduzida) e a faixa liberada mostrava o leito escuro de `.mv`.
+
+   Duas coisas quebraram nesse arranjo:
+
+   1 · No hero a faixa caía ao lado de porcelana clara e lia como um VÃO PRETO
+       entre as colunas — não como respiro dentro do filme.
+   2 · Ela ainda era ANIMADA. Uma custom property não é resolvida na cascata:
+       o valor computado continua sendo a string `clamp(40px, 3.1vw, 56px)`, o
+       CSSPlugin do GSAP não consegue lê-la como número e o ponto de partida do
+       tween virava 0. Progresso 0 da timeline valia 0px enquanto o CSS pintava
+       56px: a faixa aparecia no carregamento e sumia no primeiro tick.
+
+   Na Clínica o valor era estático, mas a faixa continuava sendo uma superfície
+   mais funda que o carvão da seção — visível como uma barra antes do filme.
+
+   Não existe `object-position` que substitua o gutter (os arquivos são
+   verticais dentro de janelas mais largas que altas, então o `cover` escala
+   pela LARGURA e sobram 0px horizontais para deslocar), e ampliar o raster por
+   `scale()` para criar folga seria pagar nitidez por ar. Então a decisão é a
+   simples: o filme preenche a coluna inteira, de borda a borda, em toda parte.
+   A legenda queimada entra INTEIRA — o gutter só lhe dava ar extra, nunca a
+   impediu de ser cortada. */
+.mv-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--mv-x, 50%) var(--mv-y, 50%);
+}
+
+/* Toda superfície de mídia é uma caixa fechada, sem sub-pixel escapando. */
+.hero-media,
+.work-media,
+.phil-media,
+.clinic-media {
+  overflow: clip;
+  isolation: isolate;
+  contain: paint;
+  background: var(--surface-dark-2);
+}
+
+/* EXCEÇÃO: a Filosofia não pode ter leito próprio.
+   A caixa da mídia é a única superfície da página cuja BORDA precisa
+   desaparecer. O leito opaco herdado acima não é atingido pela máscara alpha
+   (ela vive em `.mv`), então ele reaparecia inteiro no exato x onde a caixa
+   começa — um degrau de tinta chapada por baixo de um degradê perfeito.
+   Era a costura que sobrava depois de alargar o feather.
+
+   Sem leito, o que existe atrás do filme na zona de transição é o carvão da
+   seção com a sua textura, que é justamente o que a dissolução procura. O
+   `.mv` continua com o leito dele para o intervalo até o poster carregar — e
+   esse, sim, a máscara alcança. */
+.phil-media {
+  background: transparent;
+}
+
+/* ==========================================================================
+   CAP. 03 · HERO
+   ==========================================================================
+   Mobile   faixa de filme no alto, copy em porcelana abaixo.
+   Desktop  colunas 1–5 de texto · filme na metade direita, de topo a base.
+
+   MODELO GEOMÉTRICO DA EXPANSÃO — um só, com UMA propriedade animada:
+
+       .hero-media { top: 0; bottom: 0; right: 0; left: auto; width: W }
+       W: 50% → 100%   (percentual do palco, que tem a largura da viewport)
+
+   Como a caixa está ancorada em `right: 0`, o lado direito nunca se move e o
+   `left` é derivado (100% − W). É impossível haver faixa branca, salto,
+   reentrada pela lateral ou frame mais estreito que o inicial: existe uma
+   única grandeza monotônica. Nem clip-path, nem translate, nem offsets
+   concorrentes participam do scrub.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  background: var(--surface);
+  color: var(--ink);
+  /* IMERSIVO: a altura é `100svh` + a pista de rolagem. O respiro interno da
+     copy vive em `.hero-layout` e é composição, não ritmo de seção. */
+  padding-block: var(--section-y-immersive);
+}
+
+.hero-runway {
+  position: relative;
+}
+
+/* MOBILE E TABLET — reorganização própria, não um desktop empilhado.
+   O filme é uma faixa grande no alto (56svh) e a copy vive abaixo, em
+   porcelana. Assim o H1 nunca disputa espaço com a mídia, os CTAs continuam
+   visíveis sem rolar, e o texto queimado no próprio filme fica INTEIRO dentro
+   da área de vídeo — nada do site passa por cima dele. */
+.hero-stage {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  /* O filme fica com TODA a altura que sobra depois da copy: em qualquer
+     aparelho ele é o maior possível, e o CTA nunca cai abaixo da dobra. */
+  grid-template-rows: minmax(12rem, 1fr) auto;
+  overflow: clip;
+  isolation: isolate;
+  background: var(--surface);
+}
+
+.hero-media {
+  position: relative;
+  grid-row: 1;
+  z-index: var(--z-media);
+}
+
+/* A camada da ENTRADA. O clip-path de abertura vive aqui e em mais lugar
+   nenhum: no arranjo anterior ele dividia elemento com a largura animada pelo
+   scrub, e a combinação dos dois fazia o filme sumir por alguns quadros e
+   reentrar pela direita. */
+.hero-media-reveal {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+}
+
+/* Mobile: a tela é MAIS vertical que o arquivo, então o `cover` corta a
+   largura. Recuando o corte para a esquerda, a legenda queimada do filme
+   entra inteira em vez de aparecer decepada, e o rosto continua na janela. */
+.hero-media .mv {
+  --mv-x: 14%;
+  --mv-y: 50%;
+}
+
+/* Vinheta de topo: assenta a faixa e devolve contraste ao header. Não fecha
+   o pé — é lá que vive a legenda queimada do filme. */
+.hero-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    oklch(14% 0.011 60 / 0.5) 0%,
+    oklch(14% 0.011 60 / 0.12) 22%,
+    oklch(14% 0.011 60 / 0) 46%,
+    oklch(14% 0.011 60 / 0.18) 100%
+  );
+}
+
+.hero-media-signature {
+  display: none;
+  position: absolute;
+  z-index: 2;
+  font-size: var(--fs-micro);
+  font-weight: 600;
+  color: color-mix(in oklab, var(--ink-on-dark) 78%, transparent);
+  text-shadow: 0 1px 12px oklch(12% 0.01 60 / 0.7);
+}
+
+.hero-layout {
+  position: relative;
+  grid-row: 2;
+  z-index: var(--z-copy);
+  align-content: center;
+  padding-block: var(--sp-1) var(--sp-2);
+}
+
+/* A coluna de texto é o CONTAINER de medida do H1 (ver .hero-word). */
+.hero-copy {
+  grid-column: 1 / -1;
+  container-type: inline-size;
+  container-name: herocopy;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink);
+}
+
+.hero-label {
+  color: var(--copper-ink);
+  margin-bottom: var(--sp-1);
+}
+
+.hero-title {
+  /* Sem `overflow: hidden` permanente: a máscara da entrada é aplicada e
+     removida pelo JS. Era esse overflow fixo que fatiava "Odontologia". */
+  margin: 0;
+}
+
+/* O TIPO É MEDIDO PELA COLUNA, NÃO PELA VIEWPORT.
+   `cqw` refere-se à largura real de .hero-copy. Antes o tamanho vinha de `vw`
+   enquanto a coluna tinha largura constante (≈584px em qualquer tela ≥1312px):
+   acima de ~2170px o H1 crescia dentro de uma coluna que não crescia, e o
+   container o cortava. Com `cqw` a palavra mais larga do título ("Odontologia",
+   ~5.83 em relação ao corpo) ocupa no máximo ~96% da coluna, em toda largura. */
+.hero-word {
+  display: block;
+  font-family: var(--serif);
+  font-size: min(var(--fs-hero), 15.6cqw);
+  font-weight: 420;
+  line-height: 0.98;
+  color: var(--ink);
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: manual;
+}
+
+/* "estética restauradora" é ~9.4 vezes o corpo: 9.8cqw a mantém em ~92% da
+   coluna, em uma linha só, de 360px a 2560px. */
+.hero-word--it {
+  font-style: italic;
+  font-weight: 390;
+  font-size: min(calc(var(--fs-hero) * 0.72), 9.8cqw);
+  color: var(--copper-ink);
+  margin-left: 0.04em;
+}
+
+.hero-foot {
+  margin-top: var(--sp-1);
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+
+.hero-statement {
+  max-width: 34em;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--ink-2);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  font-size: 0.84rem;
+  font-weight: 550;
+  color: var(--ink-2);
+  transition: border-color var(--dur-fast) ease, color var(--dur-fast) ease;
+}
+
+.hero-tag:hover {
+  border-color: var(--copper);
+  color: var(--ink);
+}
+
+@media (min-width: 768px) {
+  .hero-stage {
+    grid-template-rows: minmax(20rem, 1fr) auto;
+  }
+
+  .hero-copy {
+    grid-column: 1 / 7;
+  }
+
+  .hero-foot {
+    margin-top: var(--sp-2);
+    gap: var(--sp-1);
+  }
+}
+
+/* --- Desktop: composição 50/50 e rolagem fixada --------------------------- */
+
+@media (min-width: 1024px) {
+  /* ~120svh de rolagem fixada depois da primeira dobra: o filme chega a 100%
+     em ~72svh e PERMANECE em tela cheia por ~48svh antes de liberar a Missão. */
+  .hero-runway {
+    height: 220svh;
+  }
+
+  /* Desktop: volta a ser uma dobra só, com o filme sobreposto à direita. */
+  .hero-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    min-height: 0;
+    display: block;
+  }
+
+  /* estado inicial da única grandeza animada */
+  .hero-media {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: auto;
+    width: 50%;
+    will-change: width;
+  }
+
+  /* SEM GUTTER NO HERO — por que ele saiu
+     -------------------------------------------------------------------------
+     A safe area da legenda queimada era declarada aqui como
+     `clamp(40px, 3.1vw, 56px)` e fechada por um tween de `--mv-gutter` em
+     hero.js. Uma custom property NÃO é resolvida na cascata: o valor computado
+     continua sendo a STRING `clamp(...)`, e o CSSPlugin do GSAP não consegue
+     lê-la como número. O ponto de partida do tween virava 0, então o progresso
+     0 da timeline valia 0px enquanto o CSS ainda pintava 56px — a faixa escura
+     entre a coluna de texto e o filme no carregamento, que sumia no primeiro
+     tick da rolagem e nunca mais voltava.
+
+     A correção é estrutural: o hero não tem gutter em estado nenhum. Assim o
+     estado inicial do CSS e o progresso 0 da timeline são o MESMO estado, e o
+     filme preenche a coluna direita de borda a borda desde o primeiro quadro.
+     A legenda queimada continua inteira dentro do quadro — o gutter só lhe
+     dava ar extra, nunca a impediu de ser cortada. */
+  .hero-media .mv {
+    --mv-x: 52%;
+    --mv-y: 46%;
+  }
+
+  /* No desktop a copy tem o próprio lado: nada de véu sobre o filme. Só uma
+     sombra quente no pé, que assenta a imagem e recua a legenda queimada do
+     próprio filme sem escondê-la. */
+  .hero-media::after {
+    background: linear-gradient(
+      180deg,
+      oklch(14% 0.011 60 / 0) 0 44%,
+      oklch(14% 0.011 60 / 0.22) 74%,
+      oklch(14% 0.011 60 / 0.48) 100%
+    );
+  }
+
+  .hero-media-signature {
+    display: block;
+    bottom: clamp(1.6rem, 4svh, 2.6rem);
+    right: clamp(1.6rem, 2.5vw, 2.6rem);
+  }
+
+  .hero-layout {
+    position: relative;
+    height: 100svh;
+    min-height: 0;
+    align-content: center;
+    padding-block: 6rem var(--sp-2);
+  }
+
+  /* O bloco começa no PRIMEIRO eixo do container global e ocupa as colunas
+     1–4 (grid de 8 nesta faixa). Não é centralizado dentro da metade
+     esquerda: encosta no eixo da página e deixa o respiro do lado do filme —
+     a assimetria é intencional. */
+  .hero-copy {
+    grid-column: 1 / 5;
+    padding-right: var(--grid-gap);
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  /* colunas 1–5 do grid de 12, a partir do primeiro eixo do container */
+  .hero-copy {
+    grid-column: 1 / 6;
+  }
+}
+
+/* Sem motion o hero não tem pista de rolagem: vira uma dobra só. */
+@media (min-width: 1024px) {
+  html:not(.motion) .hero-runway {
+    height: auto;
+  }
+
+  html:not(.motion) .hero-stage {
+    position: relative;
+  }
+}
+
+/* ==========================================================================
+   CAP. 06 · PRECISÃO
+   ==========================================================================
+   Superfície CLARA (areia), oposta ao carvão de "Como trabalhamos": a
+   passagem entre os dois capítulos é imediatamente reconhecível.
+
+   O filme é um PAINEL ALTO, em retrato — não uma faixa panorâmica. Ele nasce
+   com ~5 colunas por 86svh e, durante uma seção fixada, cresce até ~8 colunas
+   mantendo a altura. A janela é sempre mais alta que larga, então o
+   enquadramento vertical do material é respeitado: o crescimento revela MAIS
+   cena lateral em vez de cortar mais cena vertical.
+
+   Não repete o hero: lá o filme vai de metade a tela inteira e a copy sai; aqui
+   ele permanece um painel dentro da página, a copy acompanha o crescimento
+   recuando para a coluna vizinha, e o capítulo continua claro do começo ao fim.
+   ========================================================================== */
+
+.work {
+  background: var(--surface-2);
+  color: var(--ink);
+  /* fecha a seção: nenhuma linha de mídia cruza a fronteira do capítulo */
+  overflow: clip;
+}
+
+.work-runway {
+  position: relative;
+}
+
+.work-stage {
+  row-gap: var(--sp-2);
+  padding-block: var(--section-y);
+  align-items: center;
+}
+
+/* ACABAMENTO DO FRAME — só isso.
+   O material é vertical, perto de 9:16, e sem nenhum acabamento o painel
+   terminava em quatro cantos retos sobre a areia, como uma imagem colada.
+   Um raio discreto e um fio de 1px dão borda ao quadro e o assentam no
+   capítulo. Não é moldura de aparelho: não há bezel, botão, entalhe, sombra
+   projetada nem reflexo — nada que faça o filme parecer um post. O raio é
+   pequeno o bastante para ler como acabamento e não como cartão. */
+.work-media {
+  grid-column: 1 / -1;
+  position: relative;
+  /* retrato mesmo no mobile: nunca uma faixa baixa */
+  aspect-ratio: 4 / 5;
+  height: auto;
+  border-radius: clamp(10px, 0.85vw, 16px);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--ink) 12%, transparent);
+}
+
+/* O `.mv` herda o recorte do pai, mas ele declara `contain: paint` e um fundo
+   próprio: sem o raio aqui também, o leito escuro voltaria a pintar os cantos
+   retos por dentro do frame arredondado. */
+.work-media .mv,
+.work-media::after {
+  border-radius: inherit;
+}
+
+/* Ancorado no terço superior — e nunca na borda exata da textura (ver a nota
+   sobre alinhamento de macrobloco em scripts/build-video-assets.mjs). O plano
+   mantém a lanterna de cabeça e as mãos dentro da janela em toda a expansão. */
+.work-media .mv {
+  --mv-x: 50%;
+  --mv-y: 14%;
+}
+
+/* Vinheta discreta: assenta o painel na areia sem virar moldura. */
+.work-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    oklch(14% 0.011 60 / 0.34) 0%,
+    oklch(14% 0.011 60 / 0) 26%,
+    oklch(14% 0.011 60 / 0) 68%,
+    oklch(14% 0.011 60 / 0.42) 100%
+  );
+}
+
+.work-copy {
+  grid-column: 1 / -1;
+  display: grid;
+  align-content: center;
+}
+
+.work-title {
+  margin-top: var(--sp-1);
+  font-family: var(--serif);
+  font-size: var(--fs-display);
+  font-weight: 435;
+  line-height: 1.06;
+  color: var(--ink);
+}
+
+.work-title em,
+.work-title .it {
+  font-style: italic;
+  font-weight: 405;
+  color: var(--copper-ink);
+}
+
+.work-lead {
+  margin-top: var(--sp-1);
+  max-width: 30em;
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--ink-2);
+}
+
+.work-notes {
+  margin-top: var(--sp-2);
+  display: grid;
+  gap: 1.05rem;
+  max-width: 30em;
+}
+
+.work-notes li {
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-small);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.work-notes span {
+  display: block;
+  font-weight: 650;
+  color: var(--copper-ink);
+}
+
+/* `.work-slug` (a linha "CONSULTÓRIO GUARÇONI & ASSOCIADOS · VILA VELHA ES")
+   saiu: repetia informação que já vive na Clínica e em "Onde estamos", e não
+   pertence ao capítulo sobre precisão. A linha 2 do palco também saiu junto —
+   sem ela o `grid-template-rows: 1fr auto` deixaria uma faixa vazia no pé. */
+
+@media (min-width: 768px) {
+  .work-media {
+    grid-column: 1 / 5;
+    aspect-ratio: auto;
+    height: min(86svh, 52rem);
+  }
+
+  .work-copy {
+    grid-column: 5 / -1;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* Seção fixada: percurso curto e legível, sem sequestrar a rolagem. */
+  html.motion .work-runway {
+    height: 200svh;
+  }
+
+  html.motion .work-stage {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    align-content: center;
+  }
+
+  /* Uma linha só desde que o slug saiu: a copy centraliza contra o painel e
+     não sobra faixa vazia no pé da seção. */
+  .work-stage {
+    grid-template-rows: 1fr;
+    row-gap: var(--sp-1);
+  }
+
+  /* PADDING DE PALCO, NÃO DE SEÇÃO — e é por isso que ele não cresceu.
+     Quando o palco está FIXADO ele mede 100svh exatos, e este padding é a
+     moldura interna dessa tela, não o respiro entre dois capítulos. Aplicar
+     aqui o `--section-y` de desktop (152,8px a 1910) deixaria 636px de caixa
+     de conteúdo para um painel de 810px: o filme da Precisão sairia cortado em
+     cima e embaixo pelo `overflow: clip` da seção — exatamente a altura de
+     palco pinado que esta rodada não pode mexer.
+
+     Fora do pin (reduced motion) a regra base vale e a seção respira como
+     qualquer outra editorial. */
+  html.motion .work-stage {
+    padding-block: var(--sp-3);
+  }
+
+  .work-media {
+    grid-row: 1;
+    /* painel alto: 5 colunas × 86svh, proporção de retrato */
+    height: min(86svh, 54rem);
+    will-change: grid-column-end;
+  }
+
+  .work-copy {
+    grid-row: 1;
+    align-self: center;
+    padding-left: var(--grid-gap);
+  }
+}
+
+@media (min-width: 1200px) {
+  /* O painel ocupa a faixa MÁXIMA (colunas 1–7) e começa recortado em 5 pela
+     largura — é essa largura que o scrub anima. A copy fica fixa em 5 colunas
+     à direita e nunca é coberta: o que muda durante a rolagem é o espaço
+     negativo entre os dois, que se fecha. Nada desaparece — a diferença
+     essencial em relação ao hero. */
+  .work-media {
+    grid-column: 1 / 8;
+  }
+
+  .work-copy {
+    grid-column: 8 / 13;
+  }
+
+  .work-title {
+    font-size: clamp(1.9rem, 1.1rem + 2.1vw, 3.1rem);
+  }
+}
+
+/* ==========================================================================
+   CAP. 09 · FILOSOFIA · capítulo audiovisual
+   ==========================================================================
+   O QUE A CENA PRECISA DIZER, E POR QUE 100vw NÃO DEIXAVA
+   ---------------------------------------------------------------------------
+   O arquivo é 1072×1824 (retrato 0,588) e tem dois atos:
+
+     ato 1 (0–2,7s)  a paciente de perfil, deitada, luz quente. A BOCA está em
+                     y 62–68% / x 60–85% do quadro. O alto do quadro é preto.
+     ato 2 (2,7–6,9s) o plano fechado: o lábio JÁ MARCADO em y 32–37% /
+                     x 25–45%, a luva no centro, o instrumento descendo da
+                     direita até encostar nesse ponto.
+
+   Os dois momentos-chave, portanto, vivem entre 32% e 68% da altura do quadro
+   — uma faixa de 36%. Qualquer janela mais curta que isso perde um dos dois.
+
+   Com o filme em 100vw × 100svh a janela era curta demais. A 1910×942 o
+   `cover` escala pela LARGURA (1,78×), a altura projetada dá 3250px e a tela
+   mostra 942: **29% do quadro**. O enquadramento anterior (`--mv-y: 8%`)
+   mostrava y 5,7–34,7% — cabelo, luva, instrumento e um pedaço de rosto. A
+   boca do ato 1 ficava inteiramente fora; o lábio marcado do ato 2, fora
+   também nas telas mais largas. O teste de luminância aprovava justamente
+   porque não havia nada clínico ali: aprovava um enquadramento vazio.
+
+   A GEOMETRIA NOVA — a largura é a variável, não o `object-position`
+   ---------------------------------------------------------------------------
+   A fração do quadro que a janela mostra é `altura_da_janela / altura_projetada`,
+   e a altura projetada cai quando a caixa estreita. Então estreitar o filme é
+   o que devolve altura de CENA:
+
+     100vw a 1910×942   janela = 29% do quadro   → um dos dois atos se perde
+      68vw a 1910×942   janela = 43% do quadro   → 28,7–71,3%, os dois cabem
+
+   O filme passa a ser uma superfície ampla ancorada à DIREITA, com toda a
+   altura útil da seção, e `--mv-y: 50%` — o centro do arquivo é exatamente o
+   meio da faixa 32–68%. Não é um valor de gosto: é o centro geométrico das
+   duas regiões que a cena precisa mostrar.
+
+   O teto `145svh` existe para telas muito largas e baixas (21:9): sem ele a
+   caixa voltaria a achatar e a janela a encolher. Ele mantém a proporção da
+   caixa em no máximo ~1,45 e a janela em no mínimo ~40% do quadro.
+
+   A borda esquerda se dissolve por `mask-image` no próprio carvão da seção —
+   sem linha, sem cartão, sem moldura, sem segundo fundo, sem cópia borrada. À
+   direita, ao alto e embaixo o filme continua sangrando até a borda: é um
+   capítulo audiovisual, não um vídeo dentro de um bloco.
+
+   ONDE O TEXTO PODE FICAR
+   ---------------------------------------------------------------------------
+   Medido em tela: a 1910 o filme começa em x=611 e o lábio marcado do ato 2
+   cai em x 936–1236. A coluna de texto (5 de 12, do primeiro eixo do
+   container) termina em ~757. Sobram ~180px entre o fim do texto e o começo do
+   assunto, e o que existe sob o texto é a região dissolvida da máscara — preta
+   no ato 1, a maca escura no ato 2. A boca do ato 1 vive no terço direito do
+   quadro, ainda mais longe.
+
+   TELA VERTICAL E 4:3 — a composição empilhada
+   ---------------------------------------------------------------------------
+   Abaixo de `min-aspect-ratio: 3/2` o texto sai de cima do filme e a seção
+   vira duas faixas: texto em cima, filme embaixo. O que decide é o FORMATO da
+   tela, não a largura — quanto mais vertical a viewport, mais do quadro
+   aparece, e a sobreposição deixa de ter para onde fugir.
+
+   Mas o empilhado tinha o seu próprio buraco: numa tela larga e baixa como
+   1024×768 a faixa do filme fica larga e curta (1024×471), o `cover` volta a
+   escalar pela largura e a janela cai para 27% do quadro — o mesmo problema,
+   em outro lugar. Por isso, a partir de 768px e em tela deitada, o filme
+   empilhado também vira uma superfície ancorada à direita, com a largura
+   limitada a 1,25× a própria altura. No celular em pé nada disso acontece: a
+   caixa já é mais alta que larga e o filme continua sangrando de borda a borda.
+   ========================================================================== */
+
+/* --- Base (mobile): texto na faixa de cima, filme preenchendo o resto ----- */
+
+/* CARVÃO ATMOSFÉRICO, NÃO PRETO CHAPADO
+   O lado esquerdo era `--surface-dark-2` puro: um plano de luminância única,
+   e é contra um plano perfeitamente liso que qualquer chegada de imagem vira
+   uma linha. A base ganha 4% do cobre do monograma — dentro da faixa de 3–6%
+   pedida, e tirada do próprio design system, não de um hex novo. Continua em
+   torno de 15% de luminosidade: o texto off-white mede acima de 11:1 sobre
+   ela. */
+.filosofia {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  background: color-mix(in oklab, var(--copper) 4%, var(--surface-dark-2));
+  color: var(--ink-on-dark);
+  overflow: clip;
+  isolation: isolate;
+}
+
+/* TEXTURA SOB O PAINEL — a segunda metade da correção da costura.
+   Uma máscara larga resolve a BORDA; ela não resolve o fato de o lado
+   esquerdo ser uma chapa sem variação nenhuma. Enquanto houver chapa, o olho
+   acha o ponto em que ela acaba, por mais suave que a chegada seja.
+
+   Esta camada é o poster do próprio filme, full-bleed, a 6% de opacidade, com
+   30px de desfoque e 14% de escala (a escala existe só para o desfoque não
+   revelar as bordas). O que sobra não é uma imagem: é variação de luz. Rosto,
+   boca e luva não são reconhecíveis a 6% sob 30px de blur — e a camada é
+   ESTÁTICA, então nada se move do lado esquerdo.
+
+   Custo: nenhum arquivo novo. O poster já é baixado pelo atributo `poster` do
+   `<video>`, então a camada reaproveita um recurso que já está em cache.
+
+   MEDIDO, em três rodadas de 150 quadros rolando pela Filosofia:
+
+     com a camada    mediana 49,6ms · p95 94,2ms
+     sem a camada    mediana 48,4ms · p95 93,7ms
+
+   ~1ms de diferença, dentro do ruído: a camada é estática e o resultado do
+   filtro é rasterizado uma vez.
+
+   NÃO adicione `will-change: transform` nem `translateZ(0)` aqui. Foi testado:
+   promover a camada leva a mediana para 155ms e o p95 para 324ms — três vezes
+   pior. Uma camada composta separada obriga o filtro a ser reavaliado; deixada
+   no fluxo normal de pintura, ele não é. */
+.phil-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/videos/filosofia-escuta-poster.webp');
+  background-size: cover;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  opacity: 0.06;
+  filter: blur(30px) saturate(0.55);
+  transform: scale(1.14);
+}
+
+.phil-in {
+  position: relative;
+  z-index: 3;
+  grid-row: 1;
+  align-content: start;
+  padding-block: var(--sp-3) var(--sp-2);
+}
+
+.phil-copy {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: var(--sp-1);
+}
+
+.filosofia-title {
+  font-family: var(--serif);
+  font-weight: 420;
+  line-height: 1.08;
+  /* Menor que o antigo teto de 4,4rem: aqui o título divide a tela com um
+     filme, não com porcelana vazia. */
+  font-size: clamp(1.85rem, 1.1rem + 2.5vw, 3.4rem);
+  max-width: 17ch;
+  color: var(--ink-on-dark);
+}
+
+.phil-lead-text {
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  max-width: 34ch;
+  /* branco quente, não cinza: o texto vive sobre imagem */
+  color: color-mix(in oklab, var(--ink-on-dark) 90%, transparent);
+}
+
+.phil-media {
+  position: relative;
+  z-index: 1;
+  grid-row: 2;
+  min-height: 42svh;
+}
+
+/* O FILME PREENCHE A FAIXA — não é a faixa que se estica para caber no filme.
+   `.mv` pede `height: 100%`, mas a trilha `minmax(0, 1fr)` da seção não tem
+   altura DEFINIDA para essa porcentagem resolver: a altura caía para `auto` e
+   o `<video>` impunha a própria proporção (1072×1824). Em 1024×768 isso dava
+   uma faixa de 1742px de altura — a Filosofia empilhada passava de três
+   viewports, e o "100svh" da seção não valia nada.
+
+   Tirando o filme do fluxo, a faixa volta a ser a sobra da seção (mínimo
+   42svh) e o `cover` faz o resto. */
+.phil-media .mv {
+  position: absolute;
+  inset: 0;
+}
+
+/* Celular em pé: a caixa já é mais alta que larga, o `cover` mostra 75–80% da
+   altura do quadro e os dois atos cabem com folga. O filme sangra de borda a
+   borda e não há máscara — não há fundo do lado esquerdo para dissolver. */
+.phil-media .mv {
+  --mv-x: 50%;
+  --mv-y: 52%;
+}
+
+/* Sem texto por cima do filme no empilhado, não há o que proteger. */
+.phil-veil {
+  display: none;
+}
+
+/* --- Tela DEITADA e empilhada (≥768, formato < 3/2) -----------------------
+   1024×768 é o caso: a faixa do filme fica larga e curta e a janela do `cover`
+   despenca para 27% do quadro. Limitando a largura a 1,25× a altura, a caixa
+   volta a ser quase quadrada, a janela sobe para ~47% e os dois atos cabem. O
+   que sobra à esquerda é o carvão da seção, e a borda do filme se dissolve
+   nele. */
+@media (min-width: 768px) and (min-aspect-ratio: 1/1) {
+  /* O limite é de LARGURA, em `svh`, e não uma `aspect-ratio` no filme: com
+     `aspect-ratio` a caixa passa a ter altura intrínseca, a trilha `1fr` da
+     seção cresce para caber nela e a Filosofia estoura para ~1,5 viewport.
+     `66svh` é a mesma proporção alvo (~1,3× a altura útil do filme) sem
+     nenhuma altura intrínseca envolvida.
+
+     A `min-height` sobe de 42 para 50svh pelo mesmo motivo: medido a 1024×768,
+     o bloco de texto empilhado come 409px e sobrariam 359 para o filme —
+     janela de 35% do quadro, curta demais para conter os dois atos (que pedem
+     36%). Com 50svh a faixa fica em 384px, a janela em 44,5% e a seção em
+     ~103svh: o filme ganha os 25px de que precisa, não uma segunda viewport. */
+  .phil-media {
+    width: min(100%, 66svh);
+    min-height: 50svh;
+    justify-self: end;
+  }
+
+  /* O FEATHER — 28% da largura da superfície de mídia, em curva de entrada
+     -------------------------------------------------------------------------
+     A máscara anterior já ia até 26%, e mesmo assim a costura era visível: o
+     problema nunca foi o COMPRIMENTO, foi a CURVA. Ela ganhava metade da
+     opacidade nos primeiros 10% — a 1910 isso são 124px — e meia opacidade já
+     basta para o olho registrar "aqui começa a imagem".
+
+     Esta é uma rampa cúbica de entrada, com dez paradas: quase nada acontece
+     no primeiro terço, e a opacidade total só chega DEPOIS de toda a área de
+     transição. Medido a 1910×942, sobre 348px de feather:
+
+         112px → 4%      253px → 43%
+         186px → 17%     313px → 82%
+         224px → 28%     348px → 100%
+
+     Não há ponto identificável de início porque não há degrau: entre 0 e 112px
+     a imagem existe a menos de 4%, abaixo do limiar em que uma borda se forma.
+
+     Nada aqui toca o filme: sem `filter: blur()`, sem `transform`, sem
+     `object-position`. A escala, o enquadramento e a nitidez são os aprovados.
+     Boca, luva e instrumento vivem a partir de 30% da largura da mídia — fora
+     do feather, em opacidade cheia. */
+  .phil-media .mv {
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.01) 5%,
+      rgba(0, 0, 0, 0.04) 9%,
+      rgba(0, 0, 0, 0.09) 12%,
+      rgba(0, 0, 0, 0.17) 15%,
+      rgba(0, 0, 0, 0.28) 18%,
+      rgba(0, 0, 0, 0.43) 20.4%,
+      rgba(0, 0, 0, 0.62) 23%,
+      rgba(0, 0, 0, 0.82) 25.2%,
+      #000 28%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.01) 5%,
+      rgba(0, 0, 0, 0.04) 9%,
+      rgba(0, 0, 0, 0.09) 12%,
+      rgba(0, 0, 0, 0.17) 15%,
+      rgba(0, 0, 0, 0.28) 18%,
+      rgba(0, 0, 0, 0.43) 20.4%,
+      rgba(0, 0, 0, 0.62) 23%,
+      rgba(0, 0, 0, 0.82) 25.2%,
+      #000 28%
+    );
+  }
+}
+
+/* --- Tela PAISAGEM: filme à direita, texto sobreposto à esquerda ---------- */
+
+@media (min-width: 1024px) and (min-aspect-ratio: 5/4) {
+  .filosofia {
+    height: 100svh;
+    min-height: 34rem;
+    display: block;
+  }
+
+  /* Superfície ampla ancorada à direita, com toda a altura da seção.
+     `62%` nesta faixa (grid de 8, texto em 4 colunas): medido a 1024×768 o
+     texto termina em x=500 e o lábio marcado começa em x=548 — 48px de folga.
+     Com 68% aqui a folga cairia para 2px. `145svh` segura a proporção da
+     caixa em telas muito largas e baixas (21:9), onde ela voltaria a achatar
+     e a janela a encolher abaixo dos 40% do quadro. */
+  .phil-media {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: min(62%, 145svh);
+    min-height: 0;
+    display: block;
+  }
+
+  .phil-media .mv {
+    --mv-x: 50%;
+    --mv-y: 50%;
+  }
+
+  /* PROTEÇÃO DE LEITURA — mais leve, e DESALINHADA da máscara de propósito.
+     O véu antigo começava em 0,55 e terminava em 52% da tela. Duas coisas
+     davam errado: 0,55 de tinta apagava a textura justamente onde ela mais
+     serve, e o fim dele caía quase em cima do fim do feather — dois gradientes
+     acabando no mesmo x criam, juntos, o ponto de conclusão que cada um
+     sozinho evita.
+
+     Agora ele é mais fraco (0,34) e some em 46% da tela, enquanto o feather
+     só fecha em ~51%. Onde o véu desaparece o filme ainda está a ~30%: não
+     existe um x em que "a transição termina". A leitura continua protegida —
+     o texto mede acima de 10:1 sobre o resultado composto. */
+  .phil-veil {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(
+      90deg,
+      oklch(11% 0.012 55 / 0.34) 0%,
+      oklch(11% 0.012 55 / 0.26) 22%,
+      oklch(11% 0.012 55 / 0.11) 36%,
+      transparent 46%
+    );
+  }
+
+  /* O bloco centraliza na altura. Ele não precisa mais fugir para o alto: a
+     faixa que ele ocupa é a borda dissolvida do filme, escura em todo o laço,
+     e o assunto vive a 180px à direita dele em qualquer quadro. */
+  .phil-in {
+    position: absolute;
+    inset: 0;
+    align-content: center;
+    padding-block: 0;
+  }
+
+  /* 4 das 8 colunas nesta faixa */
+  .phil-copy {
+    grid-column: 1 / 5;
+  }
+}
+
+/* 5 das 12 colunas, a partir do primeiro eixo do container. Vem com a MESMA
+   condição de formato: fora dela a composição é empilhada e a copy ocupa a
+   largura inteira, não uma coluna estreita perdida numa faixa vazia.
+
+   Com 12 colunas a coluna de texto é proporcionalmente mais estreita e sobra
+   folga: o filme volta aos 68% pedidos, e a 1910 ainda ficam ~265px entre o
+   fim do texto e o lábio marcado. */
+@media (min-width: 1200px) and (min-aspect-ratio: 5/4) {
+  .phil-media {
+    width: min(65%, 145svh);
+  }
+
+  .phil-copy {
+    grid-column: 1 / 6;
+  }
+}
+
+/* Sem motion o filme não é buscado e o poster é a peça inteira: a composição
+   é a MESMA, no mesmo tamanho e no mesmo enquadramento. */
+
+/* ==========================================================================
+   CAP. 10 · A CLÍNICA · seção de RESPIRO
+   ==========================================================================
+   Esta seção era o oposto disto: 165svh de pista, palco fixado, dois tempos
+   trocando por scrub, contador `01 / 02` e um filete de progresso. Tudo saiu.
+
+   O motivo não é técnico — aquilo funcionava e o QA passava. É de ritmo. A
+   Clínica vem logo depois da Filosofia, que agora é um capítulo de TELA
+   CHEIA, e logo antes do mapa. Três superfícies imersivas seguidas não deixam
+   a página respirar, e prender a rolagem para revelar dois parágrafos é
+   exatamente o tipo de movimento que não paga o que cobra.
+
+   Ficou uma seção editorial comum, no fluxo normal da página: duas colunas no
+   desktop (texto à esquerda, filme à direita), empilhadas no mobile, com os
+   dois parágrafos visíveis ao mesmo tempo. A altura tem presença — quase uma
+   viewport no desktop —, mas o usuário atravessa a seção rolando, sem nada
+   segurá-lo. A única coreografia é a entrada discreta (`data-reveal` e
+   `data-split`) que toda seção editorial do site já usa.
+
+   Nenhum resto do comportamento antigo sobreviveu: `.clinic-runway`,
+   `.clinic-hud`, `.clinic-counter`, `.clinic-track`, `.clinic-act-label`,
+   `.clinic-act-text`, as regras de `position: sticky`, os estados
+   `.is-active` e o módulo src/js/clinic.js foram removidos junto.
+   ========================================================================== */
+
+.clinic {
+  position: relative;
+  background: var(--surface-dark);
+  color: var(--ink-on-dark);
+  overflow: clip;
+}
+
+.clinic-stage {
+  row-gap: var(--sp-2);
+  padding-block: var(--section-y);
+  align-items: center;
+}
+
+.clinic-copy {
+  grid-column: 1 / -1;
+  display: grid;
+  align-content: center;
+}
+
+.clinic-media {
+  grid-column: 1 / -1;
+  position: relative;
+  height: 62svh;
+  min-height: 20rem;
+  margin-inline: calc(var(--edge) * -1);
+}
+
+/* ENQUADRAMENTO DA LEGENDA QUEIMADA
+   ---------------------------------------------------------------------------
+   O arquivo carrega duas frases escritas no próprio quadro, medidas frame a
+   frame no material:
+
+     "Apresenta / Guarçoni & Associados."   y 54,2–63,6%   x 1,4–73%   0 → 16,5s
+     "Um novo conceito / em odontologia…"   y 50,5–57,0%   x 1,4–70%  18,6 → 21s
+
+   As duas vivem logo ABAIXO do meio do quadro, não no pé. `50% 100%` — o
+   palpite natural — mostraria y 60–100% e decapitaria a primeira linha das
+   duas frases. O que estava no ar (`46%`) já as continha, mas as jogava para o
+   último quarto da janela: a frase ficava colada na borda de baixo do filme e,
+   como a seção era mais alta que a viewport, era ela que caía abaixo da dobra
+   em quase toda rolagem.
+
+   `65%` é o valor que põe o centro do bloco de legenda (58,9% do quadro) no
+   centro da janela, em TODAS as viewports obrigatórias — de 375×667 a
+   1910×942. A frase inteira entra, com margem em cima e embaixo, e passa pelo
+   meio da tela durante a rolagem em vez de raspar a borda.
+
+   `--mv-x: 2%` é seguro, não estético: o "A" de "Apresenta" começa a 1,4% da
+   largura do quadro. Nas viewports obrigatórias não há corte horizontal
+   nenhum (a caixa é sempre mais larga que alta em relação ao arquivo, então o
+   `cover` escala pela largura e mostra o quadro inteiro); em um tablet em pé,
+   onde a caixa fica mais estreita que o arquivo, ancorar à esquerda é o que
+   impede a primeira letra de sair — a 768×1024 a janela fica em x 0,16–92,2%
+   e a legenda continua inteira.
+
+   Não é `0%` porque 0 e 100 amostram a borda exata da textura decodificada,
+   onde vivem as linhas de preenchimento de macrobloco (croma zerado, faixa
+   verde no caminho de overlay da GPU). É a regra que nasceu da faixa verde que
+   apareceu na Precisão: nenhuma composição amostra 0% nem 100%. */
+.clinic-media .mv {
+  --mv-x: 2%;
+  --mv-y: 65%;
+}
+
+.clinic-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    oklch(14% 0.011 60 / 0.54) 0%,
+    oklch(14% 0.011 60 / 0.12) 20%,
+    oklch(14% 0.011 60 / 0) 40%,
+    oklch(14% 0.011 60 / 0.24) 78%,
+    oklch(14% 0.011 60 / 0.52) 100%
+  );
+}
+
+.clinic-title {
+  margin-top: var(--sp-1);
+  font-family: var(--serif);
+  font-size: var(--fs-display);
+  font-weight: 430;
+  line-height: 1.06;
+  color: var(--ink-on-dark);
+}
+
+.clinic-title em,
+.clinic-title .it {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold-soft);
+}
+
+/* Os dois parágrafos, os dois na tela, empilhados. Não são mais "tempos": não
+   há estado, não há troca, não há altura reservada para a peça mais alta. */
+.clinic-acts {
+  margin-top: var(--sp-1);
+  display: grid;
+  gap: 1.05rem;
+  max-width: 32em;
+}
+
+.clinic-act {
+  font-size: var(--fs-lead);
+  line-height: var(--lh-body);
+  color: var(--ink-on-dark-2);
+}
+
+.clinic-facts {
+  margin-top: var(--sp-2);
+  display: grid;
+  gap: 0.9rem;
+  max-width: 32em;
+}
+
+.clinic-facts > div {
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--line-gold);
+  display: grid;
+  gap: 0.15rem;
+}
+
+.clinic-facts dt {
+  font-size: var(--fs-micro);
+  font-weight: 650;
+  color: var(--gold-soft);
+}
+
+.clinic-facts dd {
+  margin: 0;
+  font-size: var(--fs-small);
+  color: color-mix(in oklab, var(--ink-on-dark-2) 88%, transparent);
+}
+
+.clinic-cta {
+  margin-top: var(--sp-2);
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--gold-soft);
+  border-bottom: 1px solid var(--line-gold);
+  transition: color var(--dur-fast) ease, border-color var(--dur-fast) ease;
+}
+
+.clinic-cta:hover {
+  color: var(--ink-on-dark);
+  border-color: var(--gold-soft);
+}
+
+@media (min-width: 768px) {
+  .clinic-copy {
+    grid-column: 1 / 4;
+    padding-right: var(--grid-gap);
+  }
+
+  /* Mais altura, e por um motivo mensurável: o arquivo é retrato dentro de uma
+     caixa deitada, então toda altura que a caixa ganha é altura de QUADRO que
+     entra na janela. A 1024×768 a janela sobe de 56% para 61% do arquivo, e a
+     proporção da caixa deixa de ser uma fita. */
+  .clinic-media {
+    grid-column: 4 / -1;
+    height: min(84svh, 50rem);
+    margin-inline: 0;
+    margin-right: calc(var(--edge) * -1);
+  }
+}
+
+@media (min-width: 1200px) {
+  /* 5 colunas de copy · 7 de filme. A altura tem presença — 84svh, quase a
+     proporção 4:3 a 1910 —, mas é altura de CONTEÚDO: a página continua
+     rolando por baixo dela o tempo todo, sem pin, sem scrub, sem estados.
+     Com o respiro no token editorial (80 por lado, era 160) a seção fica MAIS
+     baixa que antes mesmo com o filme mais alto: 951px contra 1056px a
+     1910×942. É o que tira a legenda de baixo da dobra. */
+  .clinic-copy {
+    grid-column: 1 / 6;
+  }
+
+  .clinic-media {
+    grid-column: 6 / -1;
+    height: min(84svh, 50rem);
+  }
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   Sem motion o JS nunca busca os arquivos de vídeo: o poster (atributo do
+   próprio <video>) é a experiência inteira, e todas as composições mantêm o
+   mesmo tamanho e o mesmo enquadramento.
+
+   A Clínica não aparece mais aqui: sem pin, sem scrub e sem estados, ela já
+   é uma seção comum em qualquer preferência de movimento.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-runway,
+  .work-runway {
+    height: auto !important;
+  }
+
+  .hero-stage,
+  .work-stage {
+    position: relative !important;
+  }
+}

@@ -1,0 +1,77 @@
+/* ============================================================================
+   GRID EDITORIAL GLOBAL
+   ----------------------------------------------------------------------------
+   Um único grid explícito para a página inteira. Toda seção o declara; nenhum
+   elemento é centralizado "no olho".
+
+     ≥1200px   12 colunas · container 1600 · gutter 40–80 · gap 20–32
+     768–1199   8 colunas · gutter 24–40 · gap 24
+      <768      4 colunas · gutter 16–24 · gap 16
+
+   EXISTE UM SÓ CONTAINER. Toda seção ocupa a largura da viewport e recua o
+   conteúdo por `--edge`, que já absorve a sobra acima de `--grid-max`. Não há
+   "grid contido" e "grid que rompe o container" com eixos diferentes: as
+   colunas caem no mesmo x da página inteira, e o que precisa sangrar até a
+   borda (as superfícies de mídia, o mapa) o faz com `calc(var(--edge) * -1)`.
+
+   As colunas são declaradas por seção, em `chapters.css` e `media.css`, com
+   `grid-column`. Cada faixa de largura recebe uma atribuição própria — o
+   tablet REORGANIZA, não reduz proporcionalmente.
+   ========================================================================== */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols), minmax(0, 1fr));
+  column-gap: var(--grid-gap);
+  width: 100%;
+  padding-inline: var(--edge);
+}
+
+/* Um item que precisa atravessar o grid inteiro (uma faixa, um fundo). */
+.grid-full {
+  grid-column: 1 / -1;
+}
+
+/* ==========================================================================
+   OVERLAY DE DEBUG
+   ==========================================================================
+   Ligado por `html.debug-grid` (console: document.documentElement.classList
+   .toggle('debug-grid'), tecla G, ou ?grid=1 na URL). Não existe em produção:
+   é só uma sobreposição condicional, sem custo quando desligada.
+   ========================================================================== */
+
+/* O overlay é montado por src/js/grid-debug.js: colunas reais, com o mesmo
+   container, o mesmo gutter e o mesmo gap do grid de produção — assim ele
+   mede o layout em vez de reproduzi-lo por aproximação. */
+
+.grid-debug {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-debug);
+  pointer-events: none;
+  align-content: stretch;
+}
+
+.grid-debug i {
+  display: block;
+  height: 100%;
+  background: color-mix(in oklab, var(--copper) 12%, transparent);
+  border-inline: 1px solid color-mix(in oklab, var(--copper) 34%, transparent);
+}
+
+.grid-debug b {
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--r-sm);
+  background: var(--surface-dark);
+  color: var(--gold-soft);
+  font: 600 11px/1 var(--sans);
+  letter-spacing: 0.08em;
+}
+
+html.debug-grid [data-axis] {
+  outline: 1px dashed color-mix(in oklab, var(--copper) 55%, transparent);
+  outline-offset: -1px;
+}

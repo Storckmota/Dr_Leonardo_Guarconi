@@ -196,16 +196,32 @@ export function renderTreatmentItems() {
     .join('\n');
 }
 
+/* UM TOM SÓ — o do card 07 ("Cirurgias odontológicas").
+   A progressão original (marfim → champagne → areia → ocre → caramelo →
+   terracota, e então cobre, grafite e ouro) deixava o palco variando de tom a
+   cada 5 segundos sem que a variação significasse nada. A unificação num
+   tratamento só resolveu isso e continua valendo.
+
+   O tom escolhido, porém, voltou a ser o CLARO. Nove placas de cobre escuro
+   seguidas, entre o painel carvão da Missão e o filme escuro da Precisão,
+   tiravam da seção o papel de respiro que ela tem na leitura da página. O
+   `stone` é o card claro do próprio histórico (a5fe60a), traduzido para a
+   paleta atual em `.plate--stone` (chapters.css).
+
+   `tone` continua existindo porque o palco pode voltar a ter estados de cor;
+   hoje os nove apontam para o MESMO tratamento, declarado uma única vez. Nada
+   além da cor mudou: dimensões, tipos, conteúdo, navegação e transições são os
+   mesmos, e as notas por card continuam distintas. */
 const treatmentCards = [
-  { tone: 'porcelain', note: 'reposição planejada' },
-  { tone: 'champagne', note: 'mordida e alinhamento' },
-  { tone: 'greige', note: 'forma, cor e função' },
+  { tone: 'stone', note: 'reposição planejada' },
+  { tone: 'stone', note: 'mordida e alinhamento' },
+  { tone: 'stone', note: 'forma, cor e função' },
   { tone: 'stone', note: 'preservação do dente' },
-  { tone: 'taupe', note: 'gengiva e suporte' },
-  { tone: 'ivory', note: 'prevenção desde cedo' },
-  { tone: 'copper', note: 'gesto clínico preciso' },
-  { tone: 'graphite', note: 'proteção e conforto' },
-  { tone: 'gold', note: 'leitura natural da face' },
+  { tone: 'stone', note: 'gengiva e suporte' },
+  { tone: 'stone', note: 'prevenção desde cedo' },
+  { tone: 'stone', note: 'gesto clínico preciso' },
+  { tone: 'stone', note: 'proteção e conforto' },
+  { tone: 'stone', note: 'leitura natural da face' },
 ];
 
 /* Palco dos tratamentos: cartões tipográficos reconhecíveis, sem desenhos

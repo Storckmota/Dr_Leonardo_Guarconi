@@ -20,6 +20,7 @@ npm run dev        # desenvolvimento (http://localhost:5173)
 npm run build      # build de produção → dist/
 npm run preview    # serve o build (http://localhost:4173)
 npm run images     # regenera public/images a partir de assets-src/
+npm run video      # regenera public/videos a partir de assets-src/video/
 node scripts/prepare-logo.mjs   # regenera derivados do logo (logo.jpg da raiz)
 ```
 
@@ -33,8 +34,9 @@ mensagem do WhatsApp, metadata) em **`src/site.data.js`** — injetados no
 ## Estrutura
 
 ```
-index.html                  10 capítulos (preloader→header/menu→hero→missão→
-                            tratamentos→processo→doutor→filosofia→mapa→CTA/footer)
+index.html                  capítulos (preloader→header/menu→hero→missão→
+                            tratamentos→precisão→processo→doutor→filosofia→
+                            clínica→mapa→CTA/footer)
 logo.jpg                    logo original do cliente (584×584, preservado)
 src/site.data.js            fonte única de dados editáveis
 src/main.js                 orquestração (funcional × coreografia)
@@ -47,15 +49,18 @@ src/js/
   menu.js                   overlay tela cheia (wipe + cascata + trap de foco)
   hero.js                   timeline de entrada + curve swipe (MorphSVG) + camadas
   reveals.js                blocos, máscaras, parallax (>=768px) e text-reveals
-  treatments.js             lista + palco de cartões tipográficos + autoplay pausável
+  treatments.js             lista + palco de cartões tipográficos (troca só por
+                            clique/toque/teclado — sem rotação automática)
   process.js                capítulo pinado com 6 etapas + órbita (scrub, só desktop)
-  philosophy-slider.js      slider dos 3 princípios (Draggable, dots, teclado, a11y)
+  precision.js              painel do capítulo Precisão (largura por scrub)
+  media.js                  carrega os filmes por viewport/motion, poster e loop
+  viewport.js               reescreve --vw sem a barra de rolagem
+  grid-debug.js             overlay do grid (só em dev)
   mapa.js                   iframe lazy + revelação por máscara
-src/styles/                 fonts / tokens / base / chapters
+src/styles/                 fonts / tokens / grid / base / chapters / media
 scripts/prepare-logo.mjs    corta margens e remove fundo branco do logo
 scripts/optimize-images.mjs retratos → WebP (+ OG JPEG)
-scripts/qa.mjs              QA Playwright (console, overflow, interações,
-                            reduced-motion) — requer `npm run preview`
+scripts/build-video-assets.mjs  deriva public/videos a partir de assets-src/video
 scripts/contrast.mjs        auditoria WCAG dos tokens
 ```
 

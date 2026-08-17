@@ -19,7 +19,7 @@ html {
 }
 
 body {
-  background: var(--porcelain);
+  background: var(--surface);
   color: var(--ink);
   font-family: var(--sans);
   font-size: var(--fs-body);
@@ -70,15 +70,19 @@ h1,
 h2,
 h3 {
   font-weight: inherit;
-  text-wrap: balance;
+  letter-spacing: 0;
 }
 
 p {
   text-wrap: pretty;
 }
 
+[data-split] {
+  text-wrap: normal;
+}
+
 ::selection {
-  background: color-mix(in oklab, var(--copper) 26%, var(--porcelain));
+  background: color-mix(in oklab, var(--copper) 26%, var(--surface));
   color: var(--ink);
 }
 
@@ -93,8 +97,8 @@ p {
   top: 0.75rem;
   left: 0.75rem;
   z-index: calc(var(--z-preloader) + 10);
-  background: var(--graphite);
-  color: var(--milk);
+  background: var(--surface-dark);
+  color: var(--ink-on-dark);
   font-size: var(--fs-small);
   font-weight: 600;
   padding: 0.7rem 1.1rem;
@@ -104,7 +108,7 @@ p {
 
 .skip-link:focus-visible {
   transform: none;
-  outline-color: var(--gold-thread);
+  outline-color: var(--gold);
 }
 
 .visually-hidden {
@@ -118,29 +122,30 @@ p {
   white-space: nowrap;
 }
 
-/* --- Labels de capítulo -------------------------------------------------- */
+/* --- Labels de capítulo --------------------------------------------------
+   O traço decorativo de 3,2rem que antecedia cada label FOI REMOVIDO daqui —
+   e só daqui, porque este é o único lugar onde ele existia. Nenhuma seção
+   precisa de override: divisórias funcionais, hairlines dos tratamentos,
+   linhas do método e o painel Saúde/Função/Estética são regras próprias e
+   continuam intactas.
+
+   Com o traço fora, o label perde a âncora horizontal que o separava do
+   título: o `letter-spacing` e a caixa alta assumem esse papel, e a distância
+   até o título é reposta pelo `margin-bottom` (antes o traço fazia parte do
+   bloco ótico). */
 
 .chapter-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: var(--fs-micro);
+  /* `block` e não `inline-flex`: sem o traço não há mais nada para alinhar ao
+     lado do texto, e o bloco faz a label nascer no MESMO x do título — antes
+     ela começava 4,1rem adiante (traço + gap), fora do eixo da coluna. */
+  display: block;
+  font-size: 0.88rem;
   font-weight: 650;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
   color: var(--copper-ink);
 }
 
-.chapter-label::before {
-  content: '';
-  width: 1.9rem;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.55;
-}
-
 .chapter-label--gold {
-  color: var(--gold-thread);
+  color: var(--gold);
 }
 
 /* --- Botões ------------------------------------------------------------------ */
@@ -155,52 +160,38 @@ p {
   border-radius: var(--r-pill);
   font-weight: 600;
   font-size: 0.96rem;
-  letter-spacing: 0.01em;
   transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease,
     border-color var(--dur-fast) ease, transform var(--dur-fast) var(--ease-out);
 }
 
-.btn:active {
+/* --- CTA PRIMÁRIO -------------------------------------------------------
+   Um único botão preenchido para a conversão, em qualquer superfície.
+   Substitui `.btn-solid` (carvão) e `.btn-porcelain` (branco), que davam três
+   aparências diferentes ao MESMO ato — agendar — conforme o capítulo.
+   Estados: repouso · hover · focus-visible · active. */
+
+.btn-cta {
+  background: var(--cta);
+  color: var(--cta-ink);
+}
+
+.btn-cta:hover {
+  background: var(--cta-hover);
+}
+
+.btn-cta:active {
+  background: var(--cta-active);
   transform: scale(0.98);
 }
 
-.btn-solid {
-  background: var(--graphite);
-  color: var(--milk);
+/* Anel próprio: sobre o cobre, o `--copper-ink` do foco global some. */
+.btn-cta:focus-visible {
+  outline: 2px solid var(--cta-ring);
+  outline-offset: 3px;
 }
 
-.btn-solid:hover {
-  background: color-mix(in oklab, var(--graphite) 86%, var(--copper));
-}
-
-.btn-solid .ico-wa {
-  color: var(--wa-green);
-}
-
-.btn-porcelain {
-  background: var(--porcelain);
-  color: var(--ink);
-}
-
-.btn-porcelain:hover {
-  background: var(--milk);
-}
-
-.btn-porcelain .ico-wa {
-  color: oklch(50% 0.14 152);
-}
-
-.btn-ivory {
-  background: var(--ivory);
-  color: var(--ink);
-}
-
-.btn-ivory:hover {
-  background: var(--porcelain);
-}
-
-.btn-ivory .ico-wa {
-  color: oklch(50% 0.14 152);
+.btn-cta .ico-wa {
+  color: var(--cta-wa);
 }
 
 .btn-line {
@@ -253,7 +244,6 @@ p {
 
 .sl-i {
   display: block;
-  will-change: transform;
 }
 
 /* palavras marcadas no split (ex-<em>): itálico preservado */
@@ -270,7 +260,7 @@ p {
   display: none;
   align-items: center;
   justify-content: center;
-  background: var(--porcelain);
+  background: var(--surface);
 }
 
 html.preloading .preloader {
@@ -312,7 +302,7 @@ html.preloading .preloader {
   font-weight: 650;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--ink-soft);
+  color: var(--ink-2);
 }
 
 /* Failsafe: se o módulo JS não concluir, o preloader se retira sozinho. */

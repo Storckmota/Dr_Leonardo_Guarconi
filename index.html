@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{{meta.title}}</title>
   <meta name="description" content="{{meta.description}}" />
-  <meta name="theme-color" content="#F8F6F1" />
+  <meta name="theme-color" content="#F9F5EF" />
   <meta name="color-scheme" content="light" />
 
   <!-- Open Graph -->
@@ -17,7 +17,9 @@
   <meta name="twitter:card" content="summary" />
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="preload" as="image" href="/images/retrato-01.webp" type="image/webp" fetchpriority="high" />
+  <!-- O poster do filme de abertura carrega junto com o HTML: a primeira dobra
+       nunca aparece vazia enquanto o vídeo chega. -->
+  <link rel="preload" as="image" href="/videos/hero-leonardo-poster.webp" type="image/webp" fetchpriority="high" />
   <link rel="preload" as="image" href="/images/logo-mark.webp" type="image/webp" />
   <link rel="stylesheet" href="/src/styles/main.css" />
 
@@ -48,10 +50,12 @@
     </div>
   </div>
 
-  <!-- ============ CAP. 02 · HEADER ============ -->
-  <header class="header" data-header>
-    <div class="header-in">
-      <a class="brand" href="#inicio" aria-label="{{nomeCurto}}, voltar ao início">
+  <!-- ============ CAP. 02 · HEADER ============
+       Sobreposto ao hero, sem fundo no primeiro estado. Os três blocos são
+       posicionados por coluna do grid global, não por `space-between`. -->
+  <header class="header" data-header data-on="light">
+    <div class="header-in grid">
+      <a class="brand" href="#inicio" aria-label="{{nomeCurto}}, voltar ao início" data-axis="col-1">
         <img class="brand-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" />
         <span class="brand-text">
           <span class="brand-name">Leonardo&nbsp;Guarçoni</span>
@@ -59,22 +63,28 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Seções do site">
-        <a class="nav-link" href="#tratamentos">Tratamentos</a>
-        <a class="nav-link" href="#o-doutor">O doutor</a>
-        <a class="nav-link" href="#filosofia">Filosofia</a>
-        <a class="nav-link" href="#contato">Contato</a>
-      </nav>
+      <!-- Navegação e CTA formam um bloco alinhado à direita. No hero isso os
+           mantém INTEIROS sobre o filme, e a logomarca inteira sobre a
+           porcelana: o header atravessa duas superfícies sem precisar de uma
+           faixa branca para ficar legível. -->
+      <div class="header-right">
+        <nav class="nav" aria-label="Seções do site">
+          <a class="nav-link" href="#tratamentos">Tratamentos</a>
+          <a class="nav-link" href="#o-doutor">O doutor</a>
+          <a class="nav-link" href="#filosofia">Filosofia</a>
+          <a class="nav-link" href="#contato">Contato</a>
+        </nav>
 
-      <div class="header-actions">
-        <a class="btn btn-solid btn-header" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
+        <div class="header-actions">
+        <a class="btn btn-cta btn-header" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
           <svg class="ico ico-wa" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
           <span>Agendar</span>
         </a>
-        <button class="menu-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu" data-menu-toggle>
-          <span class="menu-toggle-label">Menu</span>
-          <span class="menu-toggle-bars" aria-hidden="true"><i></i><i></i></span>
-        </button>
+          <button class="menu-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu" data-menu-toggle>
+            <span class="menu-toggle-label">Menu</span>
+            <span class="menu-toggle-bars" aria-hidden="true"><i></i><i></i></span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -83,107 +93,128 @@
   <div class="menu" id="menu" data-menu hidden>
     <div class="menu-panel" role="dialog" aria-modal="true" aria-label="Menu de navegação">
       <img class="menu-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" />
-      <nav class="menu-nav" aria-label="Seções do site">
-        <ol class="menu-list" role="list">
-          <li><a class="menu-link" href="#tratamentos" data-menu-link><span class="menu-num" aria-hidden="true">01</span><span class="menu-word" data-menu-word>Tratamentos</span></a></li>
-          <li><a class="menu-link" href="#processo" data-menu-link><span class="menu-num" aria-hidden="true">02</span><span class="menu-word" data-menu-word>Como trabalhamos</span></a></li>
-          <li><a class="menu-link" href="#o-doutor" data-menu-link><span class="menu-num" aria-hidden="true">03</span><span class="menu-word" data-menu-word>O doutor</span></a></li>
-          <li><a class="menu-link" href="#filosofia" data-menu-link><span class="menu-num" aria-hidden="true">04</span><span class="menu-word" data-menu-word>Filosofia</span></a></li>
-          <li><a class="menu-link" href="#contato" data-menu-link><span class="menu-num" aria-hidden="true">05</span><span class="menu-word" data-menu-word>Contato</span></a></li>
-        </ol>
-      </nav>
-      <div class="menu-foot" data-menu-foot>
-        <a class="btn btn-ivory" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
-          <svg class="ico ico-wa" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
-          Agendar pelo WhatsApp
-        </a>
-        <div class="menu-contacts">
-          <a class="menu-contact" href="mailto:{{email}}">{{email}}</a>
-          <a class="menu-contact" href="https://instagram.com/{{instagramUser}}" target="_blank" rel="noopener noreferrer">@{{instagramUser}}</a>
-          <p class="menu-address">{{enderecoLinha}}</p>
+      <div class="menu-in grid">
+        <nav class="menu-nav" aria-label="Seções do site">
+          <ol class="menu-list" role="list">
+            <li><a class="menu-link" href="#tratamentos" data-menu-link><span class="menu-num" aria-hidden="true">01</span><span class="menu-word" data-menu-word>Tratamentos</span></a></li>
+            <li><a class="menu-link" href="#processo" data-menu-link><span class="menu-num" aria-hidden="true">02</span><span class="menu-word" data-menu-word>Como trabalhamos</span></a></li>
+            <li><a class="menu-link" href="#o-doutor" data-menu-link><span class="menu-num" aria-hidden="true">03</span><span class="menu-word" data-menu-word>O doutor</span></a></li>
+            <li><a class="menu-link" href="#filosofia" data-menu-link><span class="menu-num" aria-hidden="true">04</span><span class="menu-word" data-menu-word>Filosofia</span></a></li>
+            <li><a class="menu-link" href="#contato" data-menu-link><span class="menu-num" aria-hidden="true">05</span><span class="menu-word" data-menu-word>Contato</span></a></li>
+          </ol>
+        </nav>
+        <div class="menu-foot" data-menu-foot>
+          <a class="btn btn-cta" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
+            <svg class="ico ico-wa" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
+            Agendar pelo WhatsApp
+          </a>
+          <div class="menu-contacts">
+            <a class="menu-contact" href="mailto:{{email}}">{{email}}</a>
+            <a class="menu-contact" href="https://instagram.com/{{instagramUser}}" target="_blank" rel="noopener noreferrer">@{{instagramUser}}</a>
+            <p class="menu-address">{{enderecoLinha}}</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <main id="conteudo">
-    <!-- ============ CAP. 03 · HERO ============ -->
+    <!-- ============ CAP. 03 · HERO AUDIOVISUAL ============
+         Filme de abertura: hero-leonardo. O desktop começa com o texto nas
+         colunas 2–6 e o filme na metade direita, de topo a base. Durante a
+         rolagem fixada a superfície CRESCE continuamente até 100vw × 100svh e
+         PERMANECE em tela cheia antes de liberar a Missão.
+         Um só modelo geométrico: left = 100% − width. Nada de clip-path,
+         translate ou offsets concorrentes no scrub. -->
     <section class="hero" id="inicio" data-theme="light" aria-label="Apresentação">
-      <div class="hero-linework" aria-hidden="true"><i></i><i></i></div>
-      <svg class="hero-swipe" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true" data-hero-swipe>
-        <path class="hero-swipe-fill" data-hero-swipe-fill d="M 0 100 V 100 Q 50 100 100 100 V 100 Z" />
-        <path class="hero-swipe-edge" data-hero-swipe-edge d="M 0 100 Q 50 100 100 100" />
-      </svg>
-      <div class="hero-panel" data-hero-panel>
-        <div class="hero-media" data-hero-media>
-          <img
-            src="/images/retrato-01.webp"
-            width="455" height="569"
-            alt="Retrato do Dr. Leonardo Guarçoni, cirurgião-dentista, de terno claro sobre fundo em tons quentes"
-            fetchpriority="high"
-            decoding="async"
-          />
-        </div>
-        <img class="hero-panel-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" aria-hidden="true" />
-        <p class="hero-panel-caption" aria-hidden="true">Dr. Leonardo Guarçoni</p>
-      </div>
+      <div class="hero-runway" data-hero-runway>
+        <div class="hero-stage" data-hero-stage>
+          <div class="hero-media" data-hero-media>
+            <!-- Camada só da entrada: o clip-path de abertura vive AQUI, nunca
+                 no elemento que o scrub redimensiona. Era a sobreposição dos
+                 dois que fazia o filme sumir e reentrar pela direita. -->
+            <div class="hero-media-reveal" data-hero-reveal>
+              <div
+                class="mv"
+                data-mv
+                data-mv-name="hero-leonardo"
+                data-mv-eager
+                role="img"
+                aria-label="Dr. Leonardo Guarçoni em atendimento: com lupa clínica, de perfil em contraluz, sob a luminária do consultório e com lanterna de cabeça."
+              >
+                <video
+                  class="mv-video"
+                  data-mv-video
+                  width="1072" height="1824"
+                  poster="/videos/hero-leonardo-poster.webp"
+                  muted loop playsinline preload="auto"
+                  aria-hidden="true"
+                ></video>
+              </div>
+            </div>
+            <span class="hero-media-signature" aria-hidden="true">Consultório · Vila&nbsp;Velha</span>
+          </div>
 
-      <div class="hero-in">
-        <h1 class="hero-title">
-          <span class="visually-hidden">Odontologia estética restauradora em Vila Velha: Dr. Leonardo Guarçoni</span>
-          <span class="hero-kicker" aria-hidden="true" data-hero-kicker>Odontologia</span>
-          <span class="hero-word" aria-hidden="true" data-hero-word>Estética</span>
-          <span class="hero-word hero-word--it" aria-hidden="true" data-hero-word>restauradora</span>
-        </h1>
+          <div class="hero-layout grid">
+            <div class="hero-copy" data-hero-copy>
+              <p class="chapter-label hero-label" data-axis="col-1" data-hero-label>Dr.&nbsp;Leonardo Guarçoni</p>
 
-        <div class="hero-foot" data-hero-foot>
-          <p class="hero-statement">
-            Ciência, técnica e escuta a serviço de sorrisos naturais.
-            O Dr.&nbsp;Leonardo Guarçoni acompanha cada paciente de perto, do diagnóstico ao acabamento.
-          </p>
-          <div class="hero-actions">
-            <a class="btn btn-solid" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
-              <svg class="ico ico-wa" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
-              Agendar avaliação
-            </a>
-            <ul class="hero-tags" role="list" aria-label="Algumas frentes de tratamento">
-              <li><a class="hero-tag" href="#tratamentos">Implantes</a></li>
-              <li><a class="hero-tag" href="#tratamentos">Ortodontia</a></li>
-              <li><a class="hero-tag" href="#tratamentos">Harmonização facial</a></li>
-            </ul>
+              <h1 class="hero-title" data-axis="col-1">
+                <span class="visually-hidden">Odontologia estética restauradora em Vila Velha: Dr. Leonardo Guarçoni</span>
+                <span class="hero-word" aria-hidden="true" data-hero-word>Odontologia</span>
+                <span class="hero-word hero-word--it" aria-hidden="true" data-hero-word>estética restauradora</span>
+              </h1>
+
+              <div class="hero-foot" data-hero-foot>
+                <p class="hero-statement" data-axis="col-1">
+                  Ciência, técnica e escuta a serviço de sorrisos naturais.
+                  O Dr.&nbsp;Leonardo Guarçoni acompanha cada paciente de perto,
+                  do diagnóstico ao acabamento.
+                </p>
+                <div class="hero-actions">
+                  <a class="btn btn-cta" href="{{waLink}}" target="_blank" rel="noopener noreferrer" data-axis="col-1">
+                    <svg class="ico ico-wa" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
+                    Agendar avaliação
+                  </a>
+                </div>
+                <ul class="hero-tags" role="list" aria-label="Algumas frentes de tratamento">
+                  <li><a class="hero-tag" href="#tratamentos">Implantes</a></li>
+                  <li><a class="hero-tag" href="#tratamentos">Ortodontia</a></li>
+                  <li><a class="hero-tag" href="#tratamentos">Harmonização facial</a></li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ CAP. 04 · MISSÃO ============ -->
+    <!-- ============ CAP. 04 · MISSÃO ============
+         Uma hierarquia só, em dois tempos:
+           1 · eyebrow  2 · UMA afirmação  3 · UM parágrafo curto
+           4 · o painel Saúde/Função/Estética
+         O segundo parágrafo e o CTA saíram: competiam com a afirmação e
+         empurravam o painel — que é o fecho da seção — para fora da leitura. -->
     <section class="missao" id="missao" data-theme="light" aria-labelledby="missao-title">
-      <div class="missao-in">
-        <p class="chapter-label" data-reveal>A nossa missão</p>
-        <h2 class="missao-title" id="missao-title" data-split>
-          Oferecer um atendimento <em>humanizado</em>, pautado na confiança e na qualidade,<br class="mission-break" />
-          transformando sorrisos e elevando a autoestima com resultados <em>naturais</em>.
+      <div class="missao-in grid">
+        <p class="chapter-label missao-label" data-axis="col-1" data-reveal>A nossa missão</p>
+        <h2 class="missao-title" id="missao-title" data-axis="col-1" data-split>
+          Transformar sorrisos com um atendimento <em>humanizado</em>,
+          pautado na confiança e na qualidade.
         </h2>
-
-        <div class="missao-cols">
-          <p class="missao-col" data-para="-0.16" data-reveal>
-            Cada plano de tratamento nasce de uma conversa e da leitura do rosto
-            de quem chega ao consultório. Nada de fórmulas prontas.
-          </p>
-          <p class="missao-col missao-col--b" data-para="0.14" data-reveal>
-            Saúde, função e estética caminham juntas em todas as decisões
-            clínicas, do primeiro exame ao acabamento final.
-          </p>
-        </div>
-
-        <a class="btn btn-solid missao-cta" href="#o-doutor" data-reveal>
-          Conhecer o Dr.&nbsp;Leonardo
-          <svg class="ico" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2 8h11M9 3.5 13.5 8 9 12.5"/></svg>
-        </a>
+        <p class="missao-lead" data-axis="col-1" data-reveal>
+          Cada plano nasce de uma conversa e da leitura do rosto de quem chega
+          ao consultório. Saúde, função e estética caminham juntas, do primeiro
+          exame ao acabamento final.
+        </p>
       </div>
 
-      <div class="galeria" aria-label="Saúde, função e estética">
-        <div class="galeria-system" data-mask data-para="0.08">
+      <!-- Painel restaurado do histórico do projeto (commit a5fe60a): as três
+           palavras distribuídas na composição, as duas curvas, a elipse de
+           cobre e a legenda. Só largura, espaçamento e encaixe no grid foram
+           adaptados; a estrutura e o desenho são os originais. -->
+      <div class="galeria grid" aria-label="Saúde, função e estética">
+        <div class="galeria-system" data-mask data-para="0.06">
           <svg class="galeria-curve" viewBox="0 0 900 420" aria-hidden="true">
             <path d="M74 292 C198 70 392 72 492 216 C581 345 734 342 826 128" />
             <path d="M122 322 C258 204 388 172 514 214 C627 252 724 226 802 98" />
@@ -196,11 +227,14 @@
       </div>
     </section>
 
-    <!-- ============ CAP. 05 · TRATAMENTOS ============ -->
+    <!-- ============ CAP. 05 · TRATAMENTOS ============
+         Estrutura, interação e conteúdo preservados: palco sticky + lista em
+         acordeão, com o mesmo comportamento no desktop e no mobile. Mudam só
+         o encaixe no grid (7/5), a proporção, as cores e os espaçamentos. -->
     <section class="tx" id="tratamentos" data-theme="light" aria-labelledby="tx-title">
-      <div class="tx-in">
+      <div class="tx-in grid" data-tx>
         <header class="tx-head">
-          <p class="chapter-label" data-reveal>Tratamentos</p>
+          <p class="chapter-label" data-axis="col-1" data-reveal>Tratamentos</p>
           <h2 class="tx-title" id="tx-title" data-split>
             Todas as fases do seu sorriso, <em>num só consultório</em>.
           </h2>
@@ -210,19 +244,17 @@
           </p>
         </header>
 
-        <div class="tx-grid" data-tx>
-          <div class="tx-stage" data-tx-stage>
+        <!-- O palco é só a placa. O HUD (pílula de porcelana com contador
+             `01 / 09`, filete de progresso e botão de pausa) foi REMOVIDO: a
+             lista da coluna direita já diz qual tratamento está ativo — item em
+             itálico, número em cobre — e dizia melhor, com o nome inteiro em vez
+             de um índice. Duas leituras do mesmo estado, uma delas tapando o
+             rótulo do próprio card, era uma a mais. Nada tomou o seu lugar. -->
+        <div class="tx-stage" data-tx-stage>
 {{@tratamentos_plates}}
-            <div class="tx-hud">
-              <p class="tx-counter"><span data-tx-current>01</span><i>/</i><span>09</span></p>
-              <span class="tx-progress"><i data-tx-progress></i></span>
-              <button class="tx-pause" type="button" data-tx-pause aria-label="Pausar troca automática" aria-pressed="false">
-                <svg class="ico-pause" viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path fill="currentColor" d="M2.5 1.5h2.4v9H2.5zM7.1 1.5h2.4v9H7.1z"/></svg>
-                <svg class="ico-play" viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path fill="currentColor" d="M3 1.4 10.4 6 3 10.6z"/></svg>
-              </button>
-            </div>
-          </div>
+        </div>
 
+        <div class="tx-panel">
           <ol class="tx-list" data-tx-list role="list">
 {{@tratamentos_items}}
           </ol>
@@ -230,18 +262,71 @@
       </div>
     </section>
 
-    <!-- ============ CAP. 06 · PROCESSO (PIN) ============ -->
+    <!-- ============ CAP. 06 · PRECISÃO ============
+         Capítulo CLARO (areia) — a ruptura com o carvão de "Como trabalhamos"
+         é imediata. O filme é um painel alto, em retrato, que ganha largura
+         durante a seção fixada: de 5 para 7 colunas. A copy fica nas 5 colunas
+         da direita o tempo todo; o que se fecha é o espaço entre os dois. -->
+    <section class="work" id="precisao" data-theme="light" aria-labelledby="work-title">
+      <div class="work-runway" data-work-runway>
+      <div class="work-stage grid" data-work-stage>
+        <div class="work-media" data-work-media>
+          <div
+            class="mv"
+            data-mv
+            data-mv-name="precisao-trabalho"
+            role="img"
+            aria-label="Campo operatório do consultório: dois profissionais trabalhando sob luz dirigida, o detalhe de uma mão enluvada conduzindo um instrumento fino e o Dr. Leonardo Guarçoni em plano alto, com lanterna de cabeça."
+          >
+            <video
+              class="mv-video"
+              data-mv-video
+              width="1072" height="1824"
+              poster="/videos/precisao-trabalho-poster.webp"
+              muted loop playsinline preload="none"
+              aria-hidden="true"
+            ></video>
+          </div>
+        </div>
+
+        <div class="work-copy">
+          <p class="chapter-label" data-reveal>Precisão</p>
+          <h2 class="work-title" id="work-title" data-split>
+            O detalhe que <em>decide o resultado</em>.
+          </h2>
+          <p class="work-lead" data-reveal>
+            Ampliação, luz dirigida e gesto controlado. Cada etapa é conferida
+            de perto, do diagnóstico ao acabamento final, com a mesma mão.
+          </p>
+          <ul class="work-notes" role="list">
+            <li data-reveal><span>Lupa clínica</span> trabalho ampliado em todas as fases</li>
+            <li data-reveal><span>Campo operatório</span> equipe preparada em cada especialidade</li>
+            <li data-reveal><span>Acabamento</span> conferência final antes da alta</li>
+          </ul>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <!-- ============ CAP. 07 · COMO TRABALHAMOS ============
+         Segundo tempo do MESMO capítulo escuro: nenhuma troca de superfície,
+         de tinta ou de linguagem de linha entre Precisão e o método. -->
     <section class="processo" id="processo" data-theme="dark" aria-labelledby="processo-title">
       <div class="processo-pin" data-processo-pin>
-        <div class="processo-in">
+        <div class="processo-in grid">
           <header class="processo-head">
-            <p class="chapter-label chapter-label--gold" data-reveal>Como trabalhamos</p>
-            <h2 class="processo-title" id="processo-title" data-split>Precisão em <em>cada etapa</em>.</h2>
+            <p class="chapter-label chapter-label--gold" data-axis="col-1" data-reveal>Como trabalhamos</p>
+            <h2 class="processo-title" id="processo-title" data-axis="col-1" data-split>Um método em <em>cada etapa</em>.</h2>
           </header>
 
           <ol class="passos" data-passos role="list">
 {{@processo}}
           </ol>
+
+          <div class="processo-hud" data-processo-hud aria-hidden="true">
+            <p class="processo-counter"><span data-processo-current>01</span><i>/</i><span>06</span></p>
+            <span class="processo-track"><i data-processo-progress></i></span>
+          </div>
 
           <div class="processo-diagram" aria-hidden="true">
             <div class="processo-ring">
@@ -249,25 +334,26 @@
               <img class="processo-ring-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" />
             </div>
           </div>
-
-          <div class="processo-hud" data-processo-hud aria-hidden="true">
-            <p class="processo-counter"><span data-processo-current>01</span><i>/</i><span>06</span></p>
-            <span class="processo-track"><i data-processo-progress></i></span>
-          </div>
         </div>
-        <img class="processo-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" aria-hidden="true" />
       </div>
     </section>
 
-    <!-- ============ CAP. 07 · O DOUTOR ============ -->
+    <!-- ============ CAP. 08 · O DOUTOR ============
+         Volta ao capítulo claro. Retrato em 5 colunas, nome/biografia/linha do
+         tempo em 6 — o conteúdo ocupa a área útil em vez de flutuar. -->
     <section class="doutor" id="o-doutor" data-theme="light" aria-labelledby="doutor-title">
-      <div class="doutor-in">
+      <div class="doutor-in grid">
         <div class="doutor-media" data-doutor-media>
+          <!-- retrato-01: é o único dos dois arquivos em que a cabeça inteira
+               cabe no quadro. Em retrato-02 o topo da cabeça já vem cortado NA
+               FONTE — nenhum `object-position` traz de volta o que não está no
+               arquivo. A proporção do container (4/5) é a mesma do retrato
+               (455×569 ≙ 0,800), então não há corte nenhum. -->
           <figure class="doutor-frame" data-mask>
             <img
-              src="/images/retrato-02.webp"
-              width="402" height="505"
-              alt="Dr. Leonardo Guarçoni sorrindo, de camisa clara, sobre fundo quente"
+              src="/images/retrato-01.webp"
+              width="455" height="569"
+              alt="Dr. Leonardo Guarçoni de terno claro, sorrindo discretamente, sobre fundo bege"
               loading="lazy"
               decoding="async"
             />
@@ -276,8 +362,8 @@
         </div>
 
         <div class="doutor-copy">
-          <p class="chapter-label chapter-label--gold" data-reveal>O doutor</p>
-          <h2 class="doutor-title" id="doutor-title" data-split>
+          <p class="chapter-label" data-axis="col-7" data-reveal>O doutor</p>
+          <h2 class="doutor-title" id="doutor-title" data-axis="col-7" data-split>
             Dr.&nbsp;Leonardo Pereira <em>Guarçoni</em> Duarte
           </h2>
 
@@ -293,102 +379,167 @@
               paciente de perto, do diagnóstico ao acabamento.
             </p>
           </div>
+        </div>
 
-          <ol class="marcos" role="list">
+        <ol class="marcos" role="list">
 {{@formacao}}
-          </ol>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ CAP. 09 · FILOSOFIA ============
+         CAPÍTULO AUDIOVISUAL DE TELA CHEIA. O filme deixa de ser um painel
+         dentro da página e passa a SER a página: largura da viewport, 100svh,
+         full-bleed, sem cartão, sem moldura e sem faixa de fundo aparecendo.
+
+         Sobre ele vivem duas peças e só duas — título e parágrafo. O rótulo
+         "Filosofia" saiu: numa composição de tela cheia ele era um terceiro
+         nível de hierarquia disputando com o próprio título.
+
+         O texto fica no quadrante superior ESQUERDO porque é lá que a cena
+         tem fundo em todos os quadros do laço: no primeiro ato o topo do
+         quadro é preto e no segundo é a textura da maca. Rosto, boca, mãos e
+         instrumento vivem abaixo e à direita da caixa de texto — ver a nota
+         de enquadramento em media.css. -->
+    <section class="filosofia" id="filosofia" data-theme="dark" aria-labelledby="filosofia-title">
+      <!-- Textura, não imagem: o poster do próprio filme, full-bleed, a 6% e
+           desfocado. Existe para o lado esquerdo não ser uma chapa lisa — é
+           contra uma chapa lisa que a chegada do filme vira uma linha. Estática
+           e decorativa: nada se move e nada precisa ser lido aqui. -->
+      <div class="phil-grain" aria-hidden="true"></div>
+
+      <div class="phil-media">
+        <div
+          class="mv"
+          data-mv
+          data-mv-name="filosofia-escuta"
+          role="img"
+          aria-label="Detalhe de um atendimento: a mão enluvada apoia o rosto do paciente sob luz quente e conduz um instrumento fino, em gesto contido."
+        >
+          <video
+            class="mv-video"
+            data-mv-video
+            width="1072" height="1824"
+            poster="/videos/filosofia-escuta-poster.webp"
+            muted loop playsinline preload="none"
+            aria-hidden="true"
+          ></video>
+        </div>
+      </div>
+
+      <!-- Proteção de leitura: escurece o CANTO do texto e se dissolve em
+           direção à cena clínica. Não é um véu sobre o filme inteiro. -->
+      <div class="phil-veil" aria-hidden="true"></div>
+
+      <div class="phil-in grid">
+        <div class="phil-copy">
+          <h2 class="filosofia-title" id="filosofia-title" data-reveal>
+            Antes de desenhar um sorriso, é preciso ler a pessoa.
+          </h2>
+          <p class="phil-lead-text" data-reveal>
+            A avaliação começa antes do instrumento. Pelo que a pessoa conta,
+            pelo modo como fala e sorri, pelo que espera do próprio rosto.
+          </p>
         </div>
       </div>
     </section>
 
-    <!-- ============ CAP. 08 · FILOSOFIA ============ -->
-    <section class="filosofia" id="filosofia" data-theme="light" aria-labelledby="filosofia-title">
-      <div class="filosofia-in">
-        <p class="chapter-label" data-reveal>Filosofia</p>
-        <h2 class="filosofia-title" id="filosofia-title" data-split>
-          Antes de desenhar um sorriso, é preciso ler a pessoa.
-        </h2>
+    <!-- ============ CAP. 10 · A CLÍNICA ============
+         SEÇÃO DE RESPIRO. Vem logo depois de um capítulo de tela cheia
+         (Filosofia) e antes do mapa: é aqui que a página desacelera.
 
-        <div class="filosofia-stage" data-filosofia-stage>
-          <svg class="filosofia-curve" viewBox="0 0 980 620" aria-hidden="true">
-            <path class="filosofia-curve-path" data-filosofia-path d="M95 468 C242 180 462 132 565 302 C662 464 817 435 891 152" />
-          </svg>
+         Nada de pin, de scrub, de troca de estados ou de contador. A rolagem
+         atravessa a seção naturalmente e os DOIS parágrafos ficam visíveis ao
+         mesmo tempo — eram eles que antes se revezavam num palco fixado que
+         segurava o usuário sem transformar a tela o bastante para justificar.
 
-          <div class="filosofia-slider" data-filosofia-slider aria-label="Princípios de atendimento">
-            <p class="visually-hidden" aria-live="polite" data-filosofia-live>
-              Princípio 1 de 3: Escuta antes da técnica.
+         Duas colunas no desktop: texto à esquerda, filme à direita. No mobile,
+         empilhados. A única coreografia é a entrada discreta que toda seção
+         editorial do site já tem. -->
+    <section class="clinic" id="clinica" data-theme="dark" aria-labelledby="clinic-title">
+      <div class="clinic-stage grid">
+        <div class="clinic-copy">
+          <p class="chapter-label chapter-label--gold" data-axis="col-1" data-reveal>A clínica</p>
+          <h2 class="clinic-title" id="clinic-title" data-axis="col-1" data-split>
+            O lugar por trás <em>do trabalho</em>
+          </h2>
+
+          <div class="clinic-acts">
+            <p class="clinic-act">
+              Um consultório no Centro de Vila Velha, pensado para que a
+              espera seja tão tranquila quanto o atendimento.
             </p>
+            <p class="clinic-act">
+              A recepção, o corredor e a sala de espera foram pensados para
+              acolher com calma, luz quente e uma atmosfera serena.
+            </p>
+          </div>
 
-            <div class="filosofia-slider-viewport" data-filosofia-viewport>
-              <ol class="filosofia-cards" data-filosofia-track role="list">
-                <li class="filosofia-card is-active" data-filosofia-card tabindex="0" aria-current="true">
-                  <span class="filosofia-card-num" aria-hidden="true">01</span>
-                  <h3 class="filosofia-card-title">Escuta antes <em>da técnica</em>.</h3>
-                  <p class="filosofia-card-copy" data-reveal>
-                    Toda avaliação começa por entender o que incomoda e o que se espera.
-                    O plano vem depois.
-                  </p>
-                </li>
-                <li class="filosofia-card" data-filosofia-card tabindex="-1">
-                  <span class="filosofia-card-num" aria-hidden="true">02</span>
-                  <h3 class="filosofia-card-title">Planejamento <em>individual</em>.</h3>
-                  <p class="filosofia-card-copy" data-reveal>
-                    Nenhum caso é igual ao outro. Cada tratamento é desenhado para uma
-                    boca, um rosto, uma rotina.
-                  </p>
-                </li>
-                <li class="filosofia-card" data-filosofia-card tabindex="-1">
-                  <span class="filosofia-card-num" aria-hidden="true">03</span>
-                  <h3 class="filosofia-card-title">Naturalidade <em>como critério</em>.</h3>
-                  <p class="filosofia-card-copy" data-reveal>
-                    Um bom resultado é discreto: um sorriso saudável, em harmonia com a
-                    sua expressão.
-                  </p>
-                </li>
-              </ol>
-            </div>
+          <dl class="clinic-facts">
+            <div><dt>Endereço</dt><dd>{{endereco.rua}} · {{endereco.bairro}}</dd></div>
+            <div><dt>Cidade</dt><dd>{{endereco.cidade}} · {{endereco.uf}}</dd></div>
+            <div><dt>Atendimento</dt><dd>{{disponibilidade}}</dd></div>
+          </dl>
 
-            <div class="filosofia-controls" aria-label="Navegar pelos princípios">
-              <button class="filosofia-nav" type="button" data-filosofia-prev aria-label="Princípio anterior">
-                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M10.5 3.5 6 8l4.5 4.5"/></svg>
-              </button>
-              <div class="filosofia-dots" role="tablist" aria-label="Selecionar princípio">
-                <button class="filosofia-dot is-active" type="button" data-filosofia-dot="0" aria-label="Mostrar Escuta antes da técnica" aria-current="true"></button>
-                <button class="filosofia-dot" type="button" data-filosofia-dot="1" aria-label="Mostrar Planejamento individual"></button>
-                <button class="filosofia-dot" type="button" data-filosofia-dot="2" aria-label="Mostrar Naturalidade como critério"></button>
-              </div>
-              <button class="filosofia-nav" type="button" data-filosofia-next aria-label="Próximo princípio">
-                <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M5.5 3.5 10 8l-4.5 4.5"/></svg>
-              </button>
-            </div>
+          <a class="clinic-cta" href="#contato">
+            Ver no mapa
+            <svg class="ico" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" d="M2 8h11M9 3.5 13.5 8 9 12.5"/></svg>
+          </a>
+        </div>
+
+        <div class="clinic-media">
+          <div
+            class="mv"
+            data-mv
+            data-mv-name="clinica-guarconi"
+            role="img"
+            aria-label="Percurso pelo consultório Guarçoni &amp; Associados: recepção iluminada com o monograma na parede, corredor, sala de espera com obra de arte e a sala clínica com seu equipamento."
+          >
+            <video
+              class="mv-video"
+              data-mv-video
+              width="1072" height="1824"
+              poster="/videos/clinica-guarconi-poster.webp"
+              muted loop playsinline preload="none"
+              aria-hidden="true"
+            ></video>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ============ CAP. 09 · LOCALIZAÇÃO ============ -->
+    <!-- ============ CAP. 11 · LOCALIZAÇÃO ============
+         Fechamento funcional dentro do mesmo escuro: o mapa é a janela clara,
+         não uma nova superfície de seção. -->
     <section class="mapa" id="contato" data-theme="light" aria-labelledby="mapa-title">
       <div class="mapa-shell" data-mapa-shell>
+        <!-- CAMADA DO MAPA — full-bleed, largura e altura inteiras da seção.
+             O `src` é ESTÁTICO, não `data-src`: o adiamento fica por conta do
+             `loading="lazy"` nativo, que o navegador resolve sozinho. Era a
+             troca por JS que deixava a área vazia quando o gancho não existia.
+             Sob o iframe fica o fallback: se o embed for bloqueado (extensão,
+             rede corporativa, política de terceiros), é ele que o visitante vê,
+             com o link real para o Google Maps. -->
         <div class="mapa-embed" data-mapa-embed>
+          <div class="mapa-fallback">
+            <p class="mapa-fallback-h">Rua Henrique Laranja, 230</p>
+            <p class="mapa-fallback-p">Centro · Vila&nbsp;Velha — ES</p>
+            <a class="mapa-fallback-link" href="{{mapsLink}}" target="_blank" rel="noopener noreferrer">
+              Abrir no Google Maps
+            </a>
+          </div>
           <iframe
-            title="Mapa: consultório do Dr. Leonardo Guarçoni, Rua Henrique Laranja 230, Centro, Vila Velha ES"
-            data-src="{{mapsEmbed}}"
+            class="mapa-iframe"
+            data-mapa-iframe
+            title="Mapa do consultório do Dr. Leonardo Guarçoni — Rua Henrique Laranja, 230, Centro, Vila Velha, ES"
+            src="{{mapsEmbed}}"
             width="600" height="450"
-            style="border:0"
-            allowfullscreen=""
             loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"></iframe>
-          <noscript>
-            <iframe
-              title="Mapa: consultório do Dr. Leonardo Guarçoni"
-              src="{{mapsEmbed}}"
-              width="600" height="450"
-              style="border:0"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"></iframe>
-          </noscript>
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen></iframe>
         </div>
 
+        <div class="mapa-frame grid">
         <div class="mapa-panel" data-mapa-panel>
           <p class="chapter-label chapter-label--gold">Onde estamos</p>
           <h2 class="mapa-title" id="mapa-title" data-split>Centro de Vila&nbsp;Velha</h2>
@@ -399,7 +550,7 @@
           </address>
           <p class="mapa-disponibilidade">{{disponibilidade}}</p>
           <div class="mapa-acoes">
-            <a class="btn btn-porcelain" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
+            <a class="btn btn-cta" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
               <svg class="ico ico-wa" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
               Agendar pelo WhatsApp
             </a>
@@ -414,22 +565,22 @@
             <a class="mapa-contato" href="https://instagram.com/{{instagramUser}}" target="_blank" rel="noopener noreferrer">@{{instagramUser}}</a>
           </div>
         </div>
+        </div>
       </div>
     </section>
 
-    <!-- ============ CAP. 10 · CTA FINAL ============ -->
-    <section class="final" data-theme="dark" aria-labelledby="final-title">
-      <div class="final-in">
+    <!-- ============ CAP. 12 · CTA FINAL ============ -->
+    <section class="final" data-theme="light" aria-labelledby="final-title">
+      <div class="final-in grid">
         <img class="final-mark" src="/images/logo-mark.webp" alt="" width="376" height="305" loading="lazy" decoding="async" aria-hidden="true" data-reveal />
         <h2 class="final-title" id="final-title" data-split>
           Um cuidado natural começa com <em>uma conversa.</em>
         </h2>
         <div class="final-actions" data-reveal>
-          <a class="btn btn-porcelain btn-lg" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
+          <a class="btn btn-cta btn-lg" href="{{waLink}}" target="_blank" rel="noopener noreferrer">
             <svg class="ico ico-wa" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15L2 21.8l4.9-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-5.9c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.4 0-.5s-.6-1.5-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.7 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3Z"/></svg>
             Agendar pelo WhatsApp
           </a>
-          <p class="final-note">{{whatsappDisplay}} · {{endereco.cidade}}, {{endereco.uf}}</p>
         </div>
       </div>
     </section>
@@ -437,34 +588,32 @@
 
   <!-- ============ FOOTER ============ -->
   <footer class="footer">
-    <div class="footer-in">
+    <div class="footer-in grid">
       <div class="footer-brand">
         <img class="footer-logo" src="/images/logo-full.webp" width="486" height="364" alt="Logotipo Dr. Leonardo Guarçoni" loading="lazy" decoding="async" />
       </div>
-      <div class="footer-cols">
-        <nav class="footer-col" aria-label="Seções">
-          <p class="footer-h">Navegação</p>
-          <a class="footer-link" href="#tratamentos">Tratamentos</a>
-          <a class="footer-link" href="#processo">Como trabalhamos</a>
-          <a class="footer-link" href="#o-doutor">O doutor</a>
-          <a class="footer-link" href="#filosofia">Filosofia</a>
-          <a class="footer-link" href="#contato">Contato</a>
-        </nav>
-        <div class="footer-col">
-          <p class="footer-h">Contato</p>
-          <a class="footer-link" href="{{waLink}}" target="_blank" rel="noopener noreferrer">WhatsApp {{whatsappDisplay}}</a>
-          <a class="footer-link" href="mailto:{{email}}">{{email}}</a>
-          <a class="footer-link" href="https://instagram.com/{{instagramUser}}" target="_blank" rel="noopener noreferrer">@{{instagramUser}}</a>
-        </div>
-        <div class="footer-col">
-          <p class="footer-h">Endereço</p>
-          <address class="footer-address">
-            {{endereco.rua}}<br />
-            {{endereco.bairro}}, {{endereco.cidade}} · {{endereco.uf}}<br />
-            CEP {{endereco.cep}}
-          </address>
-          <a class="footer-link" href="{{mapsLink}}" target="_blank" rel="noopener noreferrer">Como chegar</a>
-        </div>
+      <nav class="footer-col footer-col--nav" aria-label="Seções">
+        <p class="footer-h">Navegação</p>
+        <a class="footer-link" href="#tratamentos">Tratamentos</a>
+        <a class="footer-link" href="#processo">Como trabalhamos</a>
+        <a class="footer-link" href="#o-doutor">O doutor</a>
+        <a class="footer-link" href="#filosofia">Filosofia</a>
+        <a class="footer-link" href="#contato">Contato</a>
+      </nav>
+      <div class="footer-col footer-col--contact">
+        <p class="footer-h">Contato</p>
+        <a class="footer-link" href="{{waLink}}" target="_blank" rel="noopener noreferrer">WhatsApp {{whatsappDisplay}}</a>
+        <a class="footer-link" href="mailto:{{email}}">{{email}}</a>
+        <a class="footer-link" href="https://instagram.com/{{instagramUser}}" target="_blank" rel="noopener noreferrer">@{{instagramUser}}</a>
+      </div>
+      <div class="footer-col footer-col--address">
+        <p class="footer-h">Endereço</p>
+        <address class="footer-address">
+          {{endereco.rua}}<br />
+          {{endereco.bairro}}, {{endereco.cidade}} · {{endereco.uf}}<br />
+          CEP {{endereco.cep}}
+        </address>
+        <a class="footer-link" href="{{mapsLink}}" target="_blank" rel="noopener noreferrer">Como chegar</a>
       </div>
       <div class="footer-legal">
         <p>Responsável técnico: {{nomeCompleto}} · {{croLinha}}.</p>

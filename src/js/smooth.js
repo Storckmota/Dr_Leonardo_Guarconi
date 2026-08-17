@@ -26,6 +26,11 @@ export function initSmooth() {
   gsap.ticker.lagSmoothing(0);
 
   bindAnchors(lenis);
+  /* Handle global da instância. Ferramentas externas que precisem posicionar a
+     página (inspeção, automação) têm de rolar por aqui: com window.scrollTo o
+     Lenis desfaz o salto no frame seguinte e a posição medida nunca é a que o
+     usuário vê. */
+  window.__lenis = lenis;
   return lenis;
 }
 
